@@ -1,0 +1,6 @@
+name: SpigotDash
+version: 0.2.1 BETA
+main: de.tobias.spigotdash.main
+api-version: 1.13
+author: Tobias Dickes
+commands:
