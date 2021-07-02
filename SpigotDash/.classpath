@@ -6,12 +6,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Tobias Dickes/Desktop/Server1506/spigot-1.17.jar">
+	<classpathentry kind="lib" path="../Libraries/spigot-1.17.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Tobias Dickes/git/SpigotMC-Plugins/Libraries/sqlite-jdbc-3.34.0.jar">
+	<classpathentry kind="lib" path="../Libraries/sqlite-jdbc-3.34.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
