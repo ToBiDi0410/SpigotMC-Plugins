@@ -42,7 +42,7 @@ public class APIHandler {
 			if (method.equalsIgnoreCase("EXEC_COMMAND")) {
 				if (json.has("command")) {
 					try {
-						Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "Executing: §6/" + json.get("command").getAsString());
+						Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "Executing: ï¿½6/" + json.get("command").getAsString());
 						Bukkit.getScheduler().callSyncMethod(main.pl, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), json.get("command").getAsString())).get();
 						MainRequestHandler.sendJSONResponse(he, 200, "EXECUTED");
 						return;
@@ -52,6 +52,17 @@ public class APIHandler {
 					}
 				} else {
 					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_COMMAND");
+					return;
+				}
+			}
+			
+			if(method.equalsIgnoreCase("REMOVED_NOTIFICATION")) {
+				if(json.has("uuid")) {
+					notificationManager.removeNotification(json.get("uuid").getAsString());
+					MainRequestHandler.sendJSONResponse(he, 200, "REMOVED");
+					return;
+				} else {
+					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_NOTIFICATION_UUID");
 					return;
 				}
 			}

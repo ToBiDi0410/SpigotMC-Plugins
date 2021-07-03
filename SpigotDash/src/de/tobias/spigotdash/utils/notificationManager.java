@@ -18,6 +18,7 @@ public class notificationManager {
 		data.put("message", message);
 		data.put("shown", false);
 		data.put("created", System.currentTimeMillis());
+		data.put("uuid", MESSAGE_ID);
 		if(stayMinutes == -1) {
 			data.put("removedAfter", (long)-1);
 		} else {
@@ -30,6 +31,12 @@ public class notificationManager {
 		}
 		notifications.put(MESSAGE_ID, data);
 
+	}
+	
+	public static void removeNotification(String MESSAGE_ID) {
+		if(notifications.containsKey(MESSAGE_ID) ) {
+			notifications.remove(MESSAGE_ID);
+		}
 	}
 	
 	public static void manageNotifications() {

@@ -24,6 +24,8 @@
                         <i class="fas fa-key"></i>
                       </span>
                     </div>
+                    <p class="help is-danger" id="ERR_FIELD"></p>
+
                 </div>
 
                 <div class="field">
@@ -58,26 +60,31 @@
     </style>
 
     <script>
-        var API_URL = "./api";
         var AUTH_URL = "./auth";
+        var API_URL = "./api";
 
         async function checkLogin() {
-            var data = await fetch(API_URL, {
-                "headers": {
-                    "accept": "*/*",
-                    "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7,nl;q=0.6",
-                    "cache-control": "no-cache",
-                    "content-type": "application/json;charset=UTF-8",
-                },
-                "body": "{\n    \"method\": \"" + "NULL" + "\"\n}",
-                "method": "POST",
-                "Cache-Control": "no-cache",
+            try {
+                var data = await fetch(API_URL, {
+                    "headers": {
+                        "accept": "*/*",
+                        "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7,nl;q=0.6",
+                        "cache-control": "no-cache",
+                        "content-type": "application/json;charset=UTF-8",
+                    },
+                    "body": "{\n    \"method\": \"" + "NULL" + "\"\n}",
+                    "method": "POST",
+                    "Cache-Control": "no-cache",
 
-            });
+                });
 
-            if (data.status != 401) {
-                window.location.href = "./index.html";
+                if (data.status == 500) {
+                    window.location.href = "./index.html";
+                }
+            } catch (err) {
+                console.log(err);
             }
+
 
             setTimeout(checkLogin, 5000);
         }
@@ -89,18 +96,37 @@
             var username = "admin";
             var password = document.getElementById("PWORD").value;
 
-            var data = await fetch(AUTH_URL, {
-                "headers": {
-                    "accept": "*/*",
-                    "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7,nl;q=0.6",
-                    "cache-control": "no-cache",
-                    "content-type": "application/json;charset=UTF-8",
-                },
-                "body": '{ "username": "' + username + '", "password": "' + password + '"}',
-                "method": "POST",
-                "Cache-Control": "no-cache",
+            try {
+                var data = await fetch(AUTH_URL, {
+                    "headers": {
+                        "accept": "*/*",
+                        "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7,nl;q=0.6",
+                        "cache-control": "no-cache",
+                        "content-type": "application/json;charset=UTF-8",
+                    },
+                    "body": '{ "username": "' + username + '", "password": "' + password + '"}',
+                    "method": "POST",
+                    "Cache-Control": "no-cache",
 
-            });
+                });
+
+                if (data.status != 200) {
+                    var REP_TEXT = await data.text();
+                    REP_TEXT = REP_TEXT.replace('"ERR_WRONG_NAME_OR_PASSWORD"', "Wrong Password")
+                    document.getElementById("PWORD").classList.remove("is-success");
+                    document.getElementById("PWORD").classList.add("is-danger");
+                    document.getElementById("ERR_FIELD").innerHTML = "CODE: " + data.status + " (" + data.statusText + ")\n" + REP_TEXT;
+                } else {
+                    document.getElementById("PWORD").classList.add("is-success");
+                    document.getElementById("PWORD").classList.remove("is-danger");
+                    document.getElementById("ERR_FIELD").innerHTML = "Sucess";
+                }
+            } catch (err) {
+                document.getElementById("PWORD").classList.remove("is-success");
+                document.getElementById("PWORD").classList.add("is-danger");
+                console.log(err);
+            }
+
 
             checkLogin();
 
