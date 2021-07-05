@@ -41,6 +41,42 @@ public class dataFetcher {
 	public static float tps_avg_gen = 0;
 	public static float tps_passed = 0;
 
+	// ** FILES **
+	public static ArrayList<HashMap<String, Object>> getFilesInPath(String path) {
+		File dir = new File(main.pl.getDataFolder().getParentFile().getParent(), path);
+		ArrayList<HashMap<String, Object>> files = new ArrayList<>();
+		 
+		if(dir.exists()) {
+			if(!dir.isFile()) {
+				File[] files_obj = dir.listFiles();
+				for(File f : files_obj) {
+					files.add(fileToWebHashMap(f));
+				}
+				return files;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+		
+	}
+	
+	public static HashMap<String, Object> fileToWebHashMap(File file) {
+		HashMap<String, Object> details = new HashMap<>();
+		
+		details.put("DIR", file.isDirectory());
+		details.put("EXISTS", file.exists());
+		details.put("NAME", file.getName());
+		details.put("LAST_CHANGED", file.lastModified());
+		
+		return details;
+	}
+	
+	public static File getFileWithPath(String path) {
+		return new File(main.pl.getDataFolder().getParentFile().getParent(), path);
+	}
+	
 	// ** TPS MEASUREMENT
 
 	public static float getTPS() {
@@ -287,6 +323,28 @@ public class dataFetcher {
 			e.printStackTrace();
 		}
 		return columns;
+	}
+	
+	public static int coutNumberOfOccurences(char Char, String str) {
+		int count = 0;
+		 
+		for (int i = 0; i < str.length(); i++) {
+		    if (str.charAt(i) == Char) {
+		        count++;
+		    }
+		}
+		return count;
+	}
+	
+	public static String replaceLast(String string, String toReplace, String replacement) {
+	    int pos = string.lastIndexOf(toReplace);
+	    if (pos > -1) {
+	        return string.substring(0, pos)
+	             + replacement
+	             + string.substring(pos + toReplace.length());
+	    } else {
+	        return string;
+	    }
 	}
 
 }

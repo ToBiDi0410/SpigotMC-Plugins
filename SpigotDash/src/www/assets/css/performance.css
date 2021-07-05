@@ -1,0 +1,23 @@
+.columns {
+    max-height: 100vh;
+}
+
+.columns {
+    height: 100%;
+}
+
+.section {
+    height: calc(100vh - 5.15rem);
+    transition: display 1s ease-in-out;
+    overflow: hidden;
+    /*transition: height 0.5s ease-in-out;*/
+}
+
+.rows {
+    height: 100%;
+}
+
+.row {
+    height: 50%;
+    overflow: hidden;
+}

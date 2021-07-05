@@ -1,0 +1,25 @@
+.playerrow {
+    height: fit-content;
+    font-size: 90%;
+}
+
+.playerrow_infos {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 10px;
+    width: calc(100% - 40px - 1.25rem - 10px);
+}
+
+.playerrow_name {
+    display: inline-block;
+    font-size: 150% !important;
+    width: 100%;
+    margin-bottom: 1px !important;
+}
+
+.playerrow_uuid {
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+    padding-bottom: 10px;
+}

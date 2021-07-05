@@ -127,6 +127,10 @@ function initCharts() {
     worldchart.render();
 }
 
+function transformDate(date) {
+    return new Intl.DateTimeFormat('de-DE', { hour: '2-digit', minute: '2-digit' }).format(date);
+}
+
 async function updatePerformanceGraphs() {
     try {
         var data = await getJSONDataFromAPI("GET_PERFORMANCE_DATA");
@@ -203,7 +207,9 @@ async function updatePerformanceGraphs() {
         cpuchart.updateSeries(CPU_GRAPH.series);
 
         worldchart.updateSeries(WORLD_GRAPH.series);
-    } catch (err) {}
+    } catch (err) {
+        console.log(err);
+    }
     setTimeout(updatePerformanceGraphs, 10000);
 }
 

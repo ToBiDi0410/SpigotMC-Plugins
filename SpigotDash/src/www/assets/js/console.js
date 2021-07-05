@@ -3,8 +3,8 @@ var last_line = "";
 async function updateLog() {
     try {
         var data = await getJSONDataFromAPI("GET_LOG");
-
         var new_last_line = data[data.length - 1];
+
         if (new_last_line != last_line) {
             var messagelist = document.querySelector(".console_messagelist");
             messagelist.innerHTML = "";
@@ -48,8 +48,6 @@ async function execConsoleCommand() {
         "Cache-Control": "no-cache"
 
     });
-
-    console.log("EXECUTE: " + command);
 
     input_cont.classList.remove("is-loading");
     input.removeAttribute("disabled", "");

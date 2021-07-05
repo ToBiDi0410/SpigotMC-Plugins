@@ -1,0 +1,43 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SpigotDash | Iframe/Embed</title>
+    <base target="_parent">
+
+    <!--Dependencies-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/darkly/bulmaswatch.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="../js/global.js"></script>
+    <script src="../js/path_vars.js"></script>
+
+    <script src="../js/ANSI_PARSER.js"></script>
+    <link rel="stylesheet" href="../css/ANSI_CODES.css">
+
+    <link rel="stylesheet" href="../css/console.css">
+</head>
+
+<body>
+    <h1 class=" title ">
+        Console
+    </h1>
+    <div class="console ">
+        <ul class="console_messagelist ">
+            <li></li>
+        </ul>
+    </div>
+    <div class="field console_input ">
+        <div class="control is-small console_input_text " style="width: 93%; display: inline-block; vertical-align: top; ">
+            <input class="input " type="text " placeholder="/help " style="background-color: #4a4a4a; color: white; ">
+        </div>
+        <div class="control " style="width: 6.6%; display: inline-block; vertical-align: top; ">
+            <button class="console_input_button button is-link " onclick="execConsoleCommand() " style="max-width: 100%; width: 100%; ">Execute</button>
+        </div>
+    </div>
+
+    <script src="../js/console.js "></script>
+</body>
+
+</html>

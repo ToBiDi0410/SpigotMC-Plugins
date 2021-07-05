@@ -1,0 +1,51 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SpigotDash | Iframe/Embed</title>
+    <base target="_parent">
+
+    <!--Dependencies-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/darkly/bulmaswatch.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="../js/global.js"></script>
+    <script src="../js/path_vars.js"></script>
+
+    <link rel="stylesheet" href="../css/performance.css">
+</head>
+
+<body>
+    <h1 class="title">
+        Serverperformance
+    </h1>
+    <div class="columns if-fullwidth">
+        <div class="column">
+            <div class="rows">
+                <div class="row box">
+                    <div class="rowchart" id="tpschart"></div>
+                </div>
+                <div class="row box">
+                    <div class="rowchart" id="cpuchart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="rows">
+                <div class="row box">
+                    <div class="rowchart" id="worldchart"></div>
+                </div>
+                <div class="row box">
+                    <div class="rowchart" id="memorychart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/performance.js"></script>
+</body>
+
+</html>

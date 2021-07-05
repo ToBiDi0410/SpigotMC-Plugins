@@ -20,7 +20,30 @@ var ANSI_CSS_CLASSES = {
     "\u001b[9m": "STRIKETHROUGH",
     "\u001b[4m": "UNDERLINE",
     "\u001b[3m": "ITALIC",
-    "\u001b[m": "RESET"
+    "\u001b[m": "RESET",
+
+    "�0": "BLACK",
+    "�1": "DARK_BLUE",
+    "�2": "DARK_GREEN",
+    "�3": "DARK_AQUA",
+    "�4": "DARK_RED",
+    "�5": "DARK_PURPLE",
+    "�6": "GOLD",
+    "�7": "GRAY",
+    "�8": "DARK_GRAY",
+    "�9": "BLUE",
+    "�a": "GREEN",
+    "�b": "AQUA",
+    "�c": "RED",
+    "�d": "LIGHT_PURPLE",
+    "�e": "YELLOW",
+    "�f": "WHITE",
+    "�k": "OBFUSCATED",
+    "�l": "BOLD",
+    "�m": "STRIKETHROUGH",
+    "�n": "UNDERLINE",
+    "�o": "ITALIC",
+    "�r": "RESET",
 }
 
 var MINECRAFT_CSS_CLASSES = {

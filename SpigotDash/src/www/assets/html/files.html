@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SpigotDash | Iframe/Embed</title>
+    <base target="_parent">
+
+    <!--Dependencies-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/darkly/bulmaswatch.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+    <script src="../js/global.js"></script>
+    <script src="../js/path_vars.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/base16/railscasts.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+
+    <link rel="stylesheet" href="../css/files.css">
+</head>
+
+<body>
+    <h1 class="title">
+        Files
+    </h1>
+    <div class="content">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th><abbr title="Icon">Icon</abbr></th>
+                    <th><abbr title="Icon">Name</abbr></th>
+                    <th><abbr title="Icon">Last Change</abbr></th>
+                </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+        </table>
+
+        <div class="box fileview hidden">
+            <h2 class="subtitle fileview_title">plugin.yml</h2>
+            <span class="material-icons-outlined fileview_close" onclick="toggleFileViewer(false);">cancel</span>
+            <pre class="fileview_content_container hidden">
+                <code class="language-js fileview_content">async function stupid() {}</code>
+            </pre>
+            <div class="fileview_error">No Preview available<br>
+                <div class="fileview_error_code">ERR: File Format not Supported</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/files.js"></script>
+</body>
+
+</html>

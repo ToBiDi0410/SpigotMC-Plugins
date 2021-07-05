@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/darkly/bulmaswatch.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="./assets/js/path_vars.js"></script>
 </head>
 
 <body style="max-height: 100vh; overflow: hidden;">
@@ -60,9 +61,6 @@
     </style>
 
     <script>
-        var AUTH_URL = "./auth";
-        var API_URL = "./api";
-
         async function checkLogin() {
             try {
                 var data = await fetch(API_URL, {
@@ -119,7 +117,7 @@
                 } else {
                     document.getElementById("PWORD").classList.add("is-success");
                     document.getElementById("PWORD").classList.remove("is-danger");
-                    document.getElementById("ERR_FIELD").innerHTML = "Sucess";
+                    document.getElementById("ERR_FIELD").innerHTML = "Success";
                 }
             } catch (err) {
                 document.getElementById("PWORD").classList.remove("is-success");

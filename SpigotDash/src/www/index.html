@@ -5,14 +5,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SpigotDash</title>
-    <link rel="stylesheet" href="./index.css">
+
+    <!--Dependencies-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/darkly/bulmaswatch.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="./ANSI_CODES.css">
-    <script src="ANSI_PARSER.js"></script>
+    <!--Own Scripts & Stylesheets-->
+    <link rel="stylesheet" href="./assets/css/index.css">
 </head>
 
 <body style="max-height: 100vh; overflow: scroll;">
@@ -43,6 +45,10 @@
                     Performance
                 </a>
 
+                <a class="navbar-item" onclick='refreshSections("files")'>
+                    Files
+                </a>
+
                 <a class="navbar-item" onclick='refreshSections("players")'>
                     Players
                 </a>
@@ -69,78 +75,27 @@
         </div>
     </div>
 
-
     <section class="section section_disabled" id="sec_overview">
-        <h1 class="title">
-            Overview
-        </h1>
-        <div class="notifcations-container">
-            <a>Loading...</a>
-        </div>
-
+        <iframe class="SECTION_IFRAME" src="./assets/html/overview.html"></iframe>
     </section>
 
     <section class="section section_enabled" id="sec_console">
-        <h1 class="title">
-            Console
-        </h1>
-        <div class="console">
-            <ul class="console_messagelist">
-                <li></li>
-            </ul>
-        </div>
-        <div class="field console_input">
-            <div class="control is-small console_input_text" style="width: 93%; display: inline-block; vertical-align: top;">
-                <input class="input" type="text" placeholder="/help" style="background-color: #4a4a4a; color: white;">
-            </div>
-            <div class="control" style="width: 6.6%; display: inline-block; vertical-align: top;">
-                <button class="console_input_button button is-link" onclick="execConsoleCommand()" style="max-width: 100%; width: 100%;">Execute</button>
-            </div>
-        </div>
+        <iframe class="SECTION_IFRAME" src="./assets/html/console.html"></iframe>
     </section>
 
     <section class="section section_disabled" id="sec_performance">
-        <h1 class="title">
-            Serverperformance
-        </h1>
-        <div class="columns if-fullwidth">
-            <div class="column">
-                <div class="rows">
-                    <div class="row box">
-                        <div class="rowchart" id="tpschart"></div>
-                    </div>
-                    <div class="row box">
-                        <div class="rowchart" id="cpuchart"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="column">
-                <div class="rows">
-                    <div class="row box">
-                        <div class="rowchart" id="worldchart"></div>
-                    </div>
-                    <div class="row box">
-                        <div class="rowchart" id="memorychart"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <iframe class="SECTION_IFRAME" src="./assets/html/performance.html"></iframe>
+    </section>
+
+    <section class="section section_disabled" id="sec_files">
+        <iframe class="SECTION_IFRAME" src="./assets/html/files.html"></iframe>
     </section>
 
     <section class="section section_disabled" id="sec_players">
-        <h1 class="title">
-            Players
-        </h1>
-        <div class="rows playerrow_container">
-        </div>
+        <iframe class="SECTION_IFRAME" src="./assets/html/players.html"></iframe>
     </section>
 
-    <script src="index.js"></script>
-    <script src="log.js"></script>
-    <script src="performance.js"></script>
-    <script src="notifications.js"></script>
-    <script src="players.js"></script>
-
+    <script src="./assets/js/index.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,12 @@
+.NOTIFICATION_INITIATOR {
+    font-size: 75%;
+    background-color: rgb(109, 109, 109);
+    width: fit-content;
+    padding: 2px;
+    border-radius: 5px;
+    color: white;
+}
+
+.NOTIFICATION_TITLE {
+    font-weight: bolder;
+}

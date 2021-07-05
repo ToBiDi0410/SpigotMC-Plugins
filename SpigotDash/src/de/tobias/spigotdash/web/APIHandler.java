@@ -1,8 +1,6 @@
 package de.tobias.spigotdash.web;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.File;
 
 import org.bukkit.Bukkit;
 
@@ -10,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
 import de.tobias.spigotdash.main;
-import de.tobias.spigotdash.utils.databaseManager;
 import de.tobias.spigotdash.utils.notificationManager;
 
 public class APIHandler {
@@ -56,6 +53,39 @@ public class APIHandler {
 				}
 			}
 			
+			if(method.equalsIgnoreCase("GET_FILES_IN_PATH")) {
+					if(json.has("path")) {
+						String path = json.get("path").getAsString();
+						MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getFilesInPath(path));
+						return;
+					} else {
+						MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PATH");
+						return;
+					}
+			}
+			
+			if(method.equalsIgnoreCase("GET_FILE_WITH_PATH")) {
+				if(json.has("path")) {
+					String path = json.get("path").getAsString();
+					File f = dataFetcher.getFileWithPath(path);
+					if(f.exists()) {
+						if(f.isFile()) {
+							MainRequestHandler.sendFileResponse(he, f, 200);
+							return;
+						} else {
+							MainRequestHandler.sendJSONResponse(he, 400, "ERR_FILE_IS_DIR");
+							return;
+						}
+					} else {
+						MainRequestHandler.sendJSONResponse(he, 404, "ERR_FILE_NOT_FOUND");
+						return;
+					}
+				} else {
+					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PATH");
+					return;
+				}
+			}
+			
 			if(method.equalsIgnoreCase("REMOVED_NOTIFICATION")) {
 				if(json.has("uuid")) {
 					notificationManager.removeNotification(json.get("uuid").getAsString());
@@ -66,6 +96,7 @@ public class APIHandler {
 					return;
 				}
 			}
+			
 			MainRequestHandler.sendJSONResponse(he, 500, "ERR_NOT_HANDLED");
 			
 		} else {
