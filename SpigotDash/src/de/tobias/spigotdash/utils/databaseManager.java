@@ -15,21 +15,21 @@ public class databaseManager {
 	public static String DBFilePath = main.pl.getDataFolder().getAbsolutePath() + "/data.db";
 
 	public static boolean connect() {
-		Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "Connecting to SQLite Database...");
+		pluginConsole.sendMessage("Connecting to SQLite Database...");
 		try {
 			String url = "jdbc:sqlite:" + DBFilePath;
 			conn = DriverManager.getConnection(url);
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�aSuccessfully connected to Database!");
+			pluginConsole.sendMessage("&aSuccessfully connected to Database!");
 			return true;
 		} catch (Exception ex) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�c[ERROR] Could not connect to Database:");
+			pluginConsole.sendMessage("&c[ERROR] Could not connect to Database:");
 			errorCatcher.catchException(ex, false);
 			return false;
 		}
 	}
 
 	public static boolean close() {
-		Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "Closing SQLite Database...");
+		pluginConsole.sendMessage("Closing SQLite Database...");
 		try {
 			if (conn != null) {
 				if (conn.isClosed() == false) {
@@ -39,7 +39,7 @@ public class databaseManager {
 			}
 			return true;
 		} catch (Exception ex) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�c[ERROR] Could not disconnect from Database:");
+			pluginConsole.sendMessage("&c[ERROR] Could not disconnect from Database:");
 			errorCatcher.catchException(ex, false);
 			return false;
 		}
@@ -52,7 +52,7 @@ public class databaseManager {
 				stmt.execute(sql);
 				return true;
 			} catch(Exception ex) {
-				Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�c[ERROR] Failed to execute SQL Statement:");
+				pluginConsole.sendMessage("&c[ERROR] Failed to execute SQL Statement:");
 				errorCatcher.catchException(ex, false);
 				return false;
 			}
@@ -67,7 +67,7 @@ public class databaseManager {
 				Statement stmt = conn.createStatement();
 				return stmt.executeQuery(sql);
 			} catch(Exception ex) {
-				Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�c[ERROR] Failed to execute SQL Query:");
+				pluginConsole.sendMessage("&c[ERROR] Failed to execute SQL Query:");
 				errorCatcher.catchException(ex, false);
 				return null;
 			}
@@ -77,15 +77,15 @@ public class databaseManager {
 	}
 	
 	public static boolean setupDB() {
-		Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "Setting up SQLite Database...");
+		pluginConsole.sendMessage("Setting up SQLite Database...");
 		exec("DROP TABLE IF EXISTS `PERFORMANCE`");
 		boolean suc = (
 		exec("CREATE TABLE IF NOT EXISTS `PERFORMANCE` ( `DATETIME` DATETIME, `CPU_LOAD_SYSTEM` INT NOT NULL , `CPU_LOAD_PROCESS` INT NOT NULL , `MEMORY_USED` INT NOT NULL , `MEMORY_FREE` INT NOT NULL , `MEMORY_MAX` INT NOT NULL , `MEMORY_ALLOCATED` INT NOT NULL , `TPS` INT NOT NULL , `WORLD_CHUNKS` INT NOT NULL , `WORLD_ENTITIES` INT NOT NULL, `WORLD_PLAYERS` INT NOT NULL, `WORLD_COUNT` INT NOT NULL )") &&
 				true);
 		if(suc) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�aSQLite Database setup!");
+			pluginConsole.sendMessage("&aSQLite Database setup!");
 		} else {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�cSQLite Database setup failed!");
+			pluginConsole.sendMessage("&cSQLite Database setup failed!");
 		}
 		return suc;
 	}

@@ -9,6 +9,7 @@ import com.sun.net.httpserver.HttpServer;
 
 import de.tobias.spigotdash.main;
 import de.tobias.spigotdash.utils.errorCatcher;
+import de.tobias.spigotdash.utils.pluginConsole;
 
 public class WebServer {
 
@@ -21,12 +22,12 @@ public class WebServer {
 
 	public boolean setup() {
 		try {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "Starting Webserver under Port " + this.port + "...");
+			pluginConsole.sendMessage("Starting Webserver under Port " + this.port + "...");
 			this.server = HttpServer.create(new InetSocketAddress(port), 0);
 			server.createContext("/", new MainRequestHandler());
 			server.setExecutor(null);
 			server.start();
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�aWebserver started!");
+			pluginConsole.sendMessage("&aWebserver started!");
 			return true;
 		} catch (IOException e) {
 			errorCatcher.catchException(e, false);

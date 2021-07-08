@@ -7,8 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
-import org.bukkit.Bukkit;
-
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,8 +14,8 @@ import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import de.tobias.spigotdash.main;
 import de.tobias.spigotdash.utils.errorCatcher;
+import de.tobias.spigotdash.utils.pluginConsole;
 
 public class MainRequestHandler implements HttpHandler {
 
@@ -87,7 +85,7 @@ public class MainRequestHandler implements HttpHandler {
 			}
 			return true;
 		} catch (Exception ex) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�c[ERROR] Failed to add/mange CORS Headers to/in Response:");
+			pluginConsole.sendMessage("&c[ERROR] Failed to add/mange CORS Headers to/in Response:");
 			errorCatcher.catchException(ex, false);
 			he.close();
 			return false;
@@ -103,7 +101,7 @@ public class MainRequestHandler implements HttpHandler {
 			}
 			return sb.toString();
 		} catch (Exception ex) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�c[ERROR] Failed to read InputStream into String:");
+			pluginConsole.sendMessage("&c[ERROR] Failed to read InputStream into String:");
 			errorCatcher.catchException(ex, false);
 			return null;
 		}
@@ -119,7 +117,7 @@ public class MainRequestHandler implements HttpHandler {
 			outputStream.write(message_bytes);
 			outputStream.close();
 		} catch (Exception ex) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�c[ERROR] Failed to send JSON Response:");
+			pluginConsole.sendMessage("§c[ERROR] Failed to send JSON Response:");
 			errorCatcher.catchException(ex, false);
 			he.close();
 		}

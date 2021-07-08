@@ -11,6 +11,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import de.tobias.spigotdash.main;
 import de.tobias.spigotdash.utils.notificationManager;
+import de.tobias.spigotdash.utils.pluginConsole;
 
 public class APIHandler {
 
@@ -41,8 +42,7 @@ public class APIHandler {
 			if (method.equalsIgnoreCase("EXEC_COMMAND")) {
 				if (json.has("command")) {
 					try {
-						Bukkit.getConsoleSender().sendMessage(
-								main.CONSOLE_PREFIX + "Executing: �6/" + json.get("command").getAsString());
+						pluginConsole.sendMessage("Executing: &6/" + json.get("command").getAsString());
 						Bukkit.getScheduler().callSyncMethod(main.pl, () -> Bukkit
 								.dispatchCommand(Bukkit.getConsoleSender(), json.get("command").getAsString())).get();
 						MainRequestHandler.sendJSONResponse(he, 200, "EXECUTED");

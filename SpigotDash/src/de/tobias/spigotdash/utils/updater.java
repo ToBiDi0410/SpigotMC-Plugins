@@ -21,7 +21,7 @@ public class updater {
 
 	public static void checkForUpdates() {
 		try {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�7Checking for Updates...");
+			pluginConsole.sendMessage("&7Checking for Updates...");
 			URL url = new URL("https://api.spiget.org/v2/resources/93710/versions?fields=name");
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
@@ -48,15 +48,15 @@ public class updater {
 				String newest_version = newest.get("name").getAsString();
 				if(!current_version.equalsIgnoreCase(newest_version)) {
 					update_available = true;
-					Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�7New Update �aavailable�7! Please take a look at �6SpigotMC�7!");
+					pluginConsole.sendMessage("&7New Update &aavailable&7! Please take a look at &6SpigotMC&7!");
 				} else {
 					update_available = false;
-					Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�aYou are running the newest Version!");
+					pluginConsole.sendMessage("&aYou are running the newest Version!");
 				}
 			}
 
 		} catch (Exception ex) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�cCheck for Updates failed! You won�t recieve notifications!");
+			pluginConsole.sendMessage("&cCheck for Updates failed! You won&t recieve notifications!");
 		}
 	}
 	
