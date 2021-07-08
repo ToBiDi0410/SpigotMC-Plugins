@@ -13,8 +13,6 @@ public class errorCatcher {
 
 	
 	public static boolean catchException(Exception ex, boolean halt) {
-		pluginConsole.sendMessage("&6Reporting this error is not required! It will be transmitted to bStats and therefore to the Developer!");
-		pluginConsole.sendMessage("&6If you want to report this error anyways, include the Information below!");
 		pluginConsole.sendMessageWithoutPrefix("&c[---------- EXCEPTION ----------]");
 		pluginConsole.sendMessageWithoutPrefix("&6Technical Details:");
 		
@@ -34,7 +32,13 @@ public class errorCatcher {
 			Bukkit.getPluginManager().disablePlugin(main.pl);
 		}
 		
-		transmitError(file, line, message);
+		try {
+			transmitError(file, line, message);
+			pluginConsole.sendMessage("&6Reporting this error is not required! It will be transmitted to bStats and therefore to the Developer!");
+			pluginConsole.sendMessage("&6If you want to report this error anyways, include the Information below!");
+		} catch (Exception exe) {
+			pluginConsole.sendMessage("&cThe Error could not be reported automatically, please report it to the SpigotMC Page!");
+		}
 		
 		return true;
 	}
