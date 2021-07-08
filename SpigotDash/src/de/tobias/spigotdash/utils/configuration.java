@@ -29,10 +29,10 @@ public class configuration {
 			try {
 				cfg_file.createNewFile();
 				created = true;
-				Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§6Created new config File!");
+				Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½6Created new config File!");
 			} catch (IOException e) {
-				Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§c[ERROR] Failed to create Config File: ");
-				e.printStackTrace();
+				Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½c[ERROR] Failed to create Config File: ");
+				errorCatcher.catchException(e, false);
 				return false;
 			}
 		}
@@ -45,7 +45,7 @@ public class configuration {
 				CFG.replace(s, yaml_cfg.get(s));
 			} else {
 				if(!created) {
-					Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§6WARNING: Your Config File is missing some values: §b" + s);
+					Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½6WARNING: Your Config File is missing some values: ï¿½b" + s);
 				} else {
 					yaml_cfg.set(s, CFG.get(s));
 				}
@@ -54,15 +54,15 @@ public class configuration {
 		
 		//WARN ON WRONG_VERSIONS
 		if(!yaml_cfg.getString("FILE_VERSION").equalsIgnoreCase(current_ver)) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§6WARNING: Your Config File Version is not the newest (" + current_ver + ")");
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§cTo fix this, you should delete the current Config and Restart the Server to generate a new one!");
+			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½6WARNING: Your Config File Version is not the newest (" + current_ver + ")");
+			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½cTo fix this, you should delete the current Config and Restart the Server to generate a new one!");
 		}
 		
 		if(created) {
 			save();
 		}
 		
-		Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§aConfiguration loaded from File!");
+		Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½aConfiguration loaded from File!");
 		
 		return true;
 		
@@ -73,8 +73,8 @@ public class configuration {
 			yaml_cfg.save(cfg_file);
 			return true;
 		} catch (IOException e) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§c[ERROR] Cannot save configuration: ");
-			e.printStackTrace();
+			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½c[ERROR] Cannot save configuration: ");
+			errorCatcher.catchException(e, false);
 			return false;
 		}
 	}

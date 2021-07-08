@@ -17,34 +17,37 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import de.tobias.spigotdash.main;
+import de.tobias.spigotdash.utils.errorCatcher;
 
 public class MainRequestHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange he) throws IOException {
-		if(addCorsHeaders(he) && handleWithSections(he)) {
-			String path = he.getRequestURI().getPath();
-			if (path.equalsIgnoreCase("/")) { path = "/index.html"; }
-		
-			/*if(dataFetcher.coutNumberOfOccurences('/', path) >= 3) {
-				//path = path.replaceFirst("/", "@");
-				path = dataFetcher.replaceLast(path, "/", "@");
-				path = path.replace("/", ".");
-				path = path.replace("@", "/");
-			}*/
+		try {
+			if (addCorsHeaders(he) && handleWithSections(he)) {
+				String path = he.getRequestURI().getPath();
+				if (path.equalsIgnoreCase("/")) {
+					path = "/index.html";
+				}
 
-			String classpath = "/www" + path;
-			URL res = getClass().getResource(classpath);
-			
-			if (res == null) { classpath = "/www/404.html"; }
-			res = getClass().getResource(classpath);
+				String classpath = "/www" + path;
+				URL res = getClass().getResource(classpath);
 
-			File f = new File(res.toExternalForm());
-			he.sendResponseHeaders(200, f.length());
-			OutputStream outputStream = he.getResponseBody();
-			getClass().getResourceAsStream(classpath).transferTo(outputStream);
-			outputStream.close();
-;		}
+				if (res == null) {
+					classpath = "/www/404.html";
+				}
+				res = getClass().getResource(classpath);
+
+				File f = new File(res.toExternalForm());
+				he.sendResponseHeaders(200, f.length());
+				OutputStream outputStream = he.getResponseBody();
+				getClass().getResourceAsStream(classpath).transferTo(outputStream);
+				outputStream.close();
+				;
+			}
+		} catch (Exception ex) {
+			errorCatcher.catchException(ex, false);
+		}
 	}
 	
 	public boolean handleWithSections(HttpExchange he) {
@@ -85,7 +88,7 @@ public class MainRequestHandler implements HttpHandler {
 			return true;
 		} catch (Exception ex) {
 			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�c[ERROR] Failed to add/mange CORS Headers to/in Response:");
-			ex.printStackTrace();
+			errorCatcher.catchException(ex, false);
 			he.close();
 			return false;
 		}
@@ -101,13 +104,15 @@ public class MainRequestHandler implements HttpHandler {
 			return sb.toString();
 		} catch (Exception ex) {
 			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�c[ERROR] Failed to read InputStream into String:");
-			ex.printStackTrace();
+			errorCatcher.catchException(ex, false);
 			return null;
 		}
 	}
 	
 	public static void sendJSONResponse(HttpExchange he, Integer code, Object data) {
 		try {
+			Integer.parseInt("efafe");
+
 			String response_string = new GsonBuilder().create().toJson(data);
 			byte[] message_bytes = response_string.getBytes();
 			he.getResponseHeaders().add("Content-Type", "application/json");
@@ -117,7 +122,7 @@ public class MainRequestHandler implements HttpHandler {
 			outputStream.close();
 		} catch (Exception ex) {
 			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "�c[ERROR] Failed to send JSON Response:");
-			ex.printStackTrace();
+			errorCatcher.catchException(ex, false);
 			he.close();
 		}
 	}
@@ -130,7 +135,7 @@ public class MainRequestHandler implements HttpHandler {
 			outputStream.close();
 		} catch (Exception ex) {
 			he.close();
-			ex.printStackTrace();
+			errorCatcher.catchException(ex, false);
 		}
 	}
 

@@ -21,7 +21,7 @@ public class updater {
 
 	public static void checkForUpdates() {
 		try {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§7Checking for Updates...");
+			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½7Checking for Updates...");
 			URL url = new URL("https://api.spiget.org/v2/resources/93710/versions?fields=name");
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
@@ -48,15 +48,15 @@ public class updater {
 				String newest_version = newest.get("name").getAsString();
 				if(!current_version.equalsIgnoreCase(newest_version)) {
 					update_available = true;
-					Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§7New Update §aavailable§7! Please take a look at §6SpigotMC§7!");
+					Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½7New Update ï¿½aavailableï¿½7! Please take a look at ï¿½6SpigotMCï¿½7!");
 				} else {
 					update_available = false;
-					Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§aYou are running the newest Version!");
+					Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½aYou are running the newest Version!");
 				}
 			}
 
 		} catch (Exception ex) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§cCheck for Updates failed! You won´t recieve notifications!");
+			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½cCheck for Updates failed! You wonï¿½t recieve notifications!");
 		}
 	}
 	

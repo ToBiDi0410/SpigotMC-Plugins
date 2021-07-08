@@ -16,29 +16,34 @@ import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
 import de.tobias.spigotdash.utils.configuration;
+import de.tobias.spigotdash.utils.errorCatcher;
 
 public class AuthHandler {
 
 	public static Map<String, Object> sessionData = new HashMap<String, Object>();
 	
 	public static void handle(HttpExchange he, JsonObject json) {
-		if(!isAuthed(he)) {
-			if(json.has("username") && json.has("password")) {
-				if(isValid(json.get("username").getAsString(), json.get("password").getAsString())) {
-					he.getResponseHeaders().add("Set-Cookie", generateNewCookie().toString());
-					MainRequestHandler.sendJSONResponse(he, 200, "COOKIE_ADDED");
-					return;
+		try {
+			if (!isAuthed(he)) {
+				if (json.has("username") && json.has("password")) {
+					if (isValid(json.get("username").getAsString(), json.get("password").getAsString())) {
+						he.getResponseHeaders().add("Set-Cookie", generateNewCookie().toString());
+						MainRequestHandler.sendJSONResponse(he, 200, "COOKIE_ADDED");
+						return;
+					} else {
+						MainRequestHandler.sendJSONResponse(he, 400, "ERR_WRONG_NAME_OR_PASSWORD");
+						return;
+					}
 				} else {
-					MainRequestHandler.sendJSONResponse(he, 400, "ERR_WRONG_NAME_OR_PASSWORD");
+					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_NAME_OR_PASSWORD");
 					return;
 				}
 			} else {
-				MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_NAME_OR_PASSWORD");
+				MainRequestHandler.sendJSONResponse(he, 200, "WARN_ALREADY_AUTHED");
 				return;
 			}
-		} else {
-			MainRequestHandler.sendJSONResponse(he, 200, "WARN_ALREADY_AUTHED");
-			return;
+		} catch (Exception ex) {
+			errorCatcher.catchException(ex, false);
 		}
 	}
 	

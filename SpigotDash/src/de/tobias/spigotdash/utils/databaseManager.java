@@ -19,11 +19,11 @@ public class databaseManager {
 		try {
 			String url = "jdbc:sqlite:" + DBFilePath;
 			conn = DriverManager.getConnection(url);
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§aSuccessfully connected to Database!");
+			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½aSuccessfully connected to Database!");
 			return true;
 		} catch (Exception ex) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§c[ERROR] Could not connect to Database:");
-			ex.printStackTrace();
+			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½c[ERROR] Could not connect to Database:");
+			errorCatcher.catchException(ex, false);
 			return false;
 		}
 	}
@@ -39,8 +39,8 @@ public class databaseManager {
 			}
 			return true;
 		} catch (Exception ex) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§c[ERROR] Could not disconnect from Database:");
-			ex.printStackTrace();
+			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½c[ERROR] Could not disconnect from Database:");
+			errorCatcher.catchException(ex, false);
 			return false;
 		}
 	}
@@ -52,8 +52,8 @@ public class databaseManager {
 				stmt.execute(sql);
 				return true;
 			} catch(Exception ex) {
-				Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§c[ERROR] Failed to execute SQL Statement:");
-				ex.printStackTrace();
+				Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½c[ERROR] Failed to execute SQL Statement:");
+				errorCatcher.catchException(ex, false);
 				return false;
 			}
 		} else {
@@ -67,8 +67,8 @@ public class databaseManager {
 				Statement stmt = conn.createStatement();
 				return stmt.executeQuery(sql);
 			} catch(Exception ex) {
-				Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§c[ERROR] Failed to execute SQL Query:");
-				ex.printStackTrace();
+				Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½c[ERROR] Failed to execute SQL Query:");
+				errorCatcher.catchException(ex, false);
 				return null;
 			}
 		} else {
@@ -83,9 +83,9 @@ public class databaseManager {
 		exec("CREATE TABLE IF NOT EXISTS `PERFORMANCE` ( `DATETIME` DATETIME, `CPU_LOAD_SYSTEM` INT NOT NULL , `CPU_LOAD_PROCESS` INT NOT NULL , `MEMORY_USED` INT NOT NULL , `MEMORY_FREE` INT NOT NULL , `MEMORY_MAX` INT NOT NULL , `MEMORY_ALLOCATED` INT NOT NULL , `TPS` INT NOT NULL , `WORLD_CHUNKS` INT NOT NULL , `WORLD_ENTITIES` INT NOT NULL, `WORLD_PLAYERS` INT NOT NULL, `WORLD_COUNT` INT NOT NULL )") &&
 				true);
 		if(suc) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§aSQLite Database setup!");
+			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½aSQLite Database setup!");
 		} else {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§cSQLite Database setup failed!");
+			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½cSQLite Database setup failed!");
 		}
 		return suc;
 	}

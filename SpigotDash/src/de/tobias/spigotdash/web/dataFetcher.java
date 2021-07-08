@@ -41,6 +41,24 @@ public class dataFetcher {
 	public static float tps_avg_gen = 0;
 	public static float tps_passed = 0;
 
+	// ** PLUGINS **
+	public static ArrayList<HashMap<String, Object>> getPluginsForWeb() {
+		ArrayList<HashMap<String, Object>> plugins = new ArrayList<HashMap<String, Object>>();
+		
+		for(Plugin pl : Bukkit.getPluginManager().getPlugins()) {
+			HashMap<String, Object> plugin_info = new HashMap<>();
+			plugin_info.put("enabled", pl.isEnabled());
+			plugin_info.put("name", pl.getName());
+			plugin_info.put("version", pl.getDescription().getVersion());
+			plugin_info.put("authors", pl.getDescription().getAuthors());
+			plugin_info.put("website", pl.getDescription().getWebsite());	
+			plugin_info.put("apiversion", pl.getDescription().getAPIVersion());
+			plugin_info.put("known", false);
+			plugins.add(plugin_info);
+		}
+		return plugins;
+	}
+	
 	// ** FILES **
 	public static ArrayList<HashMap<String, Object>> getFilesInPath(String path) {
 		File dir = new File(main.pl.getDataFolder().getParentFile().getParent(), path);

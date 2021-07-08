@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import com.sun.net.httpserver.HttpServer;
 
 import de.tobias.spigotdash.main;
+import de.tobias.spigotdash.utils.errorCatcher;
 
 public class WebServer {
 
@@ -25,11 +26,10 @@ public class WebServer {
 			server.createContext("/", new MainRequestHandler());
 			server.setExecutor(null);
 			server.start();
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§aWebserver started!");
+			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "ï¿½aWebserver started!");
 			return true;
 		} catch (IOException e) {
-			Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "§c[ERROR]");
-			e.printStackTrace();
+			errorCatcher.catchException(e, false);
 			return false;
 		}
 

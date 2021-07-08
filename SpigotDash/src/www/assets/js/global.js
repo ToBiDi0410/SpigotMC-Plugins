@@ -42,3 +42,8 @@ function msToTime(s) {
 
     return hrs + 'h ' + mins + 'm ' + secs + 's'
 }
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};

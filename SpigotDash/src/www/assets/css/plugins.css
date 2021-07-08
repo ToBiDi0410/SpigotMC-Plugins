@@ -1,0 +1,12 @@
+.card-header-title>* {
+    margin-left: 4px;
+    font-size: 110%;
+}
+
+.card-header-title>*:nth-child(2) {
+    color: gray;
+}
+
+.card {
+    margin-top: 1%;
+}
