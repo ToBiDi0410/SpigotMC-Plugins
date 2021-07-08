@@ -7,6 +7,10 @@ async function updateNotifications() {
             var notf = data[key];
             addNotificationIfNotPresent(key, notf);
         }
+
+        if (data.length < 1) {
+            document.querySelector(".notifcations-container").innerHTML = "No Notifications available";
+        }
     } catch (err) {
         console.log(err);
     }

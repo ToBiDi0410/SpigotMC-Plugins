@@ -16,6 +16,8 @@ var CARD_TEMPLATE = '\
             <img class="image" alt="Logo" src="ERR" style="display: none"></img>\
             <a><b>Name:</b> %NAME%</a>\
             <br>\
+            <a><b>Enabled:</b> %ENABLED%</a>\
+            <br>\
             <a><b>Version:</b> %VERSION% (API: %API_VERSION%)</a>\
             <br>\
             <a><b>Authors:</b> %AUTHORS%</a>\
@@ -56,6 +58,7 @@ async function reloadPlugins() {
             html = html.replaceAll("%AUTHORS%", elem.authors);
             html = html.replaceAll("%WEBSITE%", elem.website);
             html = html.replaceAll("%API_VERSION%", elem.apiversion);
+            html = html.replaceAll("%ENABLED%", elem.enabled ? '<a class="has-text-success">Loaded</a>' : '<a class="has-text-danger">Disabled</a>');
             html = html.replaceAll("%INTEGRATED%", elem.known ? '<a class="has-text-success">Loaded</a>' : '<a class="has-text-danger">Not available</a>');
             if (elem.known) {
                 html = html.replace('<img alt="Logo" class="image" src="ERR" style="display: none"></img>', '<img class="image" src="' + elem.img + '"></img>');
