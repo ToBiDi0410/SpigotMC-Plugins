@@ -111,8 +111,6 @@ public class MainRequestHandler implements HttpHandler {
 	
 	public static void sendJSONResponse(HttpExchange he, Integer code, Object data) {
 		try {
-			Integer.parseInt("efafe");
-
 			String response_string = new GsonBuilder().create().toJson(data);
 			byte[] message_bytes = response_string.getBytes();
 			he.getResponseHeaders().add("Content-Type", "application/json");
