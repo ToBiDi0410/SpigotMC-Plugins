@@ -58,7 +58,7 @@ public class AuthHandler {
 	
 	public static boolean isValid(String username, String password) {
 		username = username.toLowerCase();
-		if(username.equalsIgnoreCase("admin") && password.equals((String) configuration.CFG.get("WEB_PASSWORD"))) {
+		if(username.equalsIgnoreCase("admin") && password.equals(configuration.CFG.get("WEB_PASSWORD").toString())) {
 			return true;
 		}
 		return false;
