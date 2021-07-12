@@ -56,7 +56,7 @@ public class updater {
 			}
 
 		} catch (Exception ex) {
-			pluginConsole.sendMessage("&cCheck for Updates failed! You won&t recieve notifications!");
+			pluginConsole.sendMessage("&cCheck for Updates failed! You won't recieve notifications!");
 		}
 	}
 	

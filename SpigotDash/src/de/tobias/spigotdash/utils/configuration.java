@@ -11,7 +11,7 @@ import de.tobias.spigotdash.main;
 
 public class configuration {
 	
-	public static String current_ver = "0.2";
+	public static String current_ver = "0.3";
 	
 	public static File cfg_file = new File(main.pl.getDataFolder(), "config.yml");
 	public static YamlConfiguration yaml_cfg = null;
@@ -23,6 +23,7 @@ public class configuration {
 		CFG.put("PORT", 9678);
 		CFG.put("FILE_VERSION", current_ver);
 		CFG.put("WEB_PASSWORD", "PleaseChangeThis");
+		CFG.put("UPDATE_REFRESH_TIME", 30);
 		
 		pluginConsole.sendMessage("Initializing Config File...");
 		if(!cfg_file.exists()) {
@@ -54,8 +55,10 @@ public class configuration {
 		
 		//WARN ON WRONG_VERSIONS
 		if(!yaml_cfg.getString("FILE_VERSION").equalsIgnoreCase(current_ver)) {
-			pluginConsole.sendMessage("&6WARNING: Your Config File Version is not the newest (" + current_ver + ")");
-			pluginConsole.sendMessage("&cTo fix this, you should delete the current Config and Restart the Server to generate a new one!");
+			if(!tryUpgrade(yaml_cfg)) {
+				pluginConsole.sendMessage("&6WARNING: Your Config File Version is not the newest (" + current_ver + ")");
+				pluginConsole.sendMessage("&cTo fix this, you should delete the current Config and Restart the Server to generate a new one!");	
+			}
 		}
 		
 		if(created) {
@@ -66,6 +69,21 @@ public class configuration {
 		
 		return true;
 		
+	}
+	
+	public static boolean tryUpgrade(YamlConfiguration yaml_cfg) {
+		boolean migrated = false;
+		if(yaml_cfg.getString("FILE_VERSION").equalsIgnoreCase("0.2")) {
+			yaml_cfg.set("UPDATE_REFRESH_TIME", 30);
+			yaml_cfg.set("FILE_VERSION", "0.3");
+			save();
+			migrated = true;
+		}
+		
+		if(migrated) {
+			pluginConsole.sendMessage("&2Migrated Configuration File to new Version, ignore the Warnings above!");
+		}
+		return migrated;
 	}
 	
 	public static boolean save() {

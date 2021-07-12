@@ -48,7 +48,10 @@ public class taskManager {
 	    }, 20L, 10L);
 		
 	    TPS_taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(main.pl, dataFetcher.getTPSRunnable(), 20L, 20L);
-	    UPDATE_taskID = Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(main.pl, updater.getUpdateRunnable(), 20L, 20L * 60 * 30);
+	    
+	    Integer updateTime = Integer.parseInt(configuration.CFG.get("UPDATE_REFRESH_TIME").toString());
+	    pluginConsole.sendMessage("&7Set Autoupdater time to: &6" + updateTime + " &7Minutes");
+	    UPDATE_taskID = Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(main.pl, updater.getUpdateRunnable(), 20L, 20L * 60 * updateTime);
 	}
 	
 	public static void stopTasks() {
