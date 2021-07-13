@@ -12,6 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 import de.tobias.spigotdash.main;
 import de.tobias.spigotdash.utils.notificationManager;
 import de.tobias.spigotdash.utils.pluginConsole;
+import de.tobias.spigotdash.utils.pluginInstaller;
 
 public class APIHandler {
 
@@ -121,6 +122,23 @@ public class APIHandler {
 					return;
 				} else {
 					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PLUGIN");
+					return;
+				}
+			}
+			
+			if(method.equalsIgnoreCase("GET_PLUGIN_FILES")) {
+				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPluginFileNames());
+				return;
+			}
+			
+			if (method.equalsIgnoreCase("INSTALL_PLUGIN")) {
+				if (json.has("id")) {
+					String install_state = pluginInstaller.installPlugin(json.get("id").getAsString());
+					int code = install_state.equalsIgnoreCase("INSTALLED") ? 200 : 500;
+					MainRequestHandler.sendJSONResponse(he, code, install_state);
+					return;
+				} else {
+					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_NOTIFICATION_UUID");
 					return;
 				}
 			}

@@ -115,4 +115,13 @@ async function togglePluginState(name) {
     reloadPlugins();
 }
 
+async function installPluginsDialogue(elem) {
+    elem.classList.add("is-loading");
+
+    var dialogue = document.querySelector(".PLUGIN_INSTALLER_DIALOGUE");
+    dialogue.classList.remove("hidden");
+
+    elem.classList.remove("is-loading");
+}
+
 reloadPluginsTask();

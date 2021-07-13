@@ -22,7 +22,7 @@ function setOffline(off) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-
+    refreshSections("plugins");
     // Get all "navbar-burger" elements
     const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 

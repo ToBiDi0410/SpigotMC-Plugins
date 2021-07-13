@@ -43,7 +43,39 @@ function msToTime(s) {
     return hrs + 'h ' + mins + 'm ' + secs + 's'
 }
 
+function includesSimilar(array, name) {
+    for (s in array) {
+        if (s.includes(name)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+async function fetchWithTimeout(resource, options) {
+    const { timeout = 8000 } = options;
+
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
+    const response = await fetch(resource, {
+        ...options,
+        signal: controller.signal
+    });
+    clearTimeout(id);
+
+    return response;
+}
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
+
+const timer = async function(time) {
+    return new Promise((resolve, reject) => {
+        setTimeout(function() {
+            resolve();
+        }, time);
+    })
+}

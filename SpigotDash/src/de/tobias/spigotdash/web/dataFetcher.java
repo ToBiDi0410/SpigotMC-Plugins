@@ -59,6 +59,17 @@ public class dataFetcher {
 		return plugins;
 	}
 	
+	
+	public static ArrayList<String> getPluginFileNames() {
+		ArrayList<String> files = new ArrayList<String>();
+
+		for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
+			files.add(new java.io.File(pl.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getName());
+		}
+
+		return files;
+	}
+	
 	// ** FILES **
 	public static ArrayList<HashMap<String, Object>> getFilesInPath(String path) {
 		File dir = new File(main.pl.getDataFolder().getParentFile().getParent(), path);
