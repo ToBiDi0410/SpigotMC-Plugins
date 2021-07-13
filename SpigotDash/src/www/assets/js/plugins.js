@@ -31,6 +31,8 @@ var CARD_TEMPLATE = '\
     </div>\
 </div>';
 
+//            <button class="button is-danger" data-id="%NAME%" onclick="uninstallPlugin(this);"><span class="material-icons-outlined icon-centered">delete</span>Delete</button>\
+
 var OLD_DATA = null;
 
 document.addEventListener('DOMContentLoaded', addEventListenersToToggles);
@@ -80,6 +82,74 @@ async function reloadPlugins() {
         addEventListenersToToggles();
         OLD_DATA = data;
 
+    }
+}
+
+async function uninstallPlugin(elem) {
+    var id = elem.getAttribute("data-id");
+    var res = await swal.fire({
+        title: 'Are you sure?',
+        html: "Do you want to delete this Plugin and all of it´s data?<br>This cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes',
+        closeOnClickOutside: false
+    });
+
+    if (res.isConfirmed) {
+        swal.fire({
+            title: 'Deleting...',
+            text: 'Please wait a second...',
+            closeOnClickOutside: false
+        });
+        swal.showLoading();
+
+        var err = true;
+        var err_details = "ERR: Unknown";
+
+        try {
+            var data = await fetch(API_URL, {
+                "headers": {
+                    "accept": "*/*",
+                    "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7,nl;q=0.6",
+                    "cache-control": "no-cache",
+                    "content-type": "application/json;charset=UTF-8",
+                },
+                "body": '{\n    "method": "DELETE_PLUGIN", "plugin": "' + id + '"\n}',
+                "method": "POST",
+                "Cache-Control": "no-cache"
+
+            });
+
+            if (data.status != 200) {
+                err_details = data.statusText;
+            } else {
+                err = false;
+            }
+        } catch (err) {
+            err_details = err;
+        }
+
+        if (!err) {
+            swal.fire({
+                title: "Deleted",
+                text: "The Plugin and all of it´s files has been deleted!",
+                icon: "success"
+            });
+        } else {
+            swal.fire({
+                title: "Failed",
+                text: "The Process could not be completed! Some files might be deleted and some not! Please check this manually.",
+                icon: "error"
+            });
+
+            swal.showValidationMessage(err_details);
+        }
+
+
+        swal.close
     }
 }
 

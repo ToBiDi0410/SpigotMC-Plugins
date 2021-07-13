@@ -12,19 +12,21 @@
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
     <script src="../js/global.js"></script>
     <script src="../js/path_vars.js"></script>
-
-    <script src="../css/sweetalert2@11.js"></script>
+    <script src="../js/sweetalert2@11.js"></script>
 
     <link rel="stylesheet" href="../css/installPluginsDialogue.css">
 </head>
 
 <body>
     <div class="installPluginsDialogue">
-        <div class="box">
+        <div class="box" style="height: 100%;">
             <div class="title">Install Plugins</div>
+            <span class="closebutton material-icons-outlined" onclick='parent.document.querySelector("iframe").parentElement.classList.add("hidden");'>cancel</span>
+
             <div class="search">
                 <input class="input" class="search_input" type="text" placeholder="Plugin Search" oninput="newInput(this);">
             </div>
+
             <ul class="plugininstall_list">
                 <li class="pluginli">
                     <div class="box">

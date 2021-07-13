@@ -44,12 +44,15 @@ function msToTime(s) {
 }
 
 function includesSimilar(array, name) {
-    for (s in array) {
-        if (s.includes(name)) {
-            return true;
-        }
-    }
-    return false;
+    return array.includes(name);
+}
+
+async function restartServer() {
+    await getJSONDataFromAPI("RESTART_SERVER");
+}
+
+async function reloadServer() {
+    await getJSONDataFromAPI("RELOAD_SERVER");
 }
 
 async function fetchWithTimeout(resource, options) {

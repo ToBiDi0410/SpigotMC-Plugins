@@ -10,7 +10,7 @@ var PLUGIN_INSTALLER_LI = '\
             <a class="plugintitle" href="https://spigotmc.org">%NAME%</a>\
             <div class="pluginauth">by %AUTHOR%</div>\
             <div class="plugindesc">%TAG%</div>\
-            <div class="button is-success" onclick="installPlugin(this);" data-id="%ID%">+ Install</div>\
+            <div data-id="%ID%" class="button is-success" onclick="installPlugin(this);">+ Install</div>\
         </div>\
     </div>\
 </li>'
@@ -64,11 +64,14 @@ async function sendDateIntoDialogue(json) {
 
             html = html.replaceAll("%ID%", elem.id);
             html = html.replaceAll("%NAME%", elem.name);
+            html = html.replaceAll("%TAG%", elem.tag);
+
             var author = await getAuthorByID(elem.author.id);
             if (author != null) {
                 html = html.replaceAll("%AUTHOR%", author.name);
+            } else {
+                html = html.replaceAll("%AUTHOR%", "UNKNOWN");
             }
-            html = html.replaceAll("%TAG%", elem.tag);
 
             if (elem.icon.url != "") {
                 html = html.replaceAll("%IMG%", "data:image/png;base64," + elem.icon.data);
@@ -76,9 +79,11 @@ async function sendDateIntoDialogue(json) {
                 html = html.replaceAll("%IMG%", "../img/PLUGININSTALLER_NOICON.png");
             }
 
-            if (!includesSimilar(curr_plugins, elem.name)) {
-                list.innerHTML += html;
+            if (includesSimilar(curr_plugins, elem.name.split(" ")[0] + ".jar")) {
+                html = html.replace('class="button is-success" onclick="installPlugin(this);">+ Install</div>', 'class="button is-warning" disabled onclick="installPlugin(this);">Installed</div>');;
             }
+
+            list.innerHTML += html;
             i++;
         }
 

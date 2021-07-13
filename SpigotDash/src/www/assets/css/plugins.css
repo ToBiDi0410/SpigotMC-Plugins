@@ -28,3 +28,7 @@
 .PLUGIN_INSTALLER_DIALOGUE.hidden {
     display: none;
 }
+
+.icon-centered {
+    vertical-align: middle;
+}

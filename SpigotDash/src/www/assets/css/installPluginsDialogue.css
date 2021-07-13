@@ -10,6 +10,12 @@
     float: right;
 }
 
+.closebutton {
+    float: right;
+    vertical-align: middle;
+    color: gray;
+}
+
 .installPluginsDialogue {
     position: absolute;
     display: block;
@@ -56,4 +62,9 @@
 .plugindesc {
     color: rgb(103, 187, 255);
     width: 100%;
+}
+
+.plugininstall_list {
+    height: 100%;
+    overflow: scroll;
 }

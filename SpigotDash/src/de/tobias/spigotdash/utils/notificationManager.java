@@ -9,6 +9,14 @@ public class notificationManager {
 	
 	public static HashMap<String, HashMap<String, Object>> notifications = new HashMap<String, HashMap<String, Object>>();
 	
+	public static boolean needReload = false;
+	public static void setNeedReload(boolean value) {
+		needReload = value;
+		if(needReload) {
+			notificationManager.addNotification("RELOAD_NEEDED", "WARNING", "SpigotDash", "Reload required", "A reload or restart is required to finish Plugin installation!<br><button class=\"button is-danger\" onclick='reloadServer();'>Reload</button>", -1);
+		}
+	}
+	
 	public static void addNotification(String MESSAGE_ID, String level, String initiator, String title, String message, int stayMinutes) {
 		HashMap<String, Object> data = new HashMap<>();
 		
