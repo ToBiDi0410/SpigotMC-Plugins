@@ -33,6 +33,7 @@ var CARD_TEMPLATE = '\
 
 //            <button class="button is-danger" data-id="%NAME%" onclick="uninstallPlugin(this);"><span class="material-icons-outlined icon-centered">delete</span>Delete</button>\
 
+
 var OLD_DATA = null;
 
 document.addEventListener('DOMContentLoaded', addEventListenersToToggles);
