@@ -1,8 +1,6 @@
 package de.tobias.spigotdash.web;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -23,8 +21,28 @@ public class APIHandler {
 		if (json.has("method")) {
 			String method = json.get("method").getAsString();
 
-			if (method.equalsIgnoreCase("GET_NOTIFICATIONS")) {
-				MainRequestHandler.sendJSONResponse(he, 200, notificationManager.notifications);
+//			if (method.equalsIgnoreCase("GET_NOTIFICATIONS")) {
+//				MainRequestHandler.sendJSONResponse(he, 200, notificationManager.notifications);
+//				return;
+//			}
+			
+//			if (method.equalsIgnoreCase("GET_PERFORMANCE_DATA")) {
+//				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPerformanceDataForWeb());
+//				return;
+//			}
+			
+//			if (method.equalsIgnoreCase("GET_PLAYERS")) {
+//				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPlayersForWeb());
+//				return;
+//			}
+			
+			if(method.equalsIgnoreCase("GET_OVERVIEW")) {
+				MainRequestHandler.sendJSONResponse(he, 200, pageDataFetcher.GET_PAGE_OVERVIEW());
+				return;
+			}
+			
+			if(method.equalsIgnoreCase("GET_GRAPHS")) {
+				MainRequestHandler.sendJSONResponse(he, 200, pageDataFetcher.GET_PAGE_GRAPHS());
 				return;
 			}
 
@@ -32,16 +50,12 @@ public class APIHandler {
 				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getLog(200));
 				return;
 			}
-
-			if (method.equalsIgnoreCase("GET_PLAYERS")) {
-				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPlayersForWeb());
+			
+			if(method.equalsIgnoreCase("GET_PLAYERS")) {
+				MainRequestHandler.sendJSONResponse(he, 200, pageDataFetcher.GET_PAGE_PLAYERS());
 				return;
-			}
+			}					
 
-			if (method.equalsIgnoreCase("GET_PERFORMANCE_DATA")) {
-				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPerformanceDataForWeb());
-				return;
-			}
 
 			if (method.equalsIgnoreCase("EXEC_COMMAND")) {
 				if (json.has("command")) {

@@ -4,106 +4,68 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>SpigotDash</title>
-
-    <!--Dependencies-->
-    <link rel="stylesheet" href="./assets/css/bulma.min.css">
-    <link rel="stylesheet" href="./assets/css/bulmaswatch.min.css">
+    <link rel="stylesheet" href="./global/bulma.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/darkly/bulmaswatch.min.css">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@3/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.js"></script>
 
-    <!--Own Scripts & Stylesheets-->
-    <link rel="stylesheet" href="./assets/css/index.css">
+
+    <link rel="stylesheet" href="./global/minecraftColors.css">
+    <script src="./global/apexcharts.js"></script>
+    <script src="./global/global.js"></script>
+    <script src="./global/taskManager.js"></script>
+    <script src="./global/minecraftColors.js"></script>
+
 </head>
 
-<body style="max-height: 100vh; overflow: scroll;">
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="index.html">
-                <img src="./assets/img/logo.png">
-            </a>
+<body>
+    <div class="columns">
+        <div class="column is-one-fifth p-5">
 
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
+            <aside class="menu">
+                <ul class="menu-list">
+                    <li><a data-url="./pages/overview/overview.html">Overview</a></li>
+                </ul>
+                <p class="menu-label">
+                    Performance
+                </p>
+                <ul class="menu-list">
+                    <li><a data-url="./pages/performance/graphs.html">Graphs</a></li>
+                    <li><a data-url="./pages/performance/worlds.html">Worlds</a></li>
+                </ul>
+                <p class="menu-label">
+                    Management
+                </p>
+                <ul class="menu-list">
+                    <li><a data-url="./pages/management/console.html">Console</a></li>
+                    <li><a data-url="./pages/management/controls.html">Controls</a></li>
+                    <li><a data-url="./pages/management/plugins.html">Plugins</a></li>
+                </ul>
+                <p class="menu-label">
+                    Others
+                </p>
+                <ul class="menu-list">
+                    <li><a data-url="./pages/others/players.html">Players</a></li>
+                </ul>
+            </aside>
+
         </div>
 
-        <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item" onclick='refreshSections("overview")'>
-                    Overview
-                </a>
-
-                <a class="navbar-item" onclick='refreshSections("console")'>
-                    Console
-                </a>
-
-                <a class="navbar-item" onclick='refreshSections("performance")'>
-                    Performance
-                </a>
-
-                <a class="navbar-item" onclick='refreshSections("files")'>
-                    Files
-                </a>
-
-                <a class="navbar-item" onclick='refreshSections("plugins")'>
-                    Plugins
-                </a>
-
-                <a class="navbar-item" onclick='refreshSections("players")'>
-                    Players
-                </a>
-            </div>
-
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a class="button is-primary">
-                            <strong>@ToDi0410</strong>
-                        </a>
-                    </div>
+        <div class="column is-four-fifths p-5" style="height: 100vh;">
+            <div id="currurl" data-page=""></div>
+            <div id="pagecontent" style="height: 100%;">
+                <div class="has-text-danger">
+                    You see this and it doesn´t go away?<br><br>The Javascript Execution failed and could not load the Page!<br> Please check if Javascript is enabled in your Browser!<br>If Javascript is enabled your Browser doesn´t support this Webinterface!<br><br>ID:
+                    INITIAL_PAGE_LOAD_FAILED
                 </div>
             </div>
         </div>
-    </nav>
 
-    <div id="offlinewarn">
-        <div class="box p-5">
-            <div class="title"><b>Connection to Server lost</b></div>
-            <div class="subtitle"><b>We will try reconnecting for you...</b></div>
-            <progress class="progress is-small is-info is-fullwidth" max="100">15%</progress>
-
-        </div>
+        <script src="./index.js"></script>
     </div>
-
-    <section class="section section_disabled" id="sec_overview">
-        <iframe class="SECTION_IFRAME" src="./assets/html/overview.html"></iframe>
-    </section>
-
-    <section class="section section_disabled" id="sec_console">
-        <iframe class="SECTION_IFRAME" src="./assets/html/console.html"></iframe>
-    </section>
-
-    <section class="section section_disabled" id="sec_performance">
-        <iframe class="SECTION_IFRAME" src="./assets/html/performance.html"></iframe>
-    </section>
-
-    <section class="section section_disabled" id="sec_files">
-        <iframe class="SECTION_IFRAME" src="./assets/html/files.html"></iframe>
-    </section>
-
-    <section class="section section_disabled" id="sec_players">
-        <iframe class="SECTION_IFRAME" src="./assets/html/players.html"></iframe>
-    </section>
-
-    <section class="section section_disabled" id="sec_plugins">
-        <iframe class="SECTION_IFRAME" src="./assets/html/plugins.html"></iframe>
-    </section>
-
-    <script src="./assets/js/index.js"></script>
 </body>
 
 </html>

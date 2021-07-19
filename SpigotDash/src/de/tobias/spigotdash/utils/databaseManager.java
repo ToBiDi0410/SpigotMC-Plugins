@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import org.bukkit.Bukkit;
-
 import de.tobias.spigotdash.main;
 
 public class databaseManager {

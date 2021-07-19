@@ -8,6 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import de.tobias.spigotdash.utils.configuration;
+
 public class JoinTime implements Listener {
 
 	public static HashMap<String, Long> joinTimes = new HashMap<>();  
@@ -18,6 +20,10 @@ public class JoinTime implements Listener {
 			joinTimes.replace(e.getPlayer().getUniqueId().toString(), System.currentTimeMillis());
 		} else {
 			joinTimes.put(e.getPlayer().getUniqueId().toString(), System.currentTimeMillis());
+		}
+		
+		if(Bukkit.getOnlinePlayers().size() > configuration.yaml_cfg.getInt("PLAYER_RECORD")) {
+			configuration.yaml_cfg.set("PLAYER_RECORD", Bukkit.getOnlinePlayers().size());
 		}
 	}
 	

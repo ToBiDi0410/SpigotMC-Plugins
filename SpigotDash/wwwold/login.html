@@ -5,9 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SpigotDash</title>
-    <link rel="stylesheet" href="./global/bulma.min.css">
+    <link rel="stylesheet" href="./assets/css/bulma.min.css">
+    <link rel="stylesheet" href="./assets/css/bulmaswatch.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <script src="./global/global.js"></script>
+    <script src="./assets/js/path_vars.js"></script>
 </head>
 
 <body style="max-height: 100vh; overflow: hidden;">
@@ -62,7 +63,7 @@
     <script>
         async function checkLogin() {
             try {
-                var data = await fetch("./api", {
+                var data = await fetch(API_URL, {
                     "headers": {
                         "accept": "*/*",
                         "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7,nl;q=0.6",
@@ -89,11 +90,12 @@
         checkLogin();
 
         async function submit() {
+            //var username = document.getElementById("UNAME").value;
             var username = "admin";
             var password = document.getElementById("PWORD").value;
 
             try {
-                var data = await fetch("./auth", {
+                var data = await fetch(AUTH_URL, {
                     "headers": {
                         "accept": "*/*",
                         "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7,nl;q=0.6",
@@ -123,7 +125,9 @@
                 console.log(err);
             }
 
+
             checkLogin();
+
         }
     </script>
 </body>

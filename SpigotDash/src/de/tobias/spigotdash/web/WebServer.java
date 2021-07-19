@@ -3,11 +3,8 @@ package de.tobias.spigotdash.web;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import org.bukkit.Bukkit;
-
 import com.sun.net.httpserver.HttpServer;
 
-import de.tobias.spigotdash.main;
 import de.tobias.spigotdash.utils.errorCatcher;
 import de.tobias.spigotdash.utils.pluginConsole;
 

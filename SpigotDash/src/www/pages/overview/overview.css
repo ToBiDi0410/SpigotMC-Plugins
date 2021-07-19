@@ -1,0 +1,29 @@
+.colorbox.one {
+    background: rgb(91, 29, 255);
+    background: linear-gradient(90deg, rgba(91, 29, 255, 1) 0%, rgba(175, 59, 255, 1) 100%);
+}
+
+.colorbox.two {
+    background: rgb(0, 133, 235);
+    background: linear-gradient(90deg, rgba(0, 133, 235, 1) 0%, rgba(0, 75, 189, 1) 100%);
+}
+
+.colorbox.three {
+    background: rgb(255, 102, 29);
+    background: linear-gradient(90deg, rgba(255, 102, 29, 1) 0%, rgba(255, 59, 59, 1) 100%);
+}
+
+.colorbox.four {
+    background: rgb(0, 154, 68);
+    background: linear-gradient(90deg, rgba(0, 154, 68, 1) 0%, rgba(35, 194, 110, 1) 100%);
+}
+
+.colorbox {
+    box-shadow: -2px -2px;
+    text-align: center;
+}
+
+.colorbox>*.subtitle {
+    color: inherit;
+    opacity: 0.7;
+}

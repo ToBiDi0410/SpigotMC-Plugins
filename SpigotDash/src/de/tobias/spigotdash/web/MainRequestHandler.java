@@ -127,7 +127,9 @@ public class MainRequestHandler implements HttpHandler {
 		try {
 			he.sendResponseHeaders(200, f.length());
 			OutputStream outputStream = he.getResponseBody();
-			(new FileInputStream(f)).transferTo(outputStream);
+			FileInputStream fIn = new FileInputStream(f);
+			fIn.transferTo(outputStream);
+			fIn.close();
 			outputStream.close();
 		} catch (Exception ex) {
 			he.close();

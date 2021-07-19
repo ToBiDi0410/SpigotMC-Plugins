@@ -8,10 +8,7 @@ import de.tobias.spigotdash.listener.JoinTime;
 import de.tobias.spigotdash.utils.configuration;
 import de.tobias.spigotdash.utils.databaseManager;
 import de.tobias.spigotdash.utils.pluginConsole;
-import de.tobias.spigotdash.utils.pluginInstaller;
 import de.tobias.spigotdash.utils.taskManager;
-import de.tobias.spigotdash.utils.updater;
-import de.tobias.spigotdash.web.AuthHandler;
 import de.tobias.spigotdash.web.WebServer;
 
 public class main extends JavaPlugin {
@@ -19,6 +16,7 @@ public class main extends JavaPlugin {
 	public static WebServer webserver;
 	public static Plugin pl;
 	public static Metrics metrics;
+	public static long latestStart = 0;
 	
 	public void onEnable() {
 		try {
@@ -53,18 +51,10 @@ public class main extends JavaPlugin {
 			//ONTIME TRACKER
 			Bukkit.getPluginManager().registerEvents(new JoinTime(), main.pl);
 			JoinTime.enableSet();
+			
+			latestStart = System.currentTimeMillis();
 
 			pluginConsole.sendMessage("&5Everything (seems to be) done!");
-			
-			Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
-
-				@Override
-				public void run() {
-					//pluginInstaller.installPlugin("8631");
-					
-				}
-				
-			}, 20L * 5);
 		} catch (Exception ex) {
 			pluginConsole.sendMessage("&7----------- [  " + pluginConsole.CONSOLE_PREFIX + "&7] -----------");
 			pluginConsole.sendMessage("&cINIT FAILURE! This error is currently unrecoverable!");

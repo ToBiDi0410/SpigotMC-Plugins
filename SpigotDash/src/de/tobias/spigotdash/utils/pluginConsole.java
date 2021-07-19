@@ -17,9 +17,8 @@ public class pluginConsole {
 	}
 	
 	public static void sendMessageWithoutPrefix(String message) {
-		message = message.replace("ยง", "&");
+		message = message.replace("ง", "&");
 		message = ChatColor.translateAlternateColorCodes('&', message);
-		
 		cs.sendMessage(message);
 	}
 }

@@ -4,14 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import de.tobias.spigotdash.main;
 
 public class configuration {
 	
-	public static String current_ver = "0.3";
+	public static String current_ver = "0.4";
 	
 	public static File cfg_file = new File(main.pl.getDataFolder(), "config.yml");
 	public static YamlConfiguration yaml_cfg = null;
@@ -24,6 +23,8 @@ public class configuration {
 		CFG.put("FILE_VERSION", current_ver);
 		CFG.put("WEB_PASSWORD", "PleaseChangeThis");
 		CFG.put("UPDATE_REFRESH_TIME", 30);
+		CFG.put("PLAYER_RECORD", 0);
+		CFG.put("darkMode", false);
 		
 		pluginConsole.sendMessage("Initializing Config File...");
 		if(!cfg_file.exists()) {
@@ -76,6 +77,14 @@ public class configuration {
 		if(yaml_cfg.getString("FILE_VERSION").equalsIgnoreCase("0.2")) {
 			yaml_cfg.set("UPDATE_REFRESH_TIME", 30);
 			yaml_cfg.set("FILE_VERSION", "0.3");
+			save();
+			migrated = true;
+		}
+		
+		if(yaml_cfg.getString("FILE_VERSION").equalsIgnoreCase("0.3")) {
+			yaml_cfg.set("PLAYER_RECORD", 0);
+			yaml_cfg.set("darkMode", false);
+			yaml_cfg.set("FILE_VERSION", "0.4");
 			save();
 			migrated = true;
 		}

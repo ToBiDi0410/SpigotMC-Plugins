@@ -147,8 +147,9 @@ public class dataFetcher {
 			playerinfo.put("Displayname", p.getDisplayName());
 			playerinfo.put("Location", locationToHashMap(p.getLocation()));
 			playerinfo.put("Health", p.getHealth());
-			playerinfo.put("MaxHealth", p.getHealthScale());
-			playerinfo.put("JOINTIME", JoinTime.joinTimes.get(p.getUniqueId().toString()));
+			playerinfo.put("Health_Max", p.getHealthScale());
+			playerinfo.put("Food", p.getFoodLevel());
+			playerinfo.put("Jointime", JoinTime.joinTimes.get(p.getUniqueId().toString()));
 			players.add(playerinfo);
 		}
 		return players;
@@ -232,6 +233,15 @@ public class dataFetcher {
 	// ** WORLD FUNCTIONS **
 	public static Integer getPlayerCount() {
 		return Bukkit.getOnlinePlayers().size();
+	}
+	
+	public static Integer getPluginCount() {
+		return Bukkit.getPluginManager().getPlugins().length;
+	}
+	
+	public static long getOntime() {
+		long uptime = System.currentTimeMillis() - main.latestStart;
+		return uptime;
 	}
 
 	public static Integer getTotalEntities() {

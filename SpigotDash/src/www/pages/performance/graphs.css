@@ -1,0 +1,7 @@
+.tile.is-child.box {
+    height: 100%;
+}
+
+.tile.is-ancestor {
+    height: auto;
+}

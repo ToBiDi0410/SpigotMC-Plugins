@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.libs.org.codehaus.plexus.util.ExceptionUtils;
-
 import de.tobias.spigotdash.Metrics;
 import de.tobias.spigotdash.main;
 

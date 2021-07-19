@@ -1,16 +1,9 @@
 package de.tobias.spigotdash.web;
 
 import java.net.HttpCookie;
-import java.security.spec.KeySpec;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-
-import org.bukkit.Bukkit;
 
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
