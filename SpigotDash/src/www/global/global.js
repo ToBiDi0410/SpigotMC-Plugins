@@ -13,15 +13,18 @@ function replaceObjectKeyInStringWithChar(object, string, char) {
     } catch (err) {}
 
 
-    for (const [key, value] of Object.entries(object)) {
-        string = string.replace(char + key.toUpperCase() + char, value);
+    for (var [key, value] of Object.entries(object)) {
+        if (value == null || value == undefined) {
+            value = "";
+        }
+        string = string.replaceAll(char + key.toUpperCase() + char, value.toString());
     }
 
     return string;
 }
 
 function insertObjectIntoHTML(object, tree) {
-    for (const [key, value] of Object.entries(object)) {
+    for (var [key, value] of Object.entries(object)) {
         tree.querySelectorAll("*[data-apiobj='" + key.toUpperCase() + "'").forEach((elem) => {
             elem.innerHTML = value;
         })
@@ -29,7 +32,9 @@ function insertObjectIntoHTML(object, tree) {
 }
 
 function JSONMatches(objectone, objecttwo) {
-    return (JSON.stringify(objectone) == JSON.stringify(objecttwo));
+    var objoneJSON = JSON.stringify(objectone);
+    var objtwoJSON = JSON.stringify(objecttwo);
+    return (objoneJSON == objtwoJSON);
 }
 
 async function getDataFromAPI(body) {

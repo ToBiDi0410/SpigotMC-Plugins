@@ -6,18 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>SpigotDash</title>
-    <link rel="stylesheet" href="./global/bulma.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/darkly/bulmaswatch.min.css">
+    <link rel="stylesheet" href="./global/other-license/bulma.min.css">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@3/dark.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.js"></script>
+    <script src="./global/other-license/apexcharts.js"></script>
 
-
-    <link rel="stylesheet" href="./global/minecraftColors.css">
-    <script src="./global/apexcharts.js"></script>
     <script src="./global/global.js"></script>
     <script src="./global/taskManager.js"></script>
+
     <script src="./global/minecraftColors.js"></script>
+    <link rel="stylesheet" href="./global/minecraftColors.css">
 
 </head>
 
@@ -51,16 +49,24 @@
                     <li><a data-url="./pages/others/players.html">Players</a></li>
                 </ul>
             </aside>
-
         </div>
 
-        <div class="column is-four-fifths p-5" style="height: 100vh;">
+        <div class="column is-four-fifths p-5 contentColumn" style="height: 100vh;">
             <div id="currurl" data-page=""></div>
             <div id="pagecontent" style="height: 100%;">
                 <div class="has-text-danger">
                     You see this and it doesn´t go away?<br><br>The Javascript Execution failed and could not load the Page!<br> Please check if Javascript is enabled in your Browser!<br>If Javascript is enabled your Browser doesn´t support this Webinterface!<br><br>ID:
                     INITIAL_PAGE_LOAD_FAILED
                 </div>
+            </div>
+        </div>
+
+        <div class="column is-one-fifth p-5 notificationColumn" style="display: none;">
+            <div class="notification is-warning">
+                <button class="delete" onclick="closeNotification(this);"></button>
+                <div class="NOTIFICATION_TITLE">Required Reload!</div>
+                <div class="NOTIFICATION_CONTENT">This is just a Demo Message!</div>
+                <div class="NOTIFICATION_INITIATOR"><b>SpigotDash</b></div>
             </div>
         </div>
 

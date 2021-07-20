@@ -109,7 +109,7 @@ public class MainRequestHandler implements HttpHandler {
 	
 	public static void sendJSONResponse(HttpExchange he, Integer code, Object data) {
 		try {
-			String response_string = new GsonBuilder().create().toJson(data);
+			String response_string = new GsonBuilder().serializeNulls().create().toJson(data);
 			byte[] message_bytes = response_string.getBytes();
 			he.getResponseHeaders().add("Content-Type", "application/json");
 			he.sendResponseHeaders(code, message_bytes.length);

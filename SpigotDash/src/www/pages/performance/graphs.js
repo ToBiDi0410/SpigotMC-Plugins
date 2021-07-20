@@ -104,9 +104,13 @@ function initEngineChart() {
             text: 'Engine Stats',
             align: 'left'
         },
-        yaxis: {
-            min: 0
-        }
+        yaxis: [{
+            show: false
+        }, {
+            show: false,
+        }, {
+            show: false
+        }]
     };
 
     enginechart = new ApexCharts(document.querySelector("#enginechart"), options);

@@ -1,17 +1,20 @@
 package de.tobias.spigotdash.web;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
 import de.tobias.spigotdash.main;
-import de.tobias.spigotdash.utils.notificationManager;
+import de.tobias.spigotdash.utils.configuration;
 import de.tobias.spigotdash.utils.pluginConsole;
 import de.tobias.spigotdash.utils.pluginInstaller;
+import de.tobias.spigotdash.utils.notificationManager;
+import de.tobias.spigotdash.utils.pluginManager;
 
 public class APIHandler {
 	
@@ -20,21 +23,6 @@ public class APIHandler {
 	public static void handle(HttpExchange he, JsonObject json) {
 		if (json.has("method")) {
 			String method = json.get("method").getAsString();
-
-//			if (method.equalsIgnoreCase("GET_NOTIFICATIONS")) {
-//				MainRequestHandler.sendJSONResponse(he, 200, notificationManager.notifications);
-//				return;
-//			}
-			
-//			if (method.equalsIgnoreCase("GET_PERFORMANCE_DATA")) {
-//				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPerformanceDataForWeb());
-//				return;
-//			}
-			
-//			if (method.equalsIgnoreCase("GET_PLAYERS")) {
-//				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPlayersForWeb());
-//				return;
-//			}
 			
 			if(method.equalsIgnoreCase("GET_OVERVIEW")) {
 				MainRequestHandler.sendJSONResponse(he, 200, pageDataFetcher.GET_PAGE_OVERVIEW());
@@ -54,7 +42,17 @@ public class APIHandler {
 			if(method.equalsIgnoreCase("GET_PLAYERS")) {
 				MainRequestHandler.sendJSONResponse(he, 200, pageDataFetcher.GET_PAGE_PLAYERS());
 				return;
-			}					
+			}		
+			
+			if (method.equalsIgnoreCase("GET_PLUGINS")) {
+				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPluginsForWeb());
+				return;
+			}
+			
+			if(method.equalsIgnoreCase("THEME"))  {
+				MainRequestHandler.sendJSONResponse(he, 400, configuration.yaml_cfg.getBoolean("darkMode") ? "dark" : "light");
+				return;
+			}
 
 
 			if (method.equalsIgnoreCase("EXEC_COMMAND")) {
@@ -75,6 +73,7 @@ public class APIHandler {
 				}
 			}
 
+			
 			if (method.equalsIgnoreCase("GET_FILES_IN_PATH")) {
 				if (json.has("path")) {
 					String path = json.get("path").getAsString();
@@ -108,86 +107,68 @@ public class APIHandler {
 				}
 			}
 
-			if (method.equalsIgnoreCase("GET_PLUGINS")) {
-				;
-				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPluginsForWeb());
-				return;
-			}
-
 			if (method.equalsIgnoreCase("TOGGLE_PLUGIN")) {
 				if (json.has("plugin")) {
-					Plugin pl = Bukkit.getPluginManager().getPlugin(json.get("plugin").getAsString());
-					if(pl != null) {
-						if (pl.isEnabled()) {
-							Bukkit.getScheduler().runTask(main.pl, new Runnable() {
-								public void run() {
-									Bukkit.getPluginManager().disablePlugin(pl);
-									MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
-									return;
-								}
-							});
-						} else {
-							Bukkit.getScheduler().runTask(main.pl, new Runnable() {
-								public void run() {
-									Bukkit.getPluginManager().enablePlugin(pl);
-									MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
-									return;
-								}
-							});
-						}
-						return;
-					} else {
-						MainRequestHandler.sendJSONResponse(he, 400, "ERR_NOT_FOUND");
-						return;
-					}
-				} else {
-					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PLUGIN");
-					return;
-				}
-			}
-			
-			if (method.equalsIgnoreCase("DELETE_PLUGIN")) {
-				if (json.has("plugin")) {
-					Plugin pl = Bukkit.getPluginManager().getPlugin(json.get("plugin").getAsString());
-					if (pl != null) {
-						File plfile = new java.io.File(pl.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-						File folder = pl.getDataFolder();
+					Plugin pl = pluginManager.getPlugin(json.get("plugin").getAsString());
+					if (pl.isEnabled()) {
 						Bukkit.getScheduler().runTask(main.pl, new Runnable() {
 							public void run() {
-								if (pl.isEnabled()) Bukkit.getPluginManager().disablePlugin(pl);
-								
-								if(!plfile.delete() || (folder.exists() && !folder.delete())) {
-									MainRequestHandler.sendJSONResponse(he, 500, "ERR_DEL_FAILED");
-									return;
-								}
-								
-								MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+								boolean suc = pluginManager.disablePlugin(pl);
+								MainRequestHandler.sendJSONResponse(he, suc ? 200 : 500, suc ? "SUCCESS" : "ERROR");
 								return;
 							}
 						});
-						return;
 					} else {
-						MainRequestHandler.sendJSONResponse(he, 400, "ERR_NOT_FOUND");
-						return;
+						Bukkit.getScheduler().runTask(main.pl, new Runnable() {
+							public void run() {
+								boolean suc = pluginManager.load(json.get("plugin").getAsString());
+								MainRequestHandler.sendJSONResponse(he, suc ? 200 : 500, suc ? "SUCCESS" : "ERROR");
+								return;
+							}
+						});
 					}
+					return;
 				} else {
 					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PLUGIN");
 					return;
 				}
 			}
 			
-			if(method.equalsIgnoreCase("RELOAD_SERVER")) {
-				Bukkit.getScheduler().runTask(main.pl, new Runnable() {
-					public void run() {
-						Bukkit.getServer().reload();
+			if(method.equalsIgnoreCase("CONTROL")) {
+				if(json.has("action")) {
+					String action = json.get("action").getAsString();
+					if(action.equalsIgnoreCase("stop")) {
+						MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+						Bukkit.shutdown();
+						return;
 					}
-				});
-				return;
-			}
-			
-			if(method.equalsIgnoreCase("GET_PLUGIN_FILES")) {
-				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPluginFileNames());
-				return;
+					
+					if(action.equalsIgnoreCase("reload")) {
+						MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+						Bukkit.reload();
+						return;
+					}
+					
+					if(action.equalsIgnoreCase("TOGGLE_NETHER")) {
+						boolean current = Boolean.parseBoolean(dataFetcher.getServerPropertie("allow-nether"));
+						boolean suc = dataFetcher.modifyServerPropertie("allow-nether", !current);
+						notificationManager.setNeedReload(true);
+						MainRequestHandler.sendJSONResponse(he, suc ? 200 : 500, suc ? "SUCCESS" : "ERROR");
+						return;
+					}
+					
+					if(action.equalsIgnoreCase("TOGGLE_END")) {
+						boolean current = (boolean) dataFetcher.getBukkitPropertie("settings.allow-end");
+						boolean suc = dataFetcher.modifyBukkitPropertie("settings.allow-end", !current);
+						notificationManager.setNeedReload(true);
+						MainRequestHandler.sendJSONResponse(he, suc ? 200 : 500, suc ? "SUCCESS" : "ERROR");
+						return;
+					}
+					
+				} else {
+					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_ACTION");
+					return;
+				}
 			}
 			
 			if (method.equalsIgnoreCase("INSTALL_PLUGIN")) {
@@ -202,6 +183,43 @@ public class APIHandler {
 					return;
 				}
 			}
+
+			/*if (method.equalsIgnoreCase("DELETE_PLUGIN")) {
+				if (json.has("plugin")) {
+					Plugin pl = Bukkit.getPluginManager().getPlugin(json.get("plugin").getAsString());
+					if (pl != null) {
+						File plfile = new java.io.File(
+								pl.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+						File folder = pl.getDataFolder();
+						Bukkit.getScheduler().runTask(main.pl, new Runnable() {
+							public void run() {
+								if (pl.isEnabled())
+									Bukkit.getPluginManager().disablePlugin(pl);
+
+								if (!plfile.delete() || (folder.exists() && !folder.delete())) {
+									MainRequestHandler.sendJSONResponse(he, 500, "ERR_DEL_FAILED");
+									return;
+								}
+
+								MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+								return;
+							}
+						});
+						return;
+					} else {
+						MainRequestHandler.sendJSONResponse(he, 400, "ERR_NOT_FOUND");
+						return;
+					}
+				} else {
+					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PLUGIN");
+					return;
+				}
+			}
+
+			if (method.equalsIgnoreCase("GET_PLUGIN_FILES")) {
+				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPluginFileNames());
+				return;
+			}*/
 
 			if (method.equalsIgnoreCase("REMOVED_NOTIFICATION")) {
 				if (json.has("uuid")) {

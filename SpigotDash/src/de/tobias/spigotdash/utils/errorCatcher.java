@@ -32,8 +32,7 @@ public class errorCatcher {
 		
 		try {
 			transmitError(file, line, message);
-			pluginConsole.sendMessage("&6Reporting this error is not required! It will be transmitted to bStats and therefore to the Developer!");
-			pluginConsole.sendMessage("&6If you want to report this error anyways, include the Information below!");
+			pluginConsole.sendMessage("&6If you want to report this error, include the Information below for fast Help!");
 		} catch (Exception exe) {
 			pluginConsole.sendMessage("&cThe Error could not be reported automatically, please report it to the SpigotMC Page!");
 		}
