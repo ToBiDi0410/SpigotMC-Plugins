@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
@@ -490,4 +490,24 @@ public class dataFetcher {
 	    }
 	}
 
+	public static UUID uuidFromUUIDWithoutDashes(String dashless) {
+		return UUID.fromString(insertDashUUID(dashless));
+	}
+	
+	public static String insertDashUUID(String uuid) {
+		//FROM: https://bukkit.org/threads/java-adding-dashes-back-to-minecrafts-uuids.272746/
+		StringBuffer sb = new StringBuffer(uuid);
+		sb.insert(8, "-");
+		 
+		sb = new StringBuffer(sb.toString());
+		sb.insert(13, "-");
+		 
+		sb = new StringBuffer(sb.toString());
+		sb.insert(18, "-");
+		 
+		sb = new StringBuffer(sb.toString());
+		sb.insert(23, "-");
+		 
+		return sb.toString();
+		}
 }

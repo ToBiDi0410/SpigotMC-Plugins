@@ -44,8 +44,81 @@ async function showInfos(arrayIndex) {
         html: new_html,
         showConfirmButton: true,
         showAbortButton: false
-    })
+    });
+
+    while (Swal.isVisible() && Swal.getTitle() == "Player Information") {
+        var thisPlayer = players.find(function(elem) { return (elem.uuid == player.uuid); });
+        if (thisPlayer == null || thisPlayer == undefined) {
+            Swal.getHtmlContainer().innerHTML += '<br><a class="has-text-danger">The Player left the Server!</a>';
+            break;
+        }
+
+        Swal.getHtmlContainer().innerHTML = replaceObjectKeyInString(thisPlayer, PLAYER_DIALOGUE_HTML);
+        await timer(1000);
+    }
 };
+
+async function sendMessageClick(uuid) {
+    var res = await Swal.fire({
+        title: "Send Ingame Message",
+        text: "Color Codes with '&' are Supported (e.g. '&6')!",
+        input: "text",
+        inputLable: "Message",
+        confirmButtonText: "Send Message",
+        showCancelButton: true,
+        allowOutsideClick: () => !Swal.isLoading(),
+        preConfirm: async function(message) {
+            var reqres = await getDataFromAPI({ method: "PLAYER_ACTION", action: "MESSAGE", message: message, player: uuid })
+            if (reqres == "SUCCESS") {
+                return true;
+            } else {
+                Swal.showValidationMessage("Failed: " + reqres);
+            }
+        }
+    });
+
+    if (res.isConfirmed) {
+        Swal.fire({
+            title: "Sent",
+            text: "The Message was sent successfully!",
+            icon: "success",
+            timer: 2000,
+            timerProgressBar: true
+        });
+    }
+}
+
+async function kickClick(uuid) {
+    var res = await Swal.fire({
+        title: "Kick Player",
+        text: "Color Codes with '&' are Supported (e.g. '&6')!",
+        input: "text",
+        inputLable: "Reason",
+        confirmButtonText: "Kick Player",
+        showCancelButton: true,
+        allowOutsideClick: () => !Swal.isLoading(),
+        preConfirm: async function(message) {
+            var reqres = await getDataFromAPI({ method: "PLAYER_ACTION", action: "KICK", message: message, player: uuid })
+            if (reqres == "SUCCESS") {
+                return true;
+            } else {
+                Swal.showValidationMessage("Failed: " + reqres);
+            }
+        }
+    });
+
+    if (res.isConfirmed) {
+        Swal.fire({
+            title: "Kicked",
+            text: "The Player has been kicked!",
+            icon: "success",
+            timer: 2000,
+            timerProgressBar: true
+        });
+    }
+}
+
+
 
 var PLAYER_DIALOGUE_HTML = '\
 <a><b>Displayname: </b>%DISPLAYNAME%<br>\
@@ -54,10 +127,8 @@ var PLAYER_DIALOGUE_HTML = '\
 <a><b>Health: </b>%HEALTH%/%HEALTH_MAX%<br>\
 <a><b>Food: </b>%FOOD%/20<br>\
 <a><b>Groups: </b>%GROUPS%<br><br>\
-<div class="button is-info m-1">Message</div><br>\
-<div class="button is-danger m-1">Ban</div>\
-<div class="button is-danger m-1">Kick</div>\
-<div class="button is-danger m-1">Remove from Whitelist</div>\
+<div class="button is-info m-1" onclick="sendMessageClick(this.getAttribute(\'data-uuid\'))" data-uuid="%UUID%">Message</div>\
+<div class="button is-danger m-1" onclick="kickClick(this.getAttribute(\'data-uuid\'))" data-uuid="%UUID%">Kick</div>\
 ';
 
 var PLAYER_BOX_HTML = '\

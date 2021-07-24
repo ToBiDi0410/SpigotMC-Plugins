@@ -29,7 +29,7 @@ public class taskManager {
 					}
 					
 					if(dataFetcher.pluginsDisabled()) {
-						notificationManager.addNotification("PLUGINS_DISABLED_WARN", "WARNING", "SpigotDash", "Plugins disabled", "One or more Plugins are currently <b>disabled or unloaded</b><br>Please check the Log for Errors if this is not intended!", 1);
+						notificationManager.addNotification("PLUGINS_DISABLED_WARN", "WARNING", "SpigotDash", "Plugins disabled", "One or more Plugins are currently <b>disabled or unloaded</b><br>Please check the Log for Errors if this is not intended!", -1);
 					}
 					
 					if(dataFetcher.unusedJARFiles()) {
@@ -37,7 +37,7 @@ public class taskManager {
 					}
 					
 					if(updater.update_available == true) {
-						notificationManager.addNotification("UPDATE_AVAILABLE", "INFO", "SpigotDash", "Update available", "An new Update for this Plugin was found!<br>Please visit <a href='https://www.spigotmc.org/resources/spigotdash-webinterface-performance-monitor.93710/'><b>SpigotMC</b></a> for more Information", 10);
+						notificationManager.addNotification("UPDATE_AVAILABLE", "INFO", "SpigotDash", "Update available", "An new Update for this Plugin was found!<br>Please visit <a href='https://www.spigotmc.org/resources/spigotdash-webinterface-performance-monitor.93710/'><b>SpigotMC</b></a> for more Information", -1);
 					}
 					
 					lastUpdate = System.currentTimeMillis();

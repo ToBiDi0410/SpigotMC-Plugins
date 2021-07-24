@@ -1,20 +1,22 @@
 package de.tobias.spigotdash.web;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
 import de.tobias.spigotdash.main;
 import de.tobias.spigotdash.utils.configuration;
+import de.tobias.spigotdash.utils.notificationManager;
 import de.tobias.spigotdash.utils.pluginConsole;
 import de.tobias.spigotdash.utils.pluginInstaller;
-import de.tobias.spigotdash.utils.notificationManager;
 import de.tobias.spigotdash.utils.pluginManager;
+import net.md_5.bungee.api.ChatColor;
 
 public class APIHandler {
 	
@@ -24,6 +26,7 @@ public class APIHandler {
 		if (json.has("method")) {
 			String method = json.get("method").getAsString();
 			
+			//PAGE
 			if(method.equalsIgnoreCase("GET_OVERVIEW")) {
 				MainRequestHandler.sendJSONResponse(he, 200, pageDataFetcher.GET_PAGE_OVERVIEW());
 				return;
@@ -45,16 +48,22 @@ public class APIHandler {
 			}		
 			
 			if (method.equalsIgnoreCase("GET_PLUGINS")) {
-				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPluginsForWeb());
+				MainRequestHandler.sendJSONResponse(he, 200, pageDataFetcher.GET_PAGE_PLUGINS());
 				return;
 			}
 			
+			if(method.equalsIgnoreCase("GET_CONTROLS")) {
+				MainRequestHandler.sendJSONResponse(he, 200, pageDataFetcher.GET_PAGE_CONTROLS());
+				return;
+			}
+			
+			//DATA
 			if(method.equalsIgnoreCase("THEME"))  {
 				MainRequestHandler.sendJSONResponse(he, 400, configuration.yaml_cfg.getBoolean("darkMode") ? "dark" : "light");
 				return;
 			}
 
-
+			//EXECUTION
 			if (method.equalsIgnoreCase("EXEC_COMMAND")) {
 				if (json.has("command")) {
 					try {
@@ -137,15 +146,25 @@ public class APIHandler {
 			if(method.equalsIgnoreCase("CONTROL")) {
 				if(json.has("action")) {
 					String action = json.get("action").getAsString();
-					if(action.equalsIgnoreCase("stop")) {
+					if(action.equalsIgnoreCase("STOP")) {
+						Bukkit.getScheduler().runTask(main.pl, new Runnable() {
+							@Override
+							public void run() {
+								Bukkit.shutdown();
+							}
+						});
 						MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
-						Bukkit.shutdown();
 						return;
 					}
 					
-					if(action.equalsIgnoreCase("reload")) {
+					if(action.equalsIgnoreCase("RELOAD")) {
+						Bukkit.getScheduler().runTask(main.pl, new Runnable() {
+							@Override
+							public void run() {
+								Bukkit.reload();
+							}
+						});
 						MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
-						Bukkit.reload();
 						return;
 					}
 					
@@ -155,6 +174,44 @@ public class APIHandler {
 						notificationManager.setNeedReload(true);
 						MainRequestHandler.sendJSONResponse(he, suc ? 200 : 500, suc ? "SUCCESS" : "ERROR");
 						return;
+					}
+					
+					if(action.equalsIgnoreCase("TOGGLE_WHITELIST")) {
+						boolean current = Bukkit.hasWhitelist();
+						Bukkit.setWhitelist(!current);
+						boolean suc = dataFetcher.modifyServerPropertie("white-list", !current);
+						Bukkit.reloadWhitelist();
+						MainRequestHandler.sendJSONResponse(he, suc ? 200 : 500, suc ? "SUCCESS" : "ERROR");
+						return;
+					}
+					
+					if(action.equalsIgnoreCase("WHITELIST_ADD")) {
+						if (json.has("player")) {
+							String uuid = json.get("player").getAsString();
+							//UUID uuidObj = dataFetcher.uuidFromUUIDWithoutDashes(uuid);
+							//System.out.println(uuidObj.toString());
+							//System.out.println(Bukkit.getOfflinePlayer(uuidObj).getName());
+
+							Bukkit.getOfflinePlayer(uuid).setWhitelisted(true);
+							MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+							return;
+						} else {
+							MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PLAYER");
+							return;
+						}
+					}
+					
+					if(action.equalsIgnoreCase("WHITELIST_REMOVE")) {
+						if (json.has("player")) {
+							String uuid = json.get("player").getAsString();
+							UUID uuidObj = dataFetcher.uuidFromUUIDWithoutDashes(uuid.replaceAll("-", ""));
+							Bukkit.getOfflinePlayer(uuidObj).setWhitelisted(false);
+							MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+							return;
+						} else {
+							MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PLAYER");
+							return;
+						}
 					}
 					
 					if(action.equalsIgnoreCase("TOGGLE_END")) {
@@ -167,6 +224,71 @@ public class APIHandler {
 					
 				} else {
 					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_ACTION");
+					return;
+				}
+			}
+			
+			if (method.equalsIgnoreCase("PLAYER_ACTION")) {
+				if (json.has("player")) {
+					String uuid = json.get("player").getAsString();
+					Player p = Bukkit.getPlayer(UUID.fromString(uuid));
+					System.out.println(uuid);
+					
+					if (p != null && p.isOnline()) {
+						if (json.has("action")) {
+							String action = json.get("action").getAsString();
+							
+							if (action.equalsIgnoreCase("MESSAGE")) {
+								if (json.has("message")) {
+									String message = json.get("message").getAsString();
+									message = "&cServer &a--> &6You: &7" + message;
+							
+									message = ChatColor.translateAlternateColorCodes('&', message);
+									p.sendMessage(message);
+									
+									MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+									return;
+								} else {
+									MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_MESSAGE");
+									return;
+								}
+							}
+							
+							if (action.equalsIgnoreCase("KICK")) {
+								if (json.has("message")) {
+									String message = json.get("message").getAsString();
+									message = "&cKicked from the Server:\n&b" + message;
+							
+									message = ChatColor.translateAlternateColorCodes('&', message);
+									
+									final String fmessage = message;
+									
+									Bukkit.getScheduler().runTask(main.pl, new Runnable() {
+
+										@Override
+										public void run() {
+											p.kickPlayer(fmessage);
+											MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+											return;
+										}
+										
+									});
+									return;
+								} else {
+									MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_MESSAGE");
+									return;
+								}
+							}
+						} else {
+							MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_ACTION");
+							return;
+						}
+					} else {
+						MainRequestHandler.sendJSONResponse(he, 400, "ERR_PLAYER_NOT_FOUND");
+						return;
+					}
+				} else {
+					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PLAYER");
 					return;
 				}
 			}
@@ -221,9 +343,9 @@ public class APIHandler {
 				return;
 			}*/
 
-			if (method.equalsIgnoreCase("REMOVED_NOTIFICATION")) {
+			if (method.equalsIgnoreCase("NOTIFICATION_CLOSED")) {
 				if (json.has("uuid")) {
-					notificationManager.removeNotification(json.get("uuid").getAsString());
+					notificationManager.closeNotification(json.get("uuid").getAsString());
 					MainRequestHandler.sendJSONResponse(he, 200, "REMOVED");
 					return;
 				} else {

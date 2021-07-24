@@ -1,17 +1,26 @@
 <div class="m-1">
     <div>General</div>
-    <div class="button is-danger m-1"><span class="material-icons-outlined">stop_circle</span>Stop</div>
-    <div class="button is-danger m-1"><span class="material-icons-outlined">refresh</span>Reload</div>
+    <div class="button is-danger m-1" onclick='executeAPIRequestWithButton(this, { method: "CONTROL", action: "STOP" }, function(data) { return(data == "SUCCESS") });'><span class="material-icons-outlined">stop_circle</span>Stop</div>
+    <div class="button is-danger m-1" onclick='executeAPIRequestWithButton(this, { method: "CONTROL", action: "RELOAD" }, function(data) { return(data == "SUCCESS") });'><span class="material-icons-outlined">refresh</span>Reload</div>
 </div>
 
 <div class="m-1">
     <div>Whitelist</div>
-    <div class="button is-success m-1"><span class="material-icons-outlined">add</span>Add to Whitelist</div>
-    <div class="button is-danger m-1"><span class="material-icons-outlined">remove</span>Remove from Whitelist</div>
+    <div class="button is-info m-1" onclick='executeAPIRequestWithButton(this, { method: "CONTROL", action: "TOGGLE_WHITELIST" }, function(data) { return(data == "SUCCESS") });'>
+        <span class="material-icons-outlined">power_settings_new</span>
+        <div data-apiobj="WHITELIST_TOGGLE_TEXT"></div>
+    </div>
+    <div class="button is-success m-1" onclick="showWhiteListEditor();"><span class="material-icons-outlined">edit</span>Edit Whitelist</div>
 </div>
 
 <div class="m-1">
     <div>Game</div>
-    <div class="button is-warning m-1"><span class="material-icons-outlined">power_settings_new</span>Disable Nether</div>
-    <div class="button is-success m-1"><span class="material-icons-outlined">power_settings_new</span>Enable End</div>
+    <div class="button is-info m-1" onclick='executeAPIRequestWithButton(this, { method: "CONTROL", action: "TOGGLE_NETHER" }, function(data) { return(data == "SUCCESS") });'>
+        <span class="material-icons-outlined">power_settings_new</span>
+        <div data-apiobj="NETHER_TOGGLE_TEXT"></div>
+    </div>
+    <div class="button is-info m-1" onclick='executeAPIRequestWithButton(this, { method: "CONTROL", action: "TOGGLE_END" }, function(data) { return(data == "SUCCESS") });'>
+        <span class="material-icons-outlined">power_settings_new</span>
+        <div data-apiobj="END_TOGGLE_TEXT"></div>
+    </div>
 </div>

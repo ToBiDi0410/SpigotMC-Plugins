@@ -8,7 +8,12 @@ async function dataRefreshTask() {
         insertObjectIntoHTML(curr, contentContainer);
 
         var cont = document.querySelector(".notificationContainer");
-        cont.innerHTML = "";
+        console.log()
+        if (curr.notifications.length < 1) {
+            cont.innerHTML = '<a class="has-text-danger">No Notifications</a>';
+        } else {
+            cont.innerHTML = "";
+        }
 
         for (const [key, value] of Object.entries(curr.notifications)) {
             addNotificationIfNotPresent(key, value);
@@ -31,5 +36,16 @@ async function addNotificationIfNotPresent(id, data) {
             <div class="NOTIFICATION_CONTENT">' + data.message + '</div>\
             <div class="NOTIFICATION_INITIATOR"><b>' + data.initiator + '</b> at ' + new Date(data.created).toLocaleString() + '</div>\
         </div>'
+    }
+}
+
+async function closeNotification(elem) {
+    var id = elem.parentElement.getAttribute("data-uuid");
+    var res = await getDataFromAPI({ method: "NOTIFICATION_CLOSED", uuid: id });
+
+    if (res == "REMOVED") {
+        elem.parentElement.remove();
+    } else {
+        elem.parentElement.innerHTML += "<div>Failed to close this Notification! Sorry :(</div>"
     }
 }

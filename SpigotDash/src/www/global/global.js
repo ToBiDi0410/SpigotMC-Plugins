@@ -46,7 +46,7 @@ async function getDataFromAPI(body) {
             redirect: "follow",
             body: JSON.stringify(body)
         });
-        //showOffline(false);
+        showOffline(false);
 
         if (data.status == 401) {
             loginRequired();
@@ -56,8 +56,32 @@ async function getDataFromAPI(body) {
         data = await data.json();
         return data;
     } catch (err) {
-        //showOffline(true);
+        showOffline(true);
         return null;
+    }
+}
+
+function getIndependentObject(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+
+function showOffline(state) {
+    if (state == false) {
+        if (Swal.isVisible() && Swal.getTitle().textContent == "Reconnecting...") Swal.close();
+        return;
+    }
+
+    if (state == true) {
+        if (Swal.isVisible() && Swal.getTitle().textContent == "Reconnecting...") return;
+        Swal.fire({
+            title: "Reconnecting...",
+            text: "Oh no, the Server seems to be offline! We will try reconnecting for you...",
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        });
+        Swal.showLoading();
+        return;
     }
 }
 

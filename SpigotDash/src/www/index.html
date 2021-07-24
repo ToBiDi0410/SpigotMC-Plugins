@@ -7,9 +7,11 @@
 
     <title>SpigotDash</title>
     <link rel="stylesheet" href="./global/other-license/bulma.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.js"></script>
+    <link href="./global/other-license/materialIcons.css" rel="stylesheet">
+    <script src="./global/other-license/sweetalert2.min.js"></script>
     <script src="./global/other-license/apexcharts.js"></script>
+    <link rel="stylesheet" href="./global/other-license/hightlightjs.railcasts.min.css">
+    <script src="./global/other-license/highlight.min.js"></script>
 
     <script src="./global/global.js"></script>
     <script src="./global/taskManager.js"></script>
@@ -48,6 +50,9 @@
                 <ul class="menu-list">
                     <li><a data-url="./pages/others/players.html">Players</a></li>
                 </ul>
+                <ul class="menu-list">
+                    <li><a data-url="./pages/others/files.html">Files</a></li>
+                </ul>
             </aside>
         </div>
 
@@ -58,15 +63,6 @@
                     You see this and it doesn´t go away?<br><br>The Javascript Execution failed and could not load the Page!<br> Please check if Javascript is enabled in your Browser!<br>If Javascript is enabled your Browser doesn´t support this Webinterface!<br><br>ID:
                     INITIAL_PAGE_LOAD_FAILED
                 </div>
-            </div>
-        </div>
-
-        <div class="column is-one-fifth p-5 notificationColumn" style="display: none;">
-            <div class="notification is-warning">
-                <button class="delete" onclick="closeNotification(this);"></button>
-                <div class="NOTIFICATION_TITLE">Required Reload!</div>
-                <div class="NOTIFICATION_CONTENT">This is just a Demo Message!</div>
-                <div class="NOTIFICATION_INITIATOR"><b>SpigotDash</b></div>
             </div>
         </div>
 

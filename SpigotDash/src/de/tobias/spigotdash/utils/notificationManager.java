@@ -19,31 +19,53 @@ public class notificationManager {
 	
 	public static void addNotification(String MESSAGE_ID, String level, String initiator, String title, String message, int stayMinutes) {
 		HashMap<String, Object> data = new HashMap<>();
+
+		//CREATE OR LOAD DATA
+		if(notifications.containsKey(MESSAGE_ID)) {
+			data = notifications.get(MESSAGE_ID);
+			data.replace("removedAfter", System.currentTimeMillis() + (stayMinutes * 1000 * 60));
+		} else {
+			data.put("title", title);
+			data.put("level", level);
+			data.put("initiator", initiator);
+			data.put("message", message);
+			data.put("shown", false);
+			data.put("closed", false);
+			data.put("created", System.currentTimeMillis());
+			data.put("uuid", MESSAGE_ID);
+		}
 		
-		data.put("title", title);
-		data.put("level", level);
-		data.put("initiator", initiator);
-		data.put("message", message);
-		data.put("shown", false);
-		data.put("created", System.currentTimeMillis());
-		data.put("uuid", MESSAGE_ID);
+		//RESET REMOVE TIME
+		if(data.containsKey("removedAfter")) data.remove("removedAfter");
+		
 		if(stayMinutes == -1) {
 			data.put("removedAfter", (long)-1);
 		} else {
 			data.put("removedAfter", System.currentTimeMillis() + (stayMinutes * 1000 * 60));
 		}
 		
+		
+		//INSERT OR REPLACE
 		if(notifications.containsKey(MESSAGE_ID)) {
-			data = notifications.get(MESSAGE_ID);
-			data.replace("removedAfter", System.currentTimeMillis() + (stayMinutes * 1000 * 60));
+			notifications.replace(MESSAGE_ID, data);
+		} else {
+			notifications.put(MESSAGE_ID, data);
 		}
-		notifications.put(MESSAGE_ID, data);
+		
 
 	}
 	
 	public static void removeNotification(String MESSAGE_ID) {
 		if(notifications.containsKey(MESSAGE_ID) ) {
 			notifications.remove(MESSAGE_ID);
+		}
+	}
+	
+	public static void closeNotification(String ID) {
+		if(notifications.containsKey(ID) ) {
+			HashMap<String, Object> newdata = notifications.get(ID);
+			newdata.replace("closed", true);
+			notifications.replace(ID, newdata);
 		}
 	}
 	

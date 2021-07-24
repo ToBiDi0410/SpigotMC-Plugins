@@ -16,7 +16,7 @@ async function init() {
         loadCSSIfExists("https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@3/dark.css", document.head);
     }
 
-    loadPage("./pages/management/plugins");
+    loadPage("./pages/management/controls");
 }
 
 async function loadPage(url) {
