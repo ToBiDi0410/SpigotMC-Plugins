@@ -12,8 +12,8 @@ async function init() {
 
     console.log("[INDEX] Using Theme: " + theme);
     if (theme == "dark") {
-        loadCSSIfExists("https://unpkg.com/bulmaswatch/darkly/bulmaswatch.min.css", document.head);
-        loadCSSIfExists("https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@3/dark.css", document.head);
+        loadCSSIfExists("./global/other-license/bulmaswatch.min.css", document.head);
+        loadCSSIfExists("./global/other-license/sweet_dark.css", document.head);
     }
 
     loadPage("./pages/management/controls");

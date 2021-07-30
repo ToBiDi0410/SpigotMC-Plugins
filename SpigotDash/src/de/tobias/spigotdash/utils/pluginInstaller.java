@@ -1,15 +1,16 @@
 package de.tobias.spigotdash.utils;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
+import java.util.Scanner;
 
-import com.google.gson.JsonElement;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -18,73 +19,96 @@ import de.tobias.spigotdash.main;
 public class pluginInstaller {
 	
 	public static String API_URL = "https://api.spiget.org/v2/";
+	public static String LOCAL_PREFIX = "&7[&6PluginInstaller&7] &7";
 
 	public static String installPlugin(String id) {
-		pluginConsole.sendMessage("&7Installing new Plugin '" + id + "'...");
+		pluginConsole.sendMessage(LOCAL_PREFIX + "&7Installing new Plugin with ID '&5" + id + "&7'...");
 		try {
-			JsonObject obj = getJSONObjectFromPluginID(id);
-			if(obj == null) return "INSTALL_FAILED_NULL";
-			URL download = new URL(API_URL + "resources/" + id + "/download");
-
-			File dest = new File(main.pl.getDataFolder().getParentFile(), obj.get("name").getAsString().split(" ")[0] + getFileTypeFromPluginJSON(obj));
-			pluginConsole.sendMessage("Downloading File from '" + download.toString() + "' to '" + dest.getPath() + "'...");
-			ReadableByteChannel rbc = Channels.newChannel(download.openStream());
-			FileOutputStream fos = new FileOutputStream(dest);
-			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-			fos.close();
-			rbc.close();
-			if(!dest.getName().contains(".jar")) {
-				pluginConsole.sendMessage("&cThe Plugin downloaded is not a JAR File! Please continue manually!");
-				return "INSTALL_FAILED_NOT_JAR";
-			} else {
-				pluginConsole.sendMessage("&aPlugin installed successfully. Please reload the Server to activate the Plugin");
-				return "INSTALLED";
+			//REQUESTING DETAILS
+			JsonObject details = getDetailsById(id);
+			if(details == null) {
+				pluginConsole.sendMessage(LOCAL_PREFIX + "- &cFailed: Plugin not found on SpigetAPI (Offline?)");
+				return "FAILED_RESSOURCE_NOT_FOUND";
 			}
 			
+			//REQUEST CREATION AND EXECUTION
+			URL download = new URL(API_URL + "resources/" + id + "/download");
+			pluginConsole.sendMessage(LOCAL_PREFIX + "- &7Downloading Plugin from '" + download.toString() + "'...");
+			HttpURLConnection con = (HttpURLConnection) download.openConnection();
+			con.setInstanceFollowRedirects(true);
+			con.setRequestMethod("GET");
+			int status = con.getResponseCode();
 			
+			//VERIFY OF RESPONSE (CHECK WHETHER IT WORKED OR NOT)
+			pluginConsole.sendMessage(LOCAL_PREFIX + "- &7Checking Response... (Code: " + status + ")");
+			
+			if(status != 200) {
+				pluginConsole.sendMessage(LOCAL_PREFIX + "- &cFailed: SpigetAPI does not provide the required File");
+				con.disconnect();
+				return "FAILED_RESSOURCE_NOT_FOUND";
+			}
+			
+			//WRITING OF FILE
+			File dest = new File(main.pl.getDataFolder().getParentFile(), id + details.get("file").getAsJsonObject().get("type").getAsString());
+			pluginConsole.sendMessage(LOCAL_PREFIX + "- &7Writing Response to File (" + dest.getAbsolutePath().toString() + ")...");
+			writeBytesFromInputStreamIntoFile(con.getInputStream(), dest);
+			pluginConsole.sendMessage(LOCAL_PREFIX + "- &7Finished! Loading Plugin...");
+			pluginManager.load(FilenameUtils.removeExtension(dest.getName()));
+
+			con.disconnect();
+			return "INSTALLED";
+		
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			pluginConsole.sendMessage(LOCAL_PREFIX + "- &cFailed: ");
+			errorCatcher.catchException(ex, false);
 			return "INSTALL_FAILED_ERR_THROWN";
 		}
 		
 	}
 	
-	public static String getSpigotDownloadUrlFromPluginJSON(JsonObject main) {
-		return "https://spigotmc.org/" + main.get("file").getAsJsonObject().get("url").getAsString();
-	}
-	
-	public static String getFileTypeFromPluginJSON(JsonObject main) {
-		return main.get("file").getAsJsonObject().get("type").getAsString();
-	}
-
-	public static JsonObject getJSONObjectFromPluginID(String id) {
+	public static JsonObject getDetailsById(String id) {
 		try {
-			URL url = new URL(API_URL + "resources/" + id);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			URL download = new URL(API_URL + "resources/" + id + "/");
+			HttpURLConnection con = (HttpURLConnection) download.openConnection();
+			con.setInstanceFollowRedirects(true);
 			con.setRequestMethod("GET");
-			con.setDoOutput(false);
-			con.setConnectTimeout(5000);
-			con.setReadTimeout(5000);
-
 			int status = con.getResponseCode();
-			if (status != 200) return null;
-
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String inputLine;
-			StringBuffer content = new StringBuffer();
-			while ((inputLine = in.readLine()) != null) {
-				content.append(inputLine);
+			
+			if(status != 200) return null;
+			
+			String inline = "";
+			Scanner sc = new Scanner(download.openStream());
+			while(sc.hasNext())	{
+				inline+=sc.nextLine();
 			}
-			in.close();
-			con.disconnect();
-
+			sc.close();
+			
 			JsonParser parser = new JsonParser();
-			JsonElement jsonTree = parser.parse(content.toString());
-			JsonObject obj = jsonTree.getAsJsonObject();
-			return obj;
+			JsonObject jsonTree = parser.parse(inline).getAsJsonObject();
+			
+			con.disconnect();
+			return jsonTree;
 		} catch (Exception ex) {
 			return null;
 		}
+	}
+	
+	public static boolean writeBytesFromInputStreamIntoFile(InputStream in, File f) {
+		try {
+		    OutputStream outStream = new FileOutputStream(f);
+		    byte[] buffer = new byte[8 * 1024];
+		    int bytesRead;
+		    while ((bytesRead = in.read(buffer)) != -1) {
+		        outStream.write(buffer, 0, bytesRead);
+		    }
+		    IOUtils.closeQuietly(in);
+		    IOUtils.closeQuietly(outStream);
+		    return true;
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+
 	}
 
 }

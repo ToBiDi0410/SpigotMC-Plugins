@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileDeleteStrategy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -28,6 +29,23 @@ public class pluginManager {
 	
 	public static ArrayList<Plugin> disabledPlugins = new ArrayList<>();
 
+	public static boolean removePlugin(Plugin pl) {
+		pluginConsole.sendMessage("&7Removing Plugin '&6" + pl + "&7'...");
+		File f = new File(pl.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+		if(disablePlugin(pl)) {
+		    try {
+				FileDeleteStrategy.FORCE.delete(f);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return true;
+		}
+		return false;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static boolean disablePlugin(Plugin plugin) {
 		// FROM: https://github.com/r-clancy/PlugMan/
 
@@ -177,7 +195,7 @@ public class pluginManager {
                             break;
                         }
                     } catch (Exception ex) {
-                    	pluginConsole.sendMessage("&cCannot find Plugin to enabled: ");
+                    	pluginConsole.sendMessage("&cCannot find Plugin to enable: ");
                     	errorCatcher.catchException(ex, false);
                     	return false;
                     }
@@ -189,6 +207,7 @@ public class pluginManager {
             target = Bukkit.getPluginManager().loadPlugin(pluginFile);
         } catch (Exception ex) {
         	pluginConsole.sendMessage("&cCannot enable Plugin: ");
+        	errorCatcher.catchException(ex, false);
         	return false;
         }
 

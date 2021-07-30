@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 
 import de.tobias.spigotdash.utils.configuration;
 import de.tobias.spigotdash.utils.notificationManager;
+import de.tobias.spigotdash.utils.pluginConsole;
 
 public class pageDataFetcher {
 	
@@ -41,12 +42,27 @@ public class pageDataFetcher {
 	public static Object GET_PAGE_CONTROLS() {
 		HashMap<String, Object> data = new HashMap<String, Object>();
 		
-		boolean nether = Boolean.parseBoolean(dataFetcher.getServerPropertie("allow-nether"));
-		boolean whitelist = Boolean.parseBoolean(dataFetcher.getServerPropertie("white-list"));
-		boolean end = (boolean) dataFetcher.getBukkitPropertie("settings.allow-end");
-		data.put("nether", nether);
-		data.put("end", end);
-		data.put("whitelist", whitelist);
+		Object end = dataFetcher.getBukkitPropertie("settings.allow-end");
+		if(end == null) {
+			pluginConsole.sendMessage("&cYour Bukkit.yml does not contain the 'settings.allow-end' Value. Please add it manually!");
+		} else {
+			data.put("end", (boolean) end);
+		}
+		
+		String whitelist = dataFetcher.getServerPropertie("white-list");
+		if(whitelist == null || whitelist == "" || whitelist == " ") {
+			pluginConsole.sendMessage("&cYour Server.properties does not contain the 'white-list' Value. Please add it manually!");
+		} else {
+			data.put("whitelist", Boolean.parseBoolean(whitelist));
+		}
+		
+		String nether = dataFetcher.getServerPropertie("allow-nether");
+		if(nether == null || nether == "" || nether == " ") {
+			pluginConsole.sendMessage("&cYour Server.properties does not contain the 'allow-nether' Value. Please add it manually!");
+		} else {
+			data.put("nether", Boolean.parseBoolean(nether));
+		}
+		
 		data.put("whitelistEntrys", offlinePlayerListToWeb(Bukkit.getWhitelistedPlayers()));
 		
 		return data;

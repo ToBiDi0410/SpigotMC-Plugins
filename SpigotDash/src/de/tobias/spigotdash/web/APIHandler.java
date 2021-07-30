@@ -178,10 +178,17 @@ public class APIHandler {
 					
 					if(action.equalsIgnoreCase("TOGGLE_WHITELIST")) {
 						boolean current = Bukkit.hasWhitelist();
-						Bukkit.setWhitelist(!current);
-						boolean suc = dataFetcher.modifyServerPropertie("white-list", !current);
-						Bukkit.reloadWhitelist();
-						MainRequestHandler.sendJSONResponse(he, suc ? 200 : 500, suc ? "SUCCESS" : "ERROR");
+						Bukkit.getScheduler().runTask(main.pl, new Runnable() {
+							@Override
+							public void run() {
+								Bukkit.setWhitelist(!current);
+								boolean suc = dataFetcher.modifyServerPropertie("white-list", !current);
+								Bukkit.reloadWhitelist();
+								MainRequestHandler.sendJSONResponse(he, suc ? 200 : 500, suc ? "SUCCESS" : "ERROR");
+								return;
+							}
+							
+						});
 						return;
 					}
 					

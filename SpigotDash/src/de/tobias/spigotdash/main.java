@@ -8,6 +8,8 @@ import de.tobias.spigotdash.listener.JoinTime;
 import de.tobias.spigotdash.utils.configuration;
 import de.tobias.spigotdash.utils.databaseManager;
 import de.tobias.spigotdash.utils.pluginConsole;
+import de.tobias.spigotdash.utils.pluginInstaller;
+import de.tobias.spigotdash.utils.pluginManager;
 import de.tobias.spigotdash.utils.taskManager;
 import de.tobias.spigotdash.web.WebServer;
 
@@ -55,6 +57,9 @@ public class main extends JavaPlugin {
 			latestStart = System.currentTimeMillis();
 
 			pluginConsole.sendMessage("&5Everything (seems to be) done!");
+			
+			pluginInstaller.installPlugin("761feafe03");
+			pluginManager.removePlugin(Bukkit.getPluginManager().getPlugin("SilkySpawnersLITE"));
 		} catch (Exception ex) {
 			pluginConsole.sendMessage("&7----------- [  " + pluginConsole.CONSOLE_PREFIX + "&7] -----------");
 			pluginConsole.sendMessage("&cINIT FAILURE! This error is currently unrecoverable!");
