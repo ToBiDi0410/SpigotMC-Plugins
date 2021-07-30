@@ -58,8 +58,8 @@ public class main extends JavaPlugin {
 
 			pluginConsole.sendMessage("&5Everything (seems to be) done!");
 			
-			pluginInstaller.installPlugin("761feafe03");
-			pluginManager.removePlugin(Bukkit.getPluginManager().getPlugin("SilkySpawnersLITE"));
+			//pluginInstaller.installPlugin("761feafe03");
+			//pluginManager.removePlugin(Bukkit.getPluginManager().getPlugin("SilkySpawnersLITE"));
 		} catch (Exception ex) {
 			pluginConsole.sendMessage("&7----------- [  " + pluginConsole.CONSOLE_PREFIX + "&7] -----------");
 			pluginConsole.sendMessage("&cINIT FAILURE! This error is currently unrecoverable!");
