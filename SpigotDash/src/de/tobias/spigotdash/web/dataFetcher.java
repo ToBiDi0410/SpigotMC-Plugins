@@ -1,21 +1,19 @@
 package de.tobias.spigotdash.web;
 
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.UUID;
 
 import javax.management.Attribute;
@@ -42,9 +40,9 @@ import de.tobias.spigotdash.utils.pluginManager;
 
 public class dataFetcher {
 
-	public static File serverDir = new File(main.pl.getDataFolder().getAbsoluteFile().getParentFile().getParent());
+	public static File serverDir = Bukkit.getWorldContainer();
 	public static File serverPropFile = new File(serverDir, "server.properties");
-	public static File bukkitPropFile = new File(serverDir, "Bukkit.yml");
+	public static File bukkitPropFile = new File(serverDir, "bukkit.yml");
 	
 	public static Runtime runtime = Runtime.getRuntime();
 	public static MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
@@ -54,78 +52,12 @@ public class dataFetcher {
 	public static float tps_avg = 0;
 	public static float tps_avg_gen = 0;
 	public static float tps_passed = 0;
-
+	
+	public static String NETHER_WORLD_NAME = "world_nether";
+	public static String END_WORLD_NAME = "world_the_end";
 	
 	// ** CONTROLS **
-	public static HashMap<String, String> getServerProps() {
-		try {
-			List<String> lines = Files.readAllLines(serverPropFile.toPath());
-			HashMap<String, String> values = new HashMap<>();
 
-			for (String s : lines) {
-				if(!s.contains("#") && s.contains("=")) {
-					String key = s.split("=")[0];
-					values.put(key, s.replace(key + "=", ""));
-				}
-			}
-			
-			return values;
-		} catch (Exception ex) {
-			pluginConsole.sendMessage("&cFailed to Get Server Properties: ");
-			errorCatcher.catchException(ex, false);
-			return null;
-		}
-	}
-	
-	public static boolean saveServerProps(HashMap<String, String> newvals) {
-		try {
-			serverPropFile.delete();
-			serverPropFile.createNewFile();
-			
-			FileOutputStream fos = new FileOutputStream(serverPropFile);
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-
-			for (Entry<String, String> entry : newvals.entrySet()) {
-				String line = entry.getKey() + "=" + entry.getValue();
-				bw.write(line);
-				bw.newLine();
-			}
-			
-			bw.close();
-			fos.close();
-			
-			return true;
-		} catch (Exception ex) {
-			pluginConsole.sendMessage("&cFailed to Save Server Properties: ");
-			errorCatcher.catchException(ex, false);
-			return false;
-		}
-	}
-	
-	public static boolean modifyServerPropertie(String key, Object val) {
-		try {
-			HashMap<String, String> newValues = getServerProps();
-			
-			if(newValues.containsKey(key)) {
-				newValues.replace(key, val.toString());
-			} else {
-				newValues.put(key, val.toString());
-			}
-						
-			saveServerProps(newValues);
-			
-			return true;
-		} catch (Exception ex) {
-			pluginConsole.sendMessage("&cFailed to Modify Server Properties: ");
-			errorCatcher.catchException(ex, false);
-			return false;
-		}
-	}
-	
-	public static String getServerPropertie(String key) {
-		return getServerProps().get(key);
-	}
-	
 	public static boolean modifyBukkitPropertie(String key, Object val) {
 		try {
 			YamlConfiguration yamlProps = YamlConfiguration.loadConfiguration(bukkitPropFile);		
@@ -144,6 +76,27 @@ public class dataFetcher {
 		return yamlProps.get(key);
 	}
 	
+	public static String getServerPropertie(String s) {
+		Properties pr = new Properties();
+		try {
+			FileInputStream in = new FileInputStream(serverPropFile);
+			pr.load(in);
+			String string = pr.getProperty(s);
+			return string;
+		} catch (IOException e) {}
+		return "";
+	}
+	
+	public static void setServerPropertie(String s, String value) {
+		Properties pr = new Properties();
+		try {
+			FileInputStream in = new FileInputStream(serverPropFile);
+			pr.load(in);
+			pr.setProperty(s, value);
+			pr.store(new FileOutputStream(serverPropFile), null);
+		} catch (IOException e) {}
+	}
+	
 	// ** PLUGINS **
 	public static ArrayList<HashMap<String, Object>> getPluginsForWeb() {
 		ArrayList<HashMap<String, Object>> plugins = new ArrayList<HashMap<String, Object>>();
@@ -158,9 +111,19 @@ public class dataFetcher {
 			plugin_info.put("website", pl.getDescription().getWebsite());	
 			plugin_info.put("apiversion", pl.getDescription().getAPIVersion());
 			plugin_info.put("known", false);
+			plugin_info.put("file", getPluginFile(pl).getName());
+			
+			if(pl == main.pl) {
+				plugin_info.replace("file", "93710.SpigotDashDownload");
+			}
+			
 			plugins.add(plugin_info);
 		}
 		return plugins;
+	}
+	
+	public static File getPluginFile(Plugin pl) {
+		return new File(pl.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 	}
 	
 	
@@ -168,10 +131,10 @@ public class dataFetcher {
 		ArrayList<String> files = new ArrayList<String>();
 
 		for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
-			files.add(new java.io.File(pl.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getName());
+			files.add(getPluginFile(pl).getName());
 		}
 
-		return files;
+		return files;	
 	}
 	
 	// ** FILES **

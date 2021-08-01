@@ -16,7 +16,9 @@ async function init() {
         loadCSSIfExists("./global/other-license/sweet_dark.css", document.head);
     }
 
-    loadPage("./pages/management/controls");
+    loadPage("./pages/overview/overview");
+    //loadPage("./pages/management/plugins");
+
 }
 
 async function loadPage(url) {

@@ -170,7 +170,8 @@ public class APIHandler {
 					
 					if(action.equalsIgnoreCase("TOGGLE_NETHER")) {
 						boolean current = Boolean.parseBoolean(dataFetcher.getServerPropertie("allow-nether"));
-						boolean suc = dataFetcher.modifyServerPropertie("allow-nether", !current);
+						dataFetcher.setServerPropertie("allow-nether", String.valueOf(!current));
+						boolean suc = true;
 						notificationManager.setNeedReload(true);
 						MainRequestHandler.sendJSONResponse(he, suc ? 200 : 500, suc ? "SUCCESS" : "ERROR");
 						return;
@@ -182,7 +183,8 @@ public class APIHandler {
 							@Override
 							public void run() {
 								Bukkit.setWhitelist(!current);
-								boolean suc = dataFetcher.modifyServerPropertie("white-list", !current);
+								dataFetcher.setServerPropertie("white-list", String.valueOf(!current));
+								boolean suc = true;
 								Bukkit.reloadWhitelist();
 								MainRequestHandler.sendJSONResponse(he, suc ? 200 : 500, suc ? "SUCCESS" : "ERROR");
 								return;
@@ -222,7 +224,7 @@ public class APIHandler {
 					}
 					
 					if(action.equalsIgnoreCase("TOGGLE_END")) {
-						boolean current = (boolean) dataFetcher.getBukkitPropertie("settings.allow-end");
+						boolean current = (Bukkit.getWorld("world_the_end") != null);
 						boolean suc = dataFetcher.modifyBukkitPropertie("settings.allow-end", !current);
 						notificationManager.setNeedReload(true);
 						MainRequestHandler.sendJSONResponse(he, suc ? 200 : 500, suc ? "SUCCESS" : "ERROR");
@@ -304,7 +306,7 @@ public class APIHandler {
 				if (json.has("id")) {
 					String install_state = pluginInstaller.installPlugin(json.get("id").getAsString());
 					int code = install_state.equalsIgnoreCase("INSTALLED") ? 200 : 500;
-					if(code == 200) notificationManager.setNeedReload(true);
+					//if(code == 200) notificationManager.setNeedReload(true); NOT NEEDED ANYMORE: LOADED AUTOMATICALLY
 					MainRequestHandler.sendJSONResponse(he, code, install_state);
 					return;
 				} else {

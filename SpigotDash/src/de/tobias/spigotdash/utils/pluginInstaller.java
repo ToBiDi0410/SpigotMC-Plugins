@@ -49,7 +49,7 @@ public class pluginInstaller {
 			}
 			
 			//WRITING OF FILE
-			File dest = new File(main.pl.getDataFolder().getParentFile(), id + details.get("file").getAsJsonObject().get("type").getAsString());
+			File dest = new File(main.pl.getDataFolder().getParentFile(), id + ".SpigotDashDownload" + details.get("file").getAsJsonObject().get("type").getAsString());
 			pluginConsole.sendMessage(LOCAL_PREFIX + "- &7Writing Response to File (" + dest.getAbsolutePath().toString() + ")...");
 			writeBytesFromInputStreamIntoFile(con.getInputStream(), dest);
 			pluginConsole.sendMessage(LOCAL_PREFIX + "- &7Finished! Loading Plugin...");

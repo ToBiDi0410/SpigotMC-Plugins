@@ -14,13 +14,14 @@ import de.tobias.spigotdash.main;
 
 public class updater {
 
-	public static String current_version = main.pl.getDescription().getVersion();
+	public static String current_version = main.pl.getDescription().getVersion().split(" ")[0];
 	public static boolean update_available = false;
+	public static String LOCAL_PREFIX = "&7[&5Updater&7] &7";
 
 	public static void checkForUpdates() {
 		try {
-			pluginConsole.sendMessage("&7Checking for Updates...");
-			URL url = new URL("https://api.spiget.org/v2/resources/93710/versions?fields=name");
+			pluginConsole.sendMessage(LOCAL_PREFIX + "&7Checking for Updates...");
+			URL url = new URL("https://api.spiget.org/v2/resources/93710/versions?size=1&sort=-id&fields=name");
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			con.setDoOutput(false);
@@ -41,20 +42,33 @@ public class updater {
 				JsonParser parser = new JsonParser();
 				JsonElement jsonTree = parser.parse(content.toString());
 				JsonArray array = jsonTree.getAsJsonArray();
-				JsonObject newest = array.get(array.size() - 1).getAsJsonObject();
+				JsonObject newest = array.get(0).getAsJsonObject();
 				
-				String newest_version = newest.get("name").getAsString();
-				if(!current_version.equalsIgnoreCase(newest_version)) {
+				String newest_version = newest.get("name").getAsString().split(" ")[0];
+				
+				Version newestv = new Version(newest_version);
+				Version current = new Version(current_version);
+				
+				Integer update = current.compareTo(newestv);
+				
+				if(update == -1) {
 					update_available = true;
-					pluginConsole.sendMessage("&7New Update &aavailable&7! Please take a look at &6SpigotMC&7!");
-				} else {
+					pluginConsole.sendMessage(LOCAL_PREFIX + "&7New Update &aavailable&7 (&6" + current_version + " &7--> &b" + newest_version + "&7)! Please take a look at &6SpigotMC&7!");
+				} else if(update == 0) {
 					update_available = false;
-					pluginConsole.sendMessage("&aYou are running the newest Version!");
+					pluginConsole.sendMessage(LOCAL_PREFIX + "&aYou are running the newest Version!");
+				} else if(update == 1) {
+					update_available = false;
+					pluginConsole.sendMessage(LOCAL_PREFIX + "&6You are running a Version before?");
+					pluginConsole.sendMessage(LOCAL_PREFIX + "&bDon´t worry. This can happen if you download the Plugin shortly after the release or this is a Pre-Release Version.");
 				}
+			} else {
+				pluginConsole.sendMessage(LOCAL_PREFIX + "&cCheck for Updates failed! You won't recieve notifications!");
+				return;
 			}
 
 		} catch (Exception ex) {
-			pluginConsole.sendMessage("&cCheck for Updates failed! You won't recieve notifications!");
+			pluginConsole.sendMessage(LOCAL_PREFIX + "&cCheck for Updates failed! You won't recieve notifications!");
 		}
 	}
 	
