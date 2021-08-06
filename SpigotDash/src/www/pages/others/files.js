@@ -28,7 +28,7 @@ async function refreshFiles() {
         table_body.innerHTML += getHTMLForFile(elem);
     });
 
-    if (curr_path != "./") table_body.innerHTML += FILE_TEMPLATE_BACK;
+    if (curr_path != "./") table_body.innerHTML = FILE_TEMPLATE_BACK + table_body.innerHTML;
 
     return files;
 }

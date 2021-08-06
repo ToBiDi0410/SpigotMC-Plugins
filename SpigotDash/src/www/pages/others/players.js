@@ -30,9 +30,8 @@ async function updatePlayerList() {
         if (currDom == null) {
             //IF PLAYER NOT IN LSIT
             var child = cont.appendChild(generatePlayerEntry(elem));
-            const arrID = players.indexOf(elem);
             child.addEventListener("click", function() {
-                showInfos(arrID);
+                showInfos(this.getAttribute("data-uuid"));
             });
         } else {
             //IF PLAYER IN LIST, REMOVE OUT OF DELETION BECAUSE THE PLAYER IS ONLINE (PLAYERS CONTAINS HIM)
@@ -44,8 +43,8 @@ async function updatePlayerList() {
     return;
 }
 
-async function showInfos(arrayIndex) {
-    var player = players[arrayIndex];
+async function showInfos(uuid) {
+    var player = players.find(function(elem) { return (elem.UUID == uuid); });
     var new_html = replaceObjectKeyInString(player, TEMPLATE_PLAYER_MENU);
 
     var menu = new smartMenu("PLAYERINFO", player.Name, player.Displayname);
