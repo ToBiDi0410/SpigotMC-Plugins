@@ -1,5 +1,6 @@
 var currURLElem = document.querySelector("#currurl");
-var contentContainer = document.querySelector("#pagecontent");
+var currentMenu = null;
+var contentContainer = null;
 
 async function init() {
     document.querySelectorAll(".menu-list>li>a").forEach((elem) => {
@@ -9,12 +10,16 @@ async function init() {
     });
 
     theme = await getDataFromAPI({ method: "THEME" });
+    theme = "dark";
 
     console.log("[INDEX] Using Theme: " + theme);
     if (theme == "dark") {
         loadCSSIfExists("./global/other-license/bulmaswatch.min.css", document.head);
         loadCSSIfExists("./global/other-license/sweet_dark.css", document.head);
+        smartMenuHelpers.DARK_MODE = true;
     }
+
+    addNewTask("heightFillClass", heightFillRestClass, 1000);
 
     loadPage("./pages/overview/overview");
     //loadPage("./pages/management/plugins");
@@ -22,16 +27,24 @@ async function init() {
 }
 
 async function loadPage(url) {
-    var currURL = currURLElem.getAttribute("data-page");
+    console.log("[LOADER] Loading Page '" + url + "'...");
 
-    initPage = null;
-    curr_task = null;
-    if (currURL == url) {
+    if (smartMenuHelpers.getConstructedByID(url) != null && !smartMenuHelpers.getConstructedByID(url).closed) {
+        console.warn("[LOADER] Page already loaded");
         return;
     }
 
-    console.log("[LOADER] Loading Page: " + url);
-    contentContainer.innerHTML = '<progress class="progress is-small is-primary" max="100">15%</progress>';
+    curr_task = null;
+    initPage = null;
+
+    await smartMenuHelpers.closeAll();
+
+    var pageName = url.split("/").latest().capitalizeFirstLetter();
+
+    var menu = new smartMenu(url, pageName, pageName);
+    menu.open();
+    contentContainer = menu.getContentDOM();
+
     try {
         var html = url + ".html";
         var css = url + ".css";
@@ -46,16 +59,18 @@ async function loadPage(url) {
 
         contentContainer.innerHTML = contentContainer.innerHTML.replace('<progress class="progress is-small is-primary" max="100">15%</progress>', '');
         hightlightMenu(html);
-        currURLElem.setAttribute("data-page", url);
+        heightFillRestClass();
 
+        //MANAGE DATAREFRESH TASKS
         await stopTask("dataRefresher");
-
         await timer(100);
         addNewTask("dataRefresher", function() {
             if (curr_task == null) return;
             curr_task();
         }, 5000);
     } catch (err) {
+        console.error("[LOADER] Page load failed: ");
+        console.error(err);
         contentContainer.innerHTML = '<a class="has-text-danger">Page load failed! Is the Server online?</a>';
     }
 

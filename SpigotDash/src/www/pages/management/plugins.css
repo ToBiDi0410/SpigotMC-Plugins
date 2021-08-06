@@ -1,3 +1,28 @@
+.pluginContainer {
+    overflow-y: scroll;
+}
+
+.pluginContainer>* {
+    padding: 1%;
+    border-top: 1px #1b1b1b solid;
+}
+
+.pluginContainer>*:last-child {
+    border-bottom: 1px #1b1b1b solid;
+}
+
+.pluginInstallList {
+    overflow: auto;
+}
+
+.pluginInstallList>* {
+    margin: 2%;
+}
+
+.pluginInstallControlsField {
+    padding: 2%;
+}
+
 .plugin-title {
     display: inline-block;
     font-size: 120%;

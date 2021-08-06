@@ -33,7 +33,7 @@ public class taskManager {
 					}
 					
 					if(dataFetcher.unusedJARFiles()) {
-						notificationManager.addNotification("PLUGINS_JARUNLOADED_WARN", "ERROR", "SpigotDash", "Unloaded JAR Files", "One or more JAR Files in the Plugins folder are currently <b>unloaded or invalid</b>!", -1);
+						notificationManager.addNotification("PLUGINS_JARUNLOADED_WARN", "DANGER", "SpigotDash", "Unloaded JAR Files", "One or more JAR Files in the Plugins folder are currently <b>unloaded or invalid</b>!", -1);
 					}
 					
 					if(updater.update_available == true) {

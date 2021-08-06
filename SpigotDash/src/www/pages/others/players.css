@@ -1,4 +1,6 @@
-.player {}
+.player {
+    padding-bottom: 2%;
+}
 
 .player>.head {
     width: 64px;

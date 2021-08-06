@@ -66,18 +66,16 @@ async function fileListClickEntry(elem) {
 }
 
 async function openFileInViewer(path) {
-    toggleFileViewer(false);
-
-    var content_obj = document.querySelector(".fileview_content");
-    var title_obj = document.querySelector(".fileview_title");
-    var err_obj = document.querySelector(".fileview_error");
-    var extension = path.split(".")[path.split(".").length - 1];
+    var extension = path.split(".").latest();
+    var content = "";
+    var error = false;
+    var error_text = false;
 
     try {
-
         if (!(path.includes("yml") || path.includes("yaml") || path.includes("json") || path.includes("txt") || path.includes("propertities"))) {
             throw new Error("File Format not Supported");
         }
+
 
         var data = await fetch(API_URL, {
             "headers": {
@@ -96,21 +94,29 @@ async function openFileInViewer(path) {
             throw new Error(await data.text());
         }
 
-        var text = await data.text();
-        content_obj.innerHTML = text;
+        content = await data.text();
+        content = content.replaceAll("\n", "<br>")
         extension = extension.replace("yml", "yaml");
-        content_obj.classList = "fileview_content language-" + extension;
-        content_obj.parentElement.classList.remove("hidden");
-        err_obj.classList.add("hidden");
-        hljs.highlightAll();
     } catch (err) {
-        content_obj.parentElement.classList.add("hidden");
-        err_obj.classList.remove("hidden");
-        err_obj.querySelector(".fileview_error_code").innerHTML = err.toString();
+        error = true;
+        error_text = err.toString();
     }
 
-    title_obj.innerHTML = path.split("/")[path.split("/").length - 1];
-    toggleFileViewer(true);
+    if (error) {
+        Swal.fire({
+            title: path.split("/").latest(),
+            customClass: 'swal-fileview',
+            icon: "error",
+            html: 'An error occured<br><div style="background-color: var(--lt-color-gray-400); width: fit-content; padding: 2%; left: 0; right: 0; margin: auto; border-radius: 5%; font-style: italic; font-size: 75%; font-decoration: cursive;">' + error_text + '</div>'
+        });
+    } else {
+        Swal.fire({
+            title: path.split("/").latest(),
+            customClass: 'swal-fileviewc',
+            html: '<code class="fileView_Content language-' + extension + '">' + content + '</code>'
+        });
+        hljs.highlightAll();
+    }
 
 }
 

@@ -22,18 +22,23 @@ async function executeCommand(elem) {
 
 async function updateLog() {
     var data = await getDataFromAPI({ method: "GET_LOG" });
-    var new_last_line = data[data.length - 1];
-
-    if (new_last_line != last_line) {
+    if (!JSONMatches(data, currentData)) {
         var messagelist = document.querySelector(".console_messagelist");
-        messagelist.innerHTML = "";
-        data.forEach((elem) => {
-            messagelist.innerHTML += "<li>" + ansiStringToHTMLString(elem) + "</li>";
-        });
+        var newLines = data.filter((elem) => { return !currentData.includes(elem); });
 
-        messagelist.scrollTop = messagelist.scrollHeight;
-        last_line = new_last_line;
+        for (const elem of newLines) {
+            var appended = messagelist.appendChild(generateLogListEntry(elem));
+            setTimeout(function(elem) {
+                elem.classList.add("FADEIN");
+            }, 100, appended);
+
+            await timer(10);
+            messagelist.scrollTop = messagelist.scrollHeight;
+        }
+
     }
+
+    currentData = data;
 }
 
-var last_line = "";
+var currentData = [];

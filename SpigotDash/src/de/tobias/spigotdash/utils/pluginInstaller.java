@@ -8,13 +8,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
+import org.bukkit.plugin.Plugin;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import de.tobias.spigotdash.main;
+import de.tobias.spigotdash.web.dataFetcher;
 
 public class pluginInstaller {
 	
@@ -64,6 +67,53 @@ public class pluginInstaller {
 			return "INSTALL_FAILED_ERR_THROWN";
 		}
 		
+	}
+	
+	public static String updatePlugin(Plugin pl, String id) {
+		pluginConsole.sendMessage(LOCAL_PREFIX + "&7Updating Plugin '&5" + pl.getName() + "&7'...");
+		try {
+			//REQUESTING DETAILS
+			JsonObject details = getDetailsById(id);
+			if(details == null) {
+				pluginConsole.sendMessage(LOCAL_PREFIX + "- &cFailed: Plugin not found on SpigetAPI (Offline?)");
+				return "FAILED_RESSOURCE_NOT_FOUND";
+			}
+			
+			//REQUEST CREATION AND EXECUTION
+			URL download = new URL(API_URL + "resources/" + id + "/download");
+			pluginConsole.sendMessage(LOCAL_PREFIX + "- &7Downloading Update from '" + download.toString() + "'...");
+			HttpURLConnection con = (HttpURLConnection) download.openConnection();
+			con.setInstanceFollowRedirects(true);
+			con.setRequestMethod("GET");
+			int status = con.getResponseCode();
+			
+			//VERIFY OF RESPONSE (CHECK WHETHER IT WORKED OR NOT)
+			pluginConsole.sendMessage(LOCAL_PREFIX + "- &7Checking Response... (Code: " + status + ")");
+			
+			if(status != 200) {
+				pluginConsole.sendMessage(LOCAL_PREFIX + "- &cFailed: SpigetAPI does not provide the required File");
+				con.disconnect();
+				return "FAILED_RESSOURCE_NOT_FOUND";
+			}
+			
+			
+			//WRITING OF FILE
+			File dest = dataFetcher.getPluginFile(pl);
+			pluginConsole.sendMessage(LOCAL_PREFIX + "- &7Overwriting current Version with Update (" + dest.getAbsolutePath().toString() + ")...");
+			writeBytesFromInputStreamIntoFile(con.getInputStream(), dest);
+			if(configuration.yaml_cfg.getBoolean("autoReloadOnUpdate")) {
+				pluginConsole.sendMessage(LOCAL_PREFIX + "- &7Finished! Reloading Server to enable Update...");
+				Bukkit.reload();
+			}
+			
+			con.disconnect();
+			return "UPDATED";
+		
+		} catch (Exception ex) {
+			pluginConsole.sendMessage(LOCAL_PREFIX + "- &cFailed: ");
+			errorCatcher.catchException(ex, false);
+			return "UPDATE_FAILED_ERR_THROWN";
+		}		
 	}
 	
 	public static JsonObject getDetailsById(String id) {

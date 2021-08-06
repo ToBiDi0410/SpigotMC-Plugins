@@ -9,7 +9,8 @@ function initCPUChart() {
         chart: {
             type: 'area',
             id: "chart1",
-            background: "transparent"
+            background: "transparent",
+            height: "100%"
         },
         theme: {
             mode: theme
@@ -36,7 +37,8 @@ function initRAMChart() {
         chart: {
             type: 'area',
             id: "chart2",
-            background: "transparent"
+            background: "transparent",
+            height: "100%"
         },
         theme: {
             mode: theme
@@ -63,7 +65,8 @@ function initTPSChart() {
         chart: {
             type: 'area',
             id: "chart3",
-            background: "transparent"
+            background: "transparent",
+            height: "100%"
         },
         theme: {
             mode: theme,
@@ -91,7 +94,8 @@ function initEngineChart() {
         chart: {
             type: 'area',
             id: "chart4",
-            background: "transparent"
+            background: "transparent",
+            height: "100%"
         },
         theme: {
             mode: theme,

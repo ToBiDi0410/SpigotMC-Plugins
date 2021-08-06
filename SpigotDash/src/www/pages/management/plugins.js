@@ -1,15 +1,3 @@
-var PLUGIN_BOX_TEMPLATE = '\
-<div class="box">\
-    <div class="plugin-title">%NAME%</div>\
-    <div class="plugin-authors">from %AUTHORS%</div>\
-    <div class="plugin-state %ENABLED%"><span class="material-icons-outlined">%ENABLED_ICON%</span> (%ENABLED_TEXT%)</div>\
-    <div class="plugin-version">%VERSION%</div>\
-    <div class="plugin-description">%DESCRIPTION%</div>\
-    <a class="plugin-website" href="%WEBSITE%">%WEBSITE%</a>\
-    <div class="plugin-toggle button is-warning" data-plugin="%NAME%" onclick="togglePlugin(this);"><span class="material-icons-outlined">toggle_%ENABLED_TOGGLE_ONOFF%</span> %ENABLED_TOGGLE_TEXT%</div>\
-</div>\
-';
-
 function initPage() {
     curr_task = updatePlugins;
 }
@@ -17,28 +5,19 @@ function initPage() {
 async function updatePlugins() {
     var newPlugins = await getDataFromAPI({ method: "GET_PLUGINS" });
 
-    if (JSONMatches(newPlugins, plugins)) return;
+    if (!JSONMatches(newPlugins, plugins)) {
+        var container = document.querySelector(".pluginContainer");
+        container.innerHTML = "";
+        var ignore = [];
 
-    var container = document.querySelector(".pluginContainer")
-    container.innerHTML = "";
+        newPlugins.forEach((elem) => {
+            if (ignore.includes(elem.name)) return;
+            container.append(generatePluginEntry(getIndependentObject(elem)));
+
+        })
+    }
 
     plugins = newPlugins;
-    pluginIDS = [];
-
-    plugins.forEach((elem) => {
-        elem = getIndependentObject(elem);
-        elem.enabled_icon = elem.enabled ? "done" : "highlight_off";
-        elem.enabled_text = elem.enabled ? "loaded" : "disabled";
-        elem.enabled_toggle_text = !elem.enabled ? "Enable" : "Disable";
-        elem.enabled_toggle_onoff = !elem.enabled ? "on" : "off";
-        if (elem.authors != null) {
-            elem.authors = elem.authors.join(",").substring(0, 40);
-        }
-        var html = PLUGIN_BOX_TEMPLATE;
-        container.innerHTML += replaceObjectKeyInString(elem, html);
-
-        pluginIDS.push(elem.file.replace(".SpigotDashDownload", "").replace(".jar", ""));
-    });
 }
 
 async function togglePlugin(elem) {
@@ -46,7 +25,6 @@ async function togglePlugin(elem) {
     elem.classList.add("is-loading");
 
     var pl = elem.getAttribute("data-plugin");
-
     var data = await getDataFromAPI({ method: "TOGGLE_PLUGIN", plugin: pl });
 
     if (data == "SUCCESS") {
@@ -56,81 +34,69 @@ async function togglePlugin(elem) {
         elem.classList.add("is-danger");
         elem.innerHTML = "Failed";
     }
-
     elem.classList.remove("is-loading");
-
-
 }
 
 var currentQuery = "";
 var latestUpdateQuery = "NULL";
 var pluginIDS = [94842];
+var currentPluginInstallMenu = null;
 
 async function togglePluginInstallDialogue() {
-    latestUpdateQuery = "NULL";
-    currentQuery = "";
-    await updateOrOpenDialogue();
-
-    while (Swal.isVisible() && Swal.getTitle().textContent == "Install Plugins") {
-        updateOrOpenDialogue();
-        await timer(1000);
+    if (currentPluginInstallMenu != null && !currentPluginInstallMenu.closed) {
+        currentPluginInstallMenu.close();
+        currentPluginInstallMenu = null;
+    } else {
+        latestUpdateQuery = "THISJUSTSITSHERELIKEADOG";
+        currentPluginInstallMenu = new smartMenu("PLUGININSTALL", "Install Plugins", "Install Plugins");
+        currentPluginInstallMenu.open();
+        dialogueUpdater();
     }
 }
 
-async function updateOrOpenDialogue() {
-    if (currentQuery == latestUpdateQuery) {
-        return;
-    }
+async function dialogueUpdater() {
+    while (currentPluginInstallMenu != null && !currentPluginInstallMenu.closed) {
+        if (currentQuery != latestUpdateQuery) {
+            if (currentQuery != "") {
+                var data = await fetch("https://api.spiget.org/v2/search/resources/" + currentQuery + "");
+                data = await data.json();
 
-    latestUpdateQuery = currentQuery;
+            } else {
+                var data = await fetch("https://api.spiget.org/v2/resources?sort=-updateDate");
+                data = await data.json();
+            }
 
-    if (currentQuery != "") {
-        var data = await fetch("https://api.spiget.org/v2/search/resources/" + currentQuery + "");
-        data = await data.json();
+            var entrys_html = "";
+            data.forEach((elem) => {
+                var insertElem = {};
+                insertElem["SUPPORTED_VERSIONS"] = elem.testedVersions.join(", ");
+                insertElem["ID"] = elem.id;
+                insertElem["NAME"] = elem.name;
+                insertElem["LATEST_VERSION"] = elem.version.id;
+                insertElem["TAG"] = elem.tag;
+                insertElem["BTN_ATTRIBS"] = "";
+                insertElem["BTN_TEXT"] = "+ Install";
+                insertElem["WARNINGS"] = "";
 
-    } else {
-        var data = await fetch("https://api.spiget.org/v2/resources?sort=-updateDate");
-        data = await data.json();
-    }
+                if (elem.file.type != ".jar") {
+                    insertElem["BTN_TEXT"] = '<a class="has-text-danger">Unsupported Format</a>';
+                    insertElem["BTN_ATTRIBS"] = "disabled";
+                }
 
-    var entrys_html = "";
+                if (pluginIDS.includes("" + elem.id)) {
+                    insertElem["BTN_ATTRIBS"] = "disabled";
+                    insertElem["BTN_TEXT"] = '<span class="material-icons-outlined pr-1">done</span>Installed';
+                }
 
-    data.forEach((elem) => {
+                var html = replaceObjectKeyInString(insertElem, PLUGINS_INSTALL_DIALOGUE_ENTRY);
+                entrys_html += html;
+            });
 
-        var insertElem = {};
-        insertElem["SUPPORTED_VERSIONS"] = elem.testedVersions.join(", ");
-        insertElem["ID"] = elem.id;
-        insertElem["NAME"] = elem.name;
-        insertElem["LATEST_VERSION"] = elem.version.id;
-        insertElem["TAG"] = elem.tag;
-        insertElem["BTN_ATTRIBS"] = "";
-        insertElem["BTN_TEXT"] = "+ Install";
-        insertElem["WARNINGS"] = "";
-
-        if (elem.file.type != ".jar") {
-            insertElem["BTN_TEXT"] = '<a class="has-text-danger">Unsupported Format</a>';
-            insertElem["BTN_ATTRIBS"] = "disabled";
+            var html = PLUGINS_INSTALL_DIALOGUE.replace("%ENTRYS%", entrys_html).replace("%CURRENT_SEARCH%", currentQuery);
+            currentPluginInstallMenu.setHTML(html);
+            latestUpdateQuery = currentQuery;
         }
-
-        if (pluginIDS.includes("" + elem.id)) {
-            insertElem["BTN_ATTRIBS"] = "disabled";
-            insertElem["BTN_TEXT"] = '<span class="material-icons-outlined pr-1">done</span>Installed';
-        }
-
-        var html = replaceObjectKeyInString(insertElem, PLUGINS_INSTALL_DIALOGUE_ENTRY);
-        entrys_html += html;
-    });
-
-    var html = PLUGINS_INSTALL_DIALOGUE.replace("%ENTRYS%", entrys_html).replace("%CURRENT_SEARCH%", currentQuery);
-
-    if (Swal.isVisible() && Swal.getTitle().textContent == "Install Plugins") {
-        Swal.getHtmlContainer().innerHTML = html;
-    } else {
-        Swal.fire({
-            title: "Install Plugins",
-            html: html,
-            width: "90vw"
-        });
+        await timer(1000);
     }
 }
 
@@ -152,22 +118,22 @@ async function installPluginButtonClick(elem) {
 }
 
 var PLUGINS_INSTALL_DIALOGUE = '<div class="w-100">\
-<div class="field has-addons w-100" style="justify-content: center;">\
+<div class="field has-addons w-100 pluginInstallControlsField" style="justify-content: center;">\
     <div class="control">\
         <input class="input is-primary" type="text" placeholder="Name" value="%CURRENT_SEARCH%">\
     </div>\
     <div class="control">\
-        <a class="button is-success" onclick="currentQuery = this.parentElement.parentElement.querySelector(\'input\').value; updateOrOpenDialogue();">?</a>\
+        <a class="button is-success" onclick="currentQuery = this.parentElement.parentElement.querySelector(\'input\').value;">?</a>\
     </div>\
 </div>\
 </div>\
 \
-<div class="pluginInstallList">\
+<div class="pluginInstallList heightFill">\
 %ENTRYS%\
 </div>'
 
 var PLUGINS_INSTALL_DIALOGUE_ENTRY = '\
-<div class="card m-2" style="overflow: hidden;">\
+<div class="card" style="">\
     <div class="card-content">\
         <div class="media">\
             <div class="media-left">\

@@ -5,14 +5,6 @@ function replaceObjectKeyInString(object, string) {
 }
 
 function replaceObjectKeyInStringWithChar(object, string, char) {
-    try {
-        object.x = object.Location.X;
-        object.y = object.Location.Y;
-        object.z = object.Location.Z;
-        object.world = object.Location.WORLD;
-    } catch (err) {}
-
-
     for (var [key, value] of Object.entries(object)) {
         if (value == null || value == undefined) {
             value = "";
@@ -26,9 +18,44 @@ function replaceObjectKeyInStringWithChar(object, string, char) {
 function insertObjectIntoHTML(object, tree) {
     for (var [key, value] of Object.entries(object)) {
         tree.querySelectorAll("*[data-apiobj='" + key.toUpperCase() + "'").forEach((elem) => {
-            elem.innerHTML = value;
+            if (elem.innerHTML != value) {
+                elem.innerHTML = value;
+            }
         })
     }
+}
+
+function heightFillRestClass() {
+    document.querySelectorAll(".heightFill").forEach((elem) => {
+        elem.style.height = elem.parentElement.offsetHeight - elem.offsetTop + "px";
+    });
+
+    document.querySelectorAll(".maxHeightFill").forEach((elem) => {
+        elem.style.maxHeight = elem.parentElement.offsetHeight - elem.offsetTop + "px";
+    });
+}
+
+function arr_diff(a1, a2) {
+    var a = [],
+        diff = [];
+
+    for (var i = 0; i < a1.length; i++) {
+        a[a1[i]] = true;
+    }
+
+    for (var i = 0; i < a2.length; i++) {
+        if (a[a2[i]]) {
+            delete a[a2[i]];
+        } else {
+            a[a2[i]] = true;
+        }
+    }
+
+    for (var k in a) {
+        diff.push(k);
+    }
+
+    return diff;
 }
 
 function JSONMatches(objectone, objecttwo) {
@@ -130,10 +157,40 @@ async function loadCSSIfExists(url, container) {
     }
 }
 
+String.prototype.capitalizeFirstLetter = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
+
+Array.prototype.latest = function() {
+    return this[this.length - 1];
+}
+
+Array.prototype.includesKeyValue = function(key, value) {
+    for (var i = 0; i < this.length; i++) {
+        var obj = this[i];
+        if (obj[key] != null && obj[key] == value) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+Array.prototype.getObjectWithKeyValue = function(key, value) {
+    for (var i = 0; i < this.length; i++) {
+        var obj = this[i];
+        if (obj[key] != null && obj[key] == value) {
+            return obj;
+        }
+    }
+
+    return null;
+}
 
 var theme = (document.head.innerHTML.includes("bulmaswatch") ? "dark" : "light");
 var API_URL = "./api";

@@ -13,8 +13,14 @@
     <link rel="stylesheet" href="./global/other-license/hightlightjs.railcasts.min.css">
     <script src="./global/other-license/highlight.min.js"></script>
 
+    <link rel="stylesheet" href="./global/global.css">
+
     <script src="./global/global.js"></script>
     <script src="./global/taskManager.js"></script>
+    <script src="./global/componentGenerator.js"></script>
+
+    <script src="./global/smartMenu.js"></script>
+    <link rel="stylesheet" href="./global/smartMenu.css">
 
     <script src="./global/minecraftColors.js"></script>
     <link rel="stylesheet" href="./global/minecraftColors.css">
@@ -22,10 +28,14 @@
 </head>
 
 <body>
-    <div class="columns">
-        <div class="column is-one-fifth p-5">
+    <div class="columns" style="height: 100vh; margin: 0;">
+        <div class="column is-one-fifth p-5" style="max-width: 300px; max-height: 100vh; overflow: auto;">
 
             <aside class="menu">
+                <ul class="menu-list">
+                    <li><img src="./global/NewLogoWeb.png"></img>
+                    </li>
+                </ul>
                 <ul class="menu-list">
                     <li><a data-url="./pages/overview/overview.html">Overview</a></li>
                 </ul>
@@ -56,14 +66,15 @@
             </aside>
         </div>
 
-        <div class="column is-four-fifths p-5 contentColumn" style="height: 100vh;">
-            <div id="currurl" data-page=""></div>
+        <div class="column contentColumn p-0" style="height: 100vh; flex-grow: 1;">
+            <!--<div id="currurl" data-page=""></div>
             <div id="pagecontent" style="height: 100%;">
                 <div class="has-text-danger">
                     You see this and it doesn´t go away?<br><br>The Javascript Execution failed and could not load the Page!<br> Please check if Javascript is enabled in your Browser!<br>If Javascript is enabled your Browser doesn´t support this Webinterface!<br><br>ID:
                     INITIAL_PAGE_LOAD_FAILED
                 </div>
-            </div>
+            </div>!-->
+            <div class="menuLayerContainer"></div>
         </div>
 
         <script src="./index.js"></script>

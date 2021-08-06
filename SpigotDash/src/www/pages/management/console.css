@@ -1,6 +1,6 @@
 .console {
     background-color: black;
-    height: 90%;
+    height: 85%;
     width: 100%;
     display: inline-block;
 }
@@ -8,8 +8,8 @@
 .controls {
     display: inline-block;
     width: 100%;
-    height: 9%;
     left: 50%;
+    overflow: auto;
 }
 
 .controls>.tile {
@@ -29,4 +29,13 @@
     overflow-y: scroll;
     overflow-x: auto;
     color: white;
+}
+
+.console_messagelist_entry {
+    opacity: 0;
+    transition: opacity ease-in-out 1s;
+}
+
+.console_messagelist_entry.FADEIN {
+    opacity: 1;
 }

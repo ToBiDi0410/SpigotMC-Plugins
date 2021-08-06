@@ -65,7 +65,7 @@ public class AuthHandler {
 	}
 	
 	public static boolean isAuthed(HttpExchange he) {
-		HttpCookie sessionCookie = getSessionCookie(he);
+		HttpCookie sessionCookie = getSessionCookie(he);		
 		if(sessionCookie != null) {
 			if(sessionData.containsKey(sessionCookie.getValue())) {
 				return true;
@@ -75,11 +75,23 @@ public class AuthHandler {
 	}
 	
 	public static HttpCookie getSessionCookie(HttpExchange he) {
-		HttpCookie cookie = null;
-		String sessionCookie = he.getRequestHeaders().getFirst("Cookie");
-		if(sessionCookie != null) {
-			 cookie = HttpCookie.parse(sessionCookie).get(0);
+		return getCookieByName(he, "sessionId");
+	}
+	
+	public static HttpCookie getCookieByName(HttpExchange he, String name) {
+		if(!he.getRequestHeaders().containsKey("Cookie")) return null;
+		//pluginConsole.sendMessage("Cookie Header found!");
+		for(String cookieHeader : he.getRequestHeaders().get("Cookie")) {
+			//pluginConsole.sendMessage("Parsing Cookie Header: " + cookieHeader);
+			String[] cookieParts = cookieHeader.split(";");
+			for(String cookieString : cookieParts) {
+				HttpCookie cok = HttpCookie.parse(cookieString).get(0);
+				//pluginConsole.sendMessage("Checking Cookie: " + cok);
+				if(cok.getName().equalsIgnoreCase(name)) {
+					return cok;
+				}
+			}
 		}
-		return cookie;
+		return null;
 	}
 }

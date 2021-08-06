@@ -10,7 +10,7 @@ import de.tobias.spigotdash.main;
 
 public class configuration {
 	
-	public static String current_ver = "0.4";
+	public static String current_ver = "0.5";
 	
 	public static File cfg_file = new File(main.pl.getDataFolder(), "config.yml");
 	public static YamlConfiguration yaml_cfg = null;
@@ -24,7 +24,10 @@ public class configuration {
 		CFG.put("WEB_PASSWORD", "PleaseChangeThis");
 		CFG.put("UPDATE_REFRESH_TIME", 30);
 		CFG.put("PLAYER_RECORD", 0);
-		CFG.put("darkMode", false);
+		CFG.put("darkMode", true);
+		//0.5
+		CFG.put("autoUpdate", true);
+		CFG.put("autoReloadOnUpdate", true);
 		
 		pluginConsole.sendMessage("Initializing Config File...");
 		if(!cfg_file.exists()) {
@@ -74,23 +77,32 @@ public class configuration {
 	
 	public static boolean tryUpgrade(YamlConfiguration yaml_cfg) {
 		boolean migrated = false;
-		if(yaml_cfg.getString("FILE_VERSION").equalsIgnoreCase("0.2")) {
+		String currentFileVer = yaml_cfg.getString("FILE_VERSION");
+		if(currentFileVer.equalsIgnoreCase("0.2")) {
 			yaml_cfg.set("UPDATE_REFRESH_TIME", 30);
 			yaml_cfg.set("FILE_VERSION", "0.3");
 			save();
 			migrated = true;
 		}
 		
-		if(yaml_cfg.getString("FILE_VERSION").equalsIgnoreCase("0.3")) {
+		if(currentFileVer.equalsIgnoreCase("0.3")) {
 			yaml_cfg.set("PLAYER_RECORD", 0);
-			yaml_cfg.set("darkMode", false);
+			yaml_cfg.set("darkMode", true);
 			yaml_cfg.set("FILE_VERSION", "0.4");
 			save();
 			migrated = true;
 		}
 		
+		if(currentFileVer.equalsIgnoreCase("0.4")) {
+			yaml_cfg.set("autoUpdate", true);
+			yaml_cfg.set("autoReloadOnUpdate", true);
+			yaml_cfg.set("FILE_VERSION", "0.5");
+			save();
+			migrated = true;
+		}
+		
 		if(migrated) {
-			pluginConsole.sendMessage("&2Migrated Configuration File to new Version, ignore the Warnings above!");
+			pluginConsole.sendMessage("&2Migrated Configuration File to new Version &7(&6" + currentFileVer + " --> &b" + yaml_cfg.get("FILE_VERSION") + "&7)&2, ignore the Warnings above!");
 		}
 		return migrated;
 	}

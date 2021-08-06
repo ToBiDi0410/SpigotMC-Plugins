@@ -17,11 +17,12 @@ public class updater {
 	public static String current_version = main.pl.getDescription().getVersion().split(" ")[0];
 	public static boolean update_available = false;
 	public static String LOCAL_PREFIX = "&7[&5Updater&7] &7";
+	public static String THIS_SPIGOT_ID = "93710";
 
 	public static void checkForUpdates() {
 		try {
 			pluginConsole.sendMessage(LOCAL_PREFIX + "&7Checking for Updates...");
-			URL url = new URL("https://api.spiget.org/v2/resources/93710/versions?size=1&sort=-id&fields=name");
+			URL url = new URL("https://api.spiget.org/v2/resources/" + THIS_SPIGOT_ID + "/versions?size=1&sort=-id&fields=name");
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			con.setDoOutput(false);
@@ -54,6 +55,9 @@ public class updater {
 				if(update == -1) {
 					update_available = true;
 					pluginConsole.sendMessage(LOCAL_PREFIX + "&7New Update &aavailable&7 (&6" + current_version + " &7--> &b" + newest_version + "&7)! Please take a look at &6SpigotMC&7!");
+					if(configuration.yaml_cfg.getBoolean("autoUpdate")) {
+						pluginInstaller.updatePlugin(main.pl, THIS_SPIGOT_ID);
+					}
 				} else if(update == 0) {
 					update_available = false;
 					pluginConsole.sendMessage(LOCAL_PREFIX + "&aYou are running the newest Version!");

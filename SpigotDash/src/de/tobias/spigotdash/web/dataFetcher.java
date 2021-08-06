@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -123,7 +124,11 @@ public class dataFetcher {
 	}
 	
 	public static File getPluginFile(Plugin pl) {
-		return new File(pl.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+		try {
+			return new File(pl.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+		} catch (URISyntaxException e) {
+			return null;
+		}
 	}
 	
 	
