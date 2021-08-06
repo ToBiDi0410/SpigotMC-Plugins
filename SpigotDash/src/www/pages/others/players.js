@@ -14,11 +14,11 @@ async function updatePlayerList() {
     var cont = document.querySelector(".players");
 
     if (players.length <= 0) {
-        cont.innerHTML = '<a class="has-text-danger">There are currently no Players on this Server!';
+        cont.innerHTML = '<a class="has-text-danger">%T%NO_PLAYERS_ONLINE%T%</a>';
         return;
     }
 
-    if (cont.innerHTML.includes('There are currently no Players on this Server!')) {
+    if (cont.innerHTML.includes('%T%NO_PLAYERS_ONLINE%T%')) {
         cont.innerHTML = "";
     }
 
@@ -55,7 +55,7 @@ async function showInfos(uuid) {
     while (!menu.closed) {
         var thisPlayer = players.find(function(elem) { return (elem.UUID == player.UUID); });
         if (thisPlayer == null || thisPlayer == undefined) {
-            menu.setHTML(menu.html + '<br><a class="has-text-danger"><b>The Player you are viewing left the Server, no more updates!</b></a>');
+            menu.setHTML(menu.html + '<br><a class="has-text-danger"><b>%T%PLAYER_LEFT_SERVER%T%</b></a>');
             break;
         }
 
@@ -70,10 +70,10 @@ async function showInfos(uuid) {
 
 async function sendMessageClick(uuid) {
     var res = await Swal.fire({
-        title: "Send Ingame Message",
-        text: "Color Codes with '&' are Supported (e.g. '&6')!",
+        title: "%T%SEND_INGAME_MESSAGE%T%",
+        text: "%T%COLOR_CODES_SUPPORTED%T%",
         input: "text",
-        confirmButtonText: "Send Message",
+        confirmButtonText: "%T%SEND_MESSAGE%T%",
         showCancelButton: true,
         backdrop: true,
         allowOutsideClick: () => !Swal.isLoading(),
@@ -89,8 +89,8 @@ async function sendMessageClick(uuid) {
 
     if (res.isConfirmed) {
         Swal.fire({
-            title: "Sent",
-            text: "The Message was sent successfully!",
+            title: "%T%SENT%T%",
+            text: "%T%INGAME_MESSAGE_SENT%T%",
             icon: "success",
             timer: 2000,
             timerProgressBar: true
@@ -100,10 +100,10 @@ async function sendMessageClick(uuid) {
 
 async function kickClick(uuid) {
     var res = await Swal.fire({
-        title: "Kick Player",
-        text: "Color Codes with '&' are Supported (e.g. '&6')!",
+        title: "%T%KICK_PLAYER%T%",
+        text: "%T%COLOR_CODES_SUPPORTED%T%",
         input: "text",
-        confirmButtonText: "Kick Player",
+        confirmButtonText: "%T%KICK_PLAYER%T%",
         showCancelButton: true,
         backdrop: true,
         allowOutsideClick: () => !Swal.isLoading(),
@@ -119,8 +119,8 @@ async function kickClick(uuid) {
 
     if (res.isConfirmed) {
         Swal.fire({
-            title: "Kicked",
-            text: "The Player has been kicked!",
+            title: "%T%KICKED%T%",
+            text: "%T%PLAYER_KICKED%T%",
             icon: "success",
             timer: 2000,
             timerProgressBar: true
@@ -129,11 +129,11 @@ async function kickClick(uuid) {
 }
 
 var TEMPLATE_PLAYER_MENU = '\
-<a><b>Displayname: </b>%DISPLAYNAME%<br>\
+<a><b>%T%DISPLAYNAME%T%: </b>%DISPLAYNAME%<br>\
 <a><b>UUID: </b>%UUID%<br><br>\
-<a><b>Position: </b>X: %X%, Y: %Y%, Z: %Z% in %WORLD%<br>\
-<a><b>Health: </b>%HEALTH%/%HEALTH_MAX%<br>\
-<a><b>Food: </b>%FOOD%/20<br>\
-<div class="button is-info m-1" onclick="sendMessageClick(this.getAttribute(\'data-uuid\'))" data-uuid="%UUID%">Message</div>\
-<div class="button is-danger m-1" onclick="kickClick(this.getAttribute(\'data-uuid\'))" data-uuid="%UUID%">Kick</div>\
+<a><b>%T%POSITION%T%: </b>X: %X%, Y: %Y%, Z: %Z% %T%IN%T% %WORLD%<br>\
+<a><b>%T%HEALTH%T%: </b>%HEALTH%/%HEALTH_MAX%<br>\
+<a><b>%T%FOOD%T%: </b>%FOOD%/20<br>\
+<div class="button is-info m-1" onclick="sendMessageClick(this.getAttribute(\'data-uuid\'))" data-uuid="%UUID%">%T%ACTION_MESSAGE%T%</div>\
+<div class="button is-danger m-1" onclick="kickClick(this.getAttribute(\'data-uuid\'))" data-uuid="%UUID%">%T%ACTION_KICK%T%</div>\
 ';

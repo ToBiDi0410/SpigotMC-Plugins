@@ -13,7 +13,7 @@ public class notificationManager {
 	public static void setNeedReload(boolean value) {
 		needReload = value;
 		if(needReload) {
-			notificationManager.addNotification("RELOAD_NEEDED", "WARNING", "SpigotDash", "Reload required", "A reload or restart is required to finish Plugin installation!<br><button class=\"button is-danger\" onclick='reloadServer();'>Reload</button>", -1);
+			notificationManager.addNotification("RELOAD_NEEDED", "WARNING", "SpigotDash", translations.replaceTranslationsInString("%T%NOTIFICATION_RELOADNEED_TITLE%T%"), translations.replaceTranslationsInString("%T%NOTIFICATION_RELOADNEED_CONTENT%T%"), -1);
 		}
 	}
 	

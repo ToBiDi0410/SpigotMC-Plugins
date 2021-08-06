@@ -2,6 +2,17 @@ var currURLElem = document.querySelector("#currurl");
 var currentMenu = null;
 var contentContainer = null;
 
+var PAGE_NAMES = {
+    overview: "%T%OVERVIEW%T%",
+    graphs: "%T%GRAPHS%T%",
+    worlds: "%T%WORLDS%T%",
+    console: "%T%CONSOLE%T%",
+    controls: "%T%CONTROLS%T%",
+    plugins: "%T%PLUGINS%T%",
+    players: "%T%PLAYERS%T%",
+    files: "%T%FILES%T%"
+}
+
 async function init() {
     document.querySelectorAll(".menu-list>li>a").forEach((elem) => {
         elem.addEventListener("click", function(event) {
@@ -39,7 +50,7 @@ async function loadPage(url) {
 
     await smartMenuHelpers.closeAll();
 
-    var pageName = url.split("/").latest().capitalizeFirstLetter();
+    var pageName = PAGE_NAMES[url.split("/").latest().toLowerCase()];
 
     var menu = new smartMenu(url, pageName, pageName);
     menu.open();
@@ -71,7 +82,7 @@ async function loadPage(url) {
     } catch (err) {
         console.error("[LOADER] Page load failed: ");
         console.error(err);
-        contentContainer.innerHTML = '<a class="has-text-danger">Page load failed! Is the Server online?</a>';
+        contentContainer.innerHTML = '<a class="has-text-danger">%T%PAGE_LOAD_FAILED%T%</a>';
     }
 
 }

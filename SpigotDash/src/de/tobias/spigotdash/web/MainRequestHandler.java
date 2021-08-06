@@ -6,7 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
+import org.bukkit.craftbukkit.libs.org.codehaus.plexus.util.FileUtils;
+
+import com.google.common.io.Resources;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,6 +20,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import de.tobias.spigotdash.utils.errorCatcher;
 import de.tobias.spigotdash.utils.pluginConsole;
+import de.tobias.spigotdash.utils.translations;
 
 public class MainRequestHandler implements HttpHandler {
 
@@ -35,13 +40,23 @@ public class MainRequestHandler implements HttpHandler {
 					classpath = "/www/404.html";
 				}
 				res = getClass().getResource(classpath);
-
-				File f = new File(res.toExternalForm());
-				he.sendResponseHeaders(200, f.length());
+				
 				OutputStream outputStream = he.getResponseBody();
-				getClass().getResourceAsStream(classpath).transferTo(outputStream);
+				String extension = FileUtils.getExtension(res.getPath().toString());
+				
+				if(extension.equalsIgnoreCase("html") || extension.equalsIgnoreCase("js")) {
+					String fileContent = Resources.toString(res, StandardCharsets.UTF_8);
+					fileContent = translations.replaceTranslationsInString(fileContent);
+					byte[] fileContentBytes = fileContent.getBytes(StandardCharsets.UTF_8);
+					he.sendResponseHeaders(200, fileContentBytes.length);
+					outputStream.write(fileContentBytes);
+				} else {
+					File f = new File(res.toExternalForm());
+					he.sendResponseHeaders(200, f.length());
+					getClass().getResourceAsStream(classpath).transferTo(outputStream);
+				}
+				
 				outputStream.close();
-				;
 			}
 		} catch (Exception ex) {
 			errorCatcher.catchException(ex, false);
@@ -110,7 +125,7 @@ public class MainRequestHandler implements HttpHandler {
 	public static void sendJSONResponse(HttpExchange he, Integer code, Object data) {
 		try {
 			String response_string = new GsonBuilder().serializeNulls().create().toJson(data);
-			byte[] message_bytes = response_string.getBytes();
+			byte[] message_bytes = response_string.getBytes(StandardCharsets.UTF_8);
 			he.getResponseHeaders().add("Content-Type", "application/json");
 			he.sendResponseHeaders(code, message_bytes.length);
 			OutputStream outputStream = he.getResponseBody();

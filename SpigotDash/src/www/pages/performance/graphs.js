@@ -19,7 +19,7 @@ function initCPUChart() {
             enabled: false
         },
         title: {
-            text: 'CPU Usage',
+            text: '%T%CPU_USAGE%T%',
             align: 'left'
         },
         yaxis: {
@@ -47,7 +47,7 @@ function initRAMChart() {
             enabled: false
         },
         title: {
-            text: 'RAM Usage',
+            text: '%T%RAM_USAGE%T%',
             align: 'left'
         },
         yaxis: {
@@ -76,7 +76,7 @@ function initTPSChart() {
             enabled: false
         },
         title: {
-            text: 'TPS History',
+            text: '%T%TPS_HISTORY%T%',
             align: 'left'
         },
         yaxis: {
@@ -105,7 +105,7 @@ function initEngineChart() {
             enabled: false
         },
         title: {
-            text: 'Engine Stats',
+            text: '%T%ENGINE_STATS%T%',
             align: 'left'
         },
         yaxis: [{
@@ -157,41 +157,41 @@ async function updateData() {
                 }
             },
             series: [{
-                name: "Allocated",
+                name: "%T%ALLOCATED%T%",
                 data: []
             }, {
-                name: "Used",
+                name: "%T%USED%T%",
                 data: []
             }]
         }
 
         var TPS_GRAPH = {
             series: [{
-                name: "TPS (Ticks per Second)",
+                name: "%T%TPS_LONG%T%",
                 data: []
             }]
         }
 
         var CPU_GRAPH = {
             series: [{
-                name: "Host CPU Load",
+                name: "%T%CPU_LOAD_HOST%T%",
                 data: []
             }, {
-                name: "Load caused by Server",
+                name: "%T%CPU_LOAD_SERVER%T%",
                 data: []
             }]
         }
 
         var ENGINE_GRAPH = {
             series: [{
-                    name: "Chunks",
+                    name: "%T%CHUNKS%T%",
                     data: []
                 }, {
-                    name: "Entities",
+                    name: "%T%ENTITIES%T%",
                     data: []
                 },
                 {
-                    name: "Players",
+                    name: "%T%PLAYERS%T%",
                     data: []
                 }
             ]

@@ -25,19 +25,19 @@ public class taskManager {
 					// ** NOTIFICATIONS **
 					notificationManager.manageNotifications();
 					if(dataFetcher.getTPS() < 17.0f) {
-						notificationManager.addNotification("LOW_TPS_WARN", "WARNING", "SpigotDash", "Low TPS", "You server is currently running at <b>low TPS</b>! Check the Performance tab for further information!", 1);
+						notificationManager.addNotification("LOW_TPS_WARN", "WARNING", "SpigotDash", translations.replaceTranslationsInString("%T%NOTIFICATION_LOWTPS_TITLE%T%"), translations.replaceTranslationsInString("%T%NOTIFICATION_LOWTPS_CONTENT%T%"), 1);
 					}
 					
 					if(dataFetcher.pluginsDisabled()) {
-						notificationManager.addNotification("PLUGINS_DISABLED_WARN", "WARNING", "SpigotDash", "Plugins disabled", "One or more Plugins are currently <b>disabled or unloaded</b><br>Please check the Log for Errors if this is not intended!", -1);
+						notificationManager.addNotification("PLUGINS_DISABLED_WARN", "WARNING", "SpigotDash", translations.replaceTranslationsInString("%T%NOTIFICATION_DISABLEDPLUGINS_TITLE%T%"), translations.replaceTranslationsInString("%T%NOTIFICATION_DISABLEDPLUGINS_CONTENT%T%"), -1);
 					}
 					
 					if(dataFetcher.unusedJARFiles()) {
-						notificationManager.addNotification("PLUGINS_JARUNLOADED_WARN", "DANGER", "SpigotDash", "Unloaded JAR Files", "One or more JAR Files in the Plugins folder are currently <b>unloaded or invalid</b>!", -1);
+						notificationManager.addNotification("PLUGINS_JARUNLOADED_WARN", "DANGER", "SpigotDash", translations.replaceTranslationsInString("%T%NOTIFICATION_UNLOADEDJARS_TITLE%T%"), translations.replaceTranslationsInString("%T%NOTIFICATION_UNLOADEDJARS_CONTENT%T%"), -1);
 					}
 					
 					if(updater.update_available == true) {
-						notificationManager.addNotification("UPDATE_AVAILABLE", "INFO", "SpigotDash", "Update available", "An new Update for this Plugin was found!<br>Please visit <a href='https://www.spigotmc.org/resources/spigotdash-webinterface-performance-monitor.93710/'><b>SpigotMC</b></a> for more Information", -1);
+						notificationManager.addNotification("UPDATE_AVAILABLE", "INFO", "SpigotDash", translations.replaceTranslationsInString("%T%NOTIFICATION_UPDATE_TITLE%T%"), translations.replaceTranslationsInString("%T%NOTIFICATION_UPDATE_CONTENT%T%"), -1);
 					}
 					
 					lastUpdate = System.currentTimeMillis();

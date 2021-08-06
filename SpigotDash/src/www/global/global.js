@@ -101,8 +101,8 @@ function showOffline(state) {
     if (state == true) {
         if (Swal.isVisible() && Swal.getTitle().textContent == "Reconnecting...") return;
         Swal.fire({
-            title: "Reconnecting...",
-            text: "Oh no, the Server seems to be offline! We will try reconnecting for you...",
+            title: "%T%RECONNECTING%T%",
+            text: "%T%SERVER_OFFLINE%T%",
             showConfirmButton: false,
             allowOutsideClick: false,
             allowEscapeKey: false
@@ -114,8 +114,8 @@ function showOffline(state) {
 
 function loginRequired() {
     Swal.fire({
-        title: "Login required",
-        html: "You need to be logged in to use this Page!<br>Redirecting you to the Login page...",
+        title: "%T%LOGIN_REQUIRED_SHORT%T%",
+        html: "%T%LOGIN_REQUIRED_POPUP%T%",
         showCancelButton: false,
         showConfirmButton: false,
         allowOutsideClick: false,

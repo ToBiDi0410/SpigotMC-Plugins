@@ -36,7 +36,7 @@ var TEMPLATE_LOGLIST_ENTRY = '<li class="console_messagelist_entry">%MESSAGE%</l
 
 function generateLogListEntry(message) {
     var html = TEMPLATE_LOGLIST_ENTRY;
-    html = html.replace("%MESSAGE%", ansiStringToHTMLString(message));
+    html = html.replace("%MESSAGE%", minecraftStringToHTMLString(message));
     return getDOMObject(html);
 }
 
@@ -44,7 +44,7 @@ function generateLogListEntry(message) {
 var TEMPLATE_PLUGIN_ENTRY = '\
 <div class="">\
     <div class="plugin-title">%NAME%</div>\
-    <div class="plugin-authors">from %AUTHORS%</div>\
+    <div class="plugin-authors">%T%FROM%T% %AUTHORS%</div>\
     <div class="plugin-state %ENABLED%"><span class="material-icons-outlined">%ENABLED_ICON%</span> (%ENABLED_TEXT%)</div>\
     <div class="plugin-version">%VERSION%</div>\
     <div class="plugin-description">%DESCRIPTION%</div>\
@@ -57,8 +57,8 @@ function generatePluginEntry(value) {
     var html = TEMPLATE_PLUGIN_ENTRY;
 
     value.enabled_icon = value.enabled ? "done" : "highlight_off";
-    value.enabled_text = value.enabled ? "loaded" : "disabled";
-    value.enabled_toggle_text = !value.enabled ? "Enable" : "Disable";
+    value.enabled_text = value.enabled ? "%T%ENABLED%T%" : "%T%DISABLED%T%";
+    value.enabled_toggle_text = !value.enabled ? "%T%ENABLE%T%" : "%T%DISABLE%T%";
     value.enabled_toggle_onoff = !value.enabled ? "on" : "off";
     if (value.authors != null) {
         value.authors = value.authors.join(",").substring(0, 40);
@@ -87,7 +87,7 @@ function generatePlayerEntry(value) {
     value.y = value.Location.Y;
     value.z = value.Location.Z;
     value.world = value.Location.WORLD;
-    value.Displayname = ansiStringToHTMLString(value.Displayname);
+    value.Displayname = minecraftStringToHTMLString(value.Displayname);
 
     html = replaceObjectKeyInString(value, html);
     return getDOMObject(html);

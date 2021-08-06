@@ -75,17 +75,17 @@ async function dialogueUpdater() {
                 insertElem["LATEST_VERSION"] = elem.version.id;
                 insertElem["TAG"] = elem.tag;
                 insertElem["BTN_ATTRIBS"] = "";
-                insertElem["BTN_TEXT"] = "+ Install";
+                insertElem["BTN_TEXT"] = "+ %T%INSTALL%T%";
                 insertElem["WARNINGS"] = "";
 
                 if (elem.file.type != ".jar") {
-                    insertElem["BTN_TEXT"] = '<a class="has-text-danger">Unsupported Format</a>';
+                    insertElem["BTN_TEXT"] = '<a class="has-text-danger">%T%ERROR_UNSUPPORTED_FILE_FORMAT%T%</a>';
                     insertElem["BTN_ATTRIBS"] = "disabled";
                 }
 
                 if (pluginIDS.includes("" + elem.id)) {
                     insertElem["BTN_ATTRIBS"] = "disabled";
-                    insertElem["BTN_TEXT"] = '<span class="material-icons-outlined pr-1">done</span>Installed';
+                    insertElem["BTN_TEXT"] = '<span class="material-icons-outlined pr-1">done</span>%T%INSTALLED%T%';
                 }
 
                 var html = replaceObjectKeyInString(insertElem, PLUGINS_INSTALL_DIALOGUE_ENTRY);
@@ -114,7 +114,7 @@ async function installPluginButtonClick(elem) {
     await timer(1000);
 
     elem.classList.remove("is-loading");
-    elem.innerHTML = '<span class="material-icons-outlined pr-1">done</span>Installed';
+    elem.innerHTML = '<span class="material-icons-outlined pr-1">done</span>%T%INSTALLED%T%';
 }
 
 var PLUGINS_INSTALL_DIALOGUE = '<div class="w-100">\
@@ -155,7 +155,7 @@ var PLUGINS_INSTALL_DIALOGUE_ENTRY = '\
     <footer class="card-footer p-2">\
         <div class="level" style="width: 100%;">\
             <div class="level-left">\
-                <div class="has-text-danger">Supports:</div>\
+                <div class="has-text-danger">%T%SUPPORTS%T%:</div>\
                 <div class="has-text-secondary pl-1 pr-1">%SUPPORTED_VERSIONS%</div>\
             </div>\
 \

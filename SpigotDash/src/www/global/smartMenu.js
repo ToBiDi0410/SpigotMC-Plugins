@@ -28,7 +28,7 @@ var TEMPLATE_MENU_LAYER = '\
         </div>\
         <div class="hiddenFontHeighter">X</div>\
         <div class="buttons">\
-            ← Back\
+            ← %T%BACK%T%\
         </div>\
     </div>\
     <div class="ctitle">\

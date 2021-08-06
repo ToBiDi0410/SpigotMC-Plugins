@@ -11,6 +11,7 @@ import de.tobias.spigotdash.utils.pluginConsole;
 import de.tobias.spigotdash.utils.pluginInstaller;
 import de.tobias.spigotdash.utils.pluginManager;
 import de.tobias.spigotdash.utils.taskManager;
+import de.tobias.spigotdash.utils.translations;
 import de.tobias.spigotdash.web.WebServer;
 
 public class main extends JavaPlugin {
@@ -38,6 +39,9 @@ public class main extends JavaPlugin {
 			
 			//CONFIGURATION SETUP
 			configuration.init();
+			
+			//TRANSLATION LOADING
+			translations.load();
 
 			//DATABASE SETUP
 			databaseManager.connect();
@@ -55,7 +59,7 @@ public class main extends JavaPlugin {
 			JoinTime.enableSet();
 			
 			latestStart = System.currentTimeMillis();
-
+			
 			pluginConsole.sendMessage("&5Everything (seems to be) done!");
 			
 			//pluginInstaller.installPlugin("761feafe03");

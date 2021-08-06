@@ -14,7 +14,7 @@ var FILE_TEMPLATE_FILE = '<tr onclick="fileListClickEntry(this);" data-relative-
 
 var FILE_TEMPLATE_BACK = '<tr onclick="goBackPath();">\
     <th><span class="material-icons-outlined">undo</span></th >\
-    <td>Previous Folder</td>\
+    <td>%T%PREVIOUS_FOLDER%T%</td>\
     <td></td>\
     <tr>';
 
@@ -73,7 +73,7 @@ async function openFileInViewer(path) {
 
     try {
         if (!(path.includes("yml") || path.includes("yaml") || path.includes("json") || path.includes("txt") || path.includes("propertities"))) {
-            throw new Error("File Format not Supported");
+            throw new Error("%T%Error_Unsupported_File_Format%T%");
         }
 
 
@@ -107,7 +107,7 @@ async function openFileInViewer(path) {
             title: path.split("/").latest(),
             customClass: 'swal-fileview',
             icon: "error",
-            html: 'An error occured<br><div style="background-color: var(--lt-color-gray-400); width: fit-content; padding: 2%; left: 0; right: 0; margin: auto; border-radius: 5%; font-style: italic; font-size: 75%; font-decoration: cursive;">' + error_text + '</div>'
+            html: '%T%ERROR_OCCURED%T%<br><div style="background-color: var(--lt-color-gray-400); width: fit-content; padding: 2%; left: 0; right: 0; margin: auto; border-radius: 5%; font-style: italic; font-size: 75%; font-decoration: cursive;">' + error_text + '</div>'
         });
     } else {
         Swal.fire({

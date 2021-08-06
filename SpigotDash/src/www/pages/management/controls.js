@@ -11,9 +11,9 @@ async function updateTask() {
 
     CURR_DATA = getIndependentObject(data);
 
-    data["WHITELIST_TOGGLE_TEXT"] = data.whitelist ? "Disable Whitelist" : "Enable Whitelist";
-    data["END_TOGGLE_TEXT"] = data.end ? "Disable End" : "Enable End";
-    data["NETHER_TOGGLE_TEXT"] = data.nether ? "Disable Nether" : "Enable Nether";
+    data["WHITELIST_TOGGLE_TEXT"] = data.whitelist ? "%T%DISABLE_WHITELIST%T%" : "%T%ENABLE_WHITELIST%T%";
+    data["END_TOGGLE_TEXT"] = data.end ? "%T%DISABLE_END%T%" : "%T%ENABLE_END%T%";
+    data["NETHER_TOGGLE_TEXT"] = data.nether ? "%T%DISABLE_NETHER%T%" : "%T%ENABLE_END%T%";
 
     insertObjectIntoHTML(data, contentContainer);
 }
@@ -30,7 +30,7 @@ async function executeAPIRequestWithButton(btn, args, verifyCallback) {
         updateTask();
     } else {
         btn.classList.add("is-danger");
-        btn.innerHTML = "ERROR";
+        btn.innerHTML = "%T%ERROR%T%";
     }
 }
 
@@ -46,7 +46,7 @@ async function addToWhitelist(elem) {
     var data = await getDataFromAPI({ method: "CONTROL", action: "WHITELIST_ADD", player: input.value });
 
     if (data == null || data != "SUCCESS") {
-        input.value = "Add failed";
+        input.value = "%T%ADD_FAILED%T%";
         input.oninput();
     }
 
@@ -63,7 +63,7 @@ async function removeFromWhitelist(elem) {
     var data = await getDataFromAPI({ method: "CONTROL", action: "WHITELIST_REMOVE", player: uuid });
 
     if (data != "SUCCESS") {
-        elem.innerHTML = "Failed!";
+        elem.innerHTML = "%T%ERROR%T%";
         elem.setAttribute("disabled", true);
     }
 
@@ -113,9 +113,9 @@ async function inputWhitelist(elem) {
 
 async function showWhiteListEditor() {
     var html = getWhiteListEditorHTML();
-    if (!Swal.isVisible() || Swal.getTitle() != "Edit Whitelist") {
+    if (!Swal.isVisible() || Swal.getTitle() != "%T%EDIT_WHITELIST%T%") {
         Swal.fire({
-            title: "Edit Whitelist",
+            title: "%T%EDIT_WHITELIST%T%",
             html: html
         });
 
@@ -145,7 +145,7 @@ function getWhiteListEditorEntrysHTML() {
 }
 
 async function updateWhiteListEditorUntilClosed() {
-    while (Swal.isVisible() || Swal.getTitle() == "Edit Whitelist") {
+    while (Swal.isVisible() || Swal.getTitle() == "%T%EDIT_WHITELIST%T%") {
         var html = getWhiteListEditorEntrysHTML();
 
         var playerList = Swal.getHtmlContainer().querySelector(".simplePlayerList");
@@ -180,6 +180,6 @@ var CONTROLS_WHITELIST_DIALOGUE_ENTRY = '<div class="box playerListBox" data-uui
 <div class="playerListHead"><img src="https://crafatar.com/avatars/%UUID%"></div>\
 <div class="playerListName">%NAME%</div>\
 <div class="playerListActions">\
-    <div class="button is-danger" onclick="removeFromWhitelist(this);">Remove</div>\
+    <div class="button is-danger" onclick="removeFromWhitelist(this);">%T%REMOVE%T%</div>\
 </div>\
 </div>';
