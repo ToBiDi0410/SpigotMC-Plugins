@@ -12,8 +12,12 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -23,10 +27,13 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.input.ReversedLinesFileReader;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -335,6 +342,81 @@ public class dataFetcher {
 	public static Integer getWorldCount() {
 		return Bukkit.getWorlds().size();
 	}
+	
+	public static HashMap<String, Object> getWorldForWebBasic(World w) {
+		HashMap<String, Object> values = new HashMap<String, Object>();
+		values.put("playerCount", w.getPlayers().size());
+		values.put("entitieCount", w.getEntities().size());
+		values.put("chunkCount", w.getLoadedChunks().length);
+		values.put("name", w.getName());
+		values.put("type", w.getEnvironment().name());
+		
+		return values;
+	}
+	
+	public static HashMap<String, Object> getWorldForWeb(World w) {
+		HashMap<String, Object> values = new HashMap<String, Object>();
+				
+		HashMap<Object, Integer> entityCountsWorld = new HashMap<Object, Integer>();
+		ArrayList<UUID> playersWorld = new ArrayList<UUID>();
+		
+		//CHUNKS
+		ArrayList<HashMap<String, Object>> chunks = new ArrayList<HashMap<String, Object>>();
+		
+		for(Chunk chunk : w.getLoadedChunks()) {
+			HashMap<String, Object> chunkValues = new HashMap<String, Object>();
+
+			//ENTITES PER CHUNK
+			HashMap<Object, Integer> entityCounts = new HashMap<Object, Integer>();
+			for(Entity ent : chunk.getEntities()) {
+				String type = ent.getType().name();
+				if(entityCounts.containsKey(type)) {
+					entityCounts.replace(type, entityCounts.get(type) + 1);
+				} else {
+					entityCounts.put(type, 1);
+				}
+				
+				if(entityCountsWorld.containsKey(type)) {
+					entityCountsWorld.replace(type, entityCounts.get(type) + 1);
+				} else {
+					entityCountsWorld.put(type, 1);
+				}
+			}
+			entityCounts = sortByValue(entityCounts);
+			chunkValues.put("Entities", entityCounts);
+			
+			//PLAYERS PER CHUNK
+			ArrayList<UUID> players = new ArrayList<UUID>();
+			for(Entity ent : chunk.getEntities()) {
+				if(ent.getType() == EntityType.PLAYER) {
+					Player p = (Player) ent;
+					players.add(p.getUniqueId());
+					playersWorld.add(p.getUniqueId());
+				}
+			}
+			chunkValues.put("Players", players);
+			
+			chunks.add(chunkValues);
+		}
+		
+		values.put("Chunks", chunks);
+
+		//ENTITES
+		entityCountsWorld = sortByValue(entityCountsWorld);
+		values.put("Entities", entityCountsWorld);
+		
+		//PLAYERS
+		values.put("Players", playersWorld);
+		
+		//INFOS
+		values.put("weather", w.isThundering() ? "Thunder" : (w.hasStorm() ? "Rain" : "Normal"));
+		values.put("difficulty", w.getDifficulty().toString());
+		values.put("seed", w.getSeed());
+		values.put("time", w.getFullTime());
+		values.put("name", w.getName());
+		
+		return values;
+	}
 
 	// ** CPU LOAD FUNCTIONS **
 
@@ -477,5 +559,28 @@ public class dataFetcher {
 		sb.insert(23, "-");
 		 
 		return sb.toString();
-		}
+	}
+	
+	public static HashMap<Object, Integer> sortByValue(HashMap<Object, Integer> hm) {
+		//CREATE BASIC COMPARATOR
+		Comparator<Entry<Object, Integer>> valComp = new Comparator<Entry<Object, Integer>>() {
+			@Override
+			public int compare(Entry<Object, Integer> o1, Entry<Object, Integer> o2) {
+				return o2.getValue().compareTo(o1.getValue());
+			}
+		};
+		
+		//GET ENTRIES AS LIST AND COMPARE
+		List<Entry<Object, Integer>> entryList = new ArrayList<Entry<Object, Integer>>(hm.entrySet());
+		Collections.sort(entryList, valComp);
+		
+		//CREATE NEW HASHMAP AND SORT
+		LinkedHashMap<Object, Integer> sortedByValue = new LinkedHashMap<Object, Integer>(entryList.size());
+		for(Entry<Object, Integer> entry : entryList){
+            sortedByValue.put(entry.getKey(), entry.getValue());
+        }
+		
+		//RETURN THE SORTED HASHMAP
+		return sortedByValue;
+    }
 }

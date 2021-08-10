@@ -18,10 +18,6 @@
     animation: slide_in_left 0.5s;
 }
 
-.menuLayer.dark {
-    background-color: #100e0e !important;
-}
-
 .menuLayer.disappear {
     animation: slide_out_right 0.5s;
     margin-left: 100vw;
@@ -61,20 +57,13 @@
     padding: 1%;
     color: #67747e;
     word-break: break-all;
-}
-
-.menuLayer.dark>*.content {
-    color: #ffffff !important;
+    overflow: scroll;
 }
 
 .menuLayer>*.ctitle {
     padding: 1%;
     font-size: 200%;
     color: #293035;
-}
-
-.menuLayer.dark>*.ctitle {
-    color: #ffffff !important;
 }
 
 @keyframes slide_in_left {

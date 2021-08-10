@@ -1,0 +1,15 @@
+.menuLayer {
+    background-color: #100e0e !important;
+}
+
+.menuLayer>*.ctitle {
+    color: #ffffff !important;
+}
+
+.menuLayer>*.content {
+    color: #ffffff !important;
+}
+
+.box {
+    background-color: #1f2424 !important;
+}

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 
 import de.tobias.spigotdash.utils.configuration;
 import de.tobias.spigotdash.utils.notificationManager;
@@ -29,6 +30,15 @@ public class pageDataFetcher {
 	
 	public static Object GET_PAGE_GRAPHS() {
 		return dataFetcher.getPerformanceDataForWeb();
+	}
+	
+	public static Object GET_PAGE_WORLDS() {
+		ArrayList<HashMap<String, Object>> worlds = new ArrayList<>();
+		for(World w : Bukkit.getWorlds()) {
+			worlds.add(dataFetcher.getWorldForWebBasic(w));
+		}
+		
+		return worlds;
 	}
 	
 	public static Object GET_PAGE_PLAYERS() {

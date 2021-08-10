@@ -1,0 +1,11 @@
+.worldlist_entry>*.tile>* {
+    align-self: center;
+}
+
+.worldlist_entry>*>.tile>*:first-child {
+    max-height: 64px;
+}
+
+.worldlist_entry>*>.tile>*>*.title {
+    font-size: 80%;
+}

@@ -1,6 +1,5 @@
 var smartMenuHelpers = {
     MENU_PATH: [],
-    DARK_MODE: false,
     HTMLParser: new DOMParser(),
     currentlyConstructed: [],
     getConstructedByID: function(id) {
@@ -21,7 +20,7 @@ var smartMenuHelpers = {
 }
 
 var TEMPLATE_MENU_LAYER = '\
-<div class="menuLayer %DARKCLASS%">\
+<div class="menuLayer">\
     <div class="navigation">\
         <div class="path">\
             %PATH%\
@@ -54,7 +53,7 @@ class smartMenu {
         smartMenuHelpers.MENU_PATH[smartMenuHelpers.MENU_PATH.length] = this.path;
         var cont = document.querySelector(".menuLayerContainer");
 
-        var DOM = HTMLParser.parseFromString(TEMPLATE_MENU_LAYER.replaceAll("%DARKCLASS%", smartMenuHelpers.DARK_MODE ? "dark" : ""), 'text/html').body.firstChild;
+        var DOM = HTMLParser.parseFromString(TEMPLATE_MENU_LAYER, 'text/html').body.firstChild;
         DOM.querySelector(".path").innerHTML = smartMenuHelpers.MENU_PATH.join(" → ");
         DOM.querySelector(".ctitle").innerHTML = this.title;
 

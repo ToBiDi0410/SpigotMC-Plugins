@@ -36,6 +36,11 @@ public class APIHandler {
 				MainRequestHandler.sendJSONResponse(he, 200, pageDataFetcher.GET_PAGE_GRAPHS());
 				return;
 			}
+			
+			if(method.equalsIgnoreCase("GET_WORLDS")) {
+				MainRequestHandler.sendJSONResponse(he, 200, pageDataFetcher.GET_PAGE_WORLDS());
+				return;
+			}
 
 			if (method.equalsIgnoreCase("GET_LOG")) {
 				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getLog(200));
@@ -61,6 +66,21 @@ public class APIHandler {
 			if(method.equalsIgnoreCase("THEME"))  {
 				MainRequestHandler.sendJSONResponse(he, 400, configuration.yaml_cfg.getBoolean("darkMode") ? "dark" : "light");
 				return;
+			}
+			
+			if(method.equalsIgnoreCase("GET_WORLD")) {
+				if (json.has("world")) {
+					if(Bukkit.getWorld(json.get("world").getAsString()) == null) {
+						MainRequestHandler.sendJSONResponse(he, 400, "ERR_NOTFOUND_WORLD");
+						return;
+					}
+					
+					MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getWorldForWeb(Bukkit.getWorld(json.get("world").getAsString())));
+					return;
+				} else {
+					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_WORLD");
+					return;
+				}
 			}
 
 			//EXECUTION

@@ -25,15 +25,15 @@ async function init() {
 
     console.log("[INDEX] Using Theme: " + theme);
     if (theme == "dark") {
+        loadCSSIfExists("./global/dark.css", document.head);
         loadCSSIfExists("./global/other-license/bulmaswatch.min.css", document.head);
         loadCSSIfExists("./global/other-license/sweet_dark.css", document.head);
-        smartMenuHelpers.DARK_MODE = true;
     }
 
     addNewTask("heightFillClass", heightFillRestClass, 1000);
 
-    loadPage("./pages/overview/overview");
-    //loadPage("./pages/management/plugins");
+    //loadPage("./pages/overview/overview");
+    loadPage("./pages/performance/worlds");
 
 }
 

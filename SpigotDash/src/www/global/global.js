@@ -64,6 +64,12 @@ function JSONMatches(objectone, objecttwo) {
     return (objoneJSON == objtwoJSON);
 }
 
+function toggleExpandCart(elem) {
+    var content = elem.querySelector(".card-content");
+    content.classList.toggle("is-hiddenc");
+    content.classList.toggle("is-expanded");
+}
+
 async function getDataFromAPI(body) {
     try {
         var data = await fetch(API_URL, {
@@ -83,7 +89,7 @@ async function getDataFromAPI(body) {
         data = await data.json();
         return data;
     } catch (err) {
-        showOffline(true);
+        //showOffline(true);
         return null;
     }
 }
@@ -94,12 +100,12 @@ function getIndependentObject(obj) {
 
 function showOffline(state) {
     if (state == false) {
-        if (Swal.isVisible() && Swal.getTitle().textContent == "Reconnecting...") Swal.close();
+        if (Swal.isVisible() && Swal.getTitle().textContent == "%T%RECONNECTING%T%") Swal.close();
         return;
     }
 
     if (state == true) {
-        if (Swal.isVisible() && Swal.getTitle().textContent == "Reconnecting...") return;
+        if (Swal.isVisible() && Swal.getTitle().textContent == "%T%RECONNECTING%T%") return;
         Swal.fire({
             title: "%T%RECONNECTING%T%",
             text: "%T%SERVER_OFFLINE%T%",
