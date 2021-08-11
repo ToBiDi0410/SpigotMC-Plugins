@@ -1,6 +1,0 @@
-name: Wireless Redstone
-author: Tobias Dickes
-main: de.tobias.wirelessred.main
-version: 0.1
-api-version: 1.13
-commands:
