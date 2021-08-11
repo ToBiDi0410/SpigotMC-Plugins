@@ -419,7 +419,8 @@ public class dataFetcher {
 		values.put("time", w.getFullTime());
 		values.put("name", w.getName());
 		values.put("daytime", w.getTime());
-		
+		values.put("days", w.getFullTime()/24000);
+
 		return values;
 	}
 

@@ -56,6 +56,7 @@ async function openWorldMenu(worldname) {
     });
 
     var timeDom = menu.getContentDOM().querySelector(".timeslider");
+    var daysDom = menu.getContentDOM().querySelector(".days");
     timeDom.addEventListener("input", async function() {
         //this.setAttribute("disabled", true);
         var res = await getDataFromAPI({ method: "CONTROL_WORLD", action: "TIME", world: data.name, time: this.value });
@@ -63,7 +64,7 @@ async function openWorldMenu(worldname) {
         if (res == "SUCCESS") {
             this.removeAttribute("disabled");
         }
-    })
+    });
 
     while (!menu.closed) {
         data = await getDataFromAPI({ method: "GET_WORLD", world: worldname });
@@ -78,6 +79,7 @@ async function openWorldMenu(worldname) {
 
         entitieCount.innerHTML = entitieCount.innerHTML.replace(entitieCount.innerHTML.split("(")[1].split(")")[0], entitieCountNum);
         playerCount.innerHTML = playerCount.innerHTML.replace(playerCount.innerHTML.split("(")[1].split(")")[0], data.Players.length);
+        daysDom.innerHTML = daysDom.innerHTML.replace(daysDom.innerHTML.split(": ")[1], data.days);
 
         await timer(5000);
     }
@@ -155,6 +157,10 @@ var TEMPLATE_WORLD_MENU = '\
             </div>\
         </div>\
     </div>\
+</div>\
+\
+<div class="p-2">\
+    <div class="days">Day in World: %DAY%</div>\
 </div>\
 \
 <div class="timeSelector p-2">\
