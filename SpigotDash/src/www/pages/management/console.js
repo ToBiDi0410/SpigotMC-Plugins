@@ -1,5 +1,10 @@
 async function initPage() {
     curr_task = updateLog;
+    document.querySelector(".consolein").addEventListener("keyup", event => {
+        if (event.key !== "Enter") return; // Use `.key` instead.
+        document.querySelector(".consolebtn").click(); // Things you want to do.
+        event.preventDefault(); // No need to `return false;`.
+    });
 }
 
 async function executeCommand(elem) {
@@ -16,6 +21,7 @@ async function executeCommand(elem) {
     input.removeAttribute("disabled");
     btn.removeAttribute("disabled");
     btn.classList.remove("is-loading");
+    input.value = "";
 
     updateLog();
 }

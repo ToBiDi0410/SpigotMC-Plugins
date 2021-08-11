@@ -60,6 +60,14 @@
     overflow: scroll;
 }
 
+.menuLayer>*.content *.disabled {
+    color: rgba(92, 92, 92, 0.301) !important;
+}
+
+.menuLayer>*.content *.disabled * {
+    color: rgba(92, 92, 92, 0.301) !important;
+}
+
 .menuLayer>*.ctitle {
     padding: 1%;
     font-size: 200%;

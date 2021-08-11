@@ -24,7 +24,7 @@ function initCPUChart() {
         },
         yaxis: {
             min: 0
-        }
+        },
     };
 
     cpuchart = new ApexCharts(document.querySelector("#cpuchart"), options);
@@ -198,7 +198,7 @@ async function updateData() {
         }
 
         data.forEach((elem) => {
-            var elem_date = transformDate(new Date(elem.DATETIME));
+            var elem_date = transformDate(new Date(elem.DATETIME + " UTC"));
             RAM_GRAPH.series[0].data.push({ x: elem_date, y: elem.MEMORY_ALLOCATED });
             RAM_GRAPH.series[1].data.push({ x: elem_date, y: elem.MEMORY_USED });
 
@@ -226,5 +226,5 @@ async function updateData() {
 }
 
 function transformDate(date) {
-    return new Intl.DateTimeFormat('de-DE', { hour: '2-digit', minute: '2-digit' }).format(date);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }

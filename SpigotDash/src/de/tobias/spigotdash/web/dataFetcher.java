@@ -220,18 +220,22 @@ public class dataFetcher {
 	public static ArrayList<HashMap<String, Object>> getPlayersForWeb() {
 		ArrayList<HashMap<String, Object>> players = new ArrayList<HashMap<String, Object>>();
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			HashMap<String, Object> playerinfo = new HashMap<String, Object>();
-			playerinfo.put("UUID", p.getUniqueId());
-			playerinfo.put("Name", p.getName());
-			playerinfo.put("Displayname", p.getDisplayName());
-			playerinfo.put("Location", locationToHashMap(p.getLocation()));
-			playerinfo.put("Health", p.getHealth());
-			playerinfo.put("Health_Max", p.getHealthScale());
-			playerinfo.put("Food", p.getFoodLevel());
-			playerinfo.put("Jointime", JoinTime.joinTimes.get(p.getUniqueId().toString()));
-			players.add(playerinfo);
+			players.add(getPlayerForWeb(p));
 		}
 		return players;
+	}
+	
+	public static HashMap<String, Object> getPlayerForWeb(Player p) {
+		HashMap<String, Object> playerinfo = new HashMap<String, Object>();
+		playerinfo.put("UUID", p.getUniqueId());
+		playerinfo.put("Name", p.getName());
+		playerinfo.put("Displayname", p.getDisplayName());
+		playerinfo.put("Location", locationToHashMap(p.getLocation()));
+		playerinfo.put("Health", p.getHealth());
+		playerinfo.put("Health_Max", p.getHealthScale());
+		playerinfo.put("Food", p.getFoodLevel());
+		playerinfo.put("Jointime", JoinTime.joinTimes.get(p.getUniqueId().toString()));
+		return playerinfo;
 	}
 
 	public static HashMap<String, Object> locationToHashMap(Location l) {
@@ -358,7 +362,7 @@ public class dataFetcher {
 		HashMap<String, Object> values = new HashMap<String, Object>();
 				
 		HashMap<Object, Integer> entityCountsWorld = new HashMap<Object, Integer>();
-		ArrayList<UUID> playersWorld = new ArrayList<UUID>();
+		ArrayList<HashMap<String, Object>> playersWorld = new ArrayList<HashMap<String, Object>>();
 		
 		//CHUNKS
 		ArrayList<HashMap<String, Object>> chunks = new ArrayList<HashMap<String, Object>>();
@@ -377,7 +381,7 @@ public class dataFetcher {
 				}
 				
 				if(entityCountsWorld.containsKey(type)) {
-					entityCountsWorld.replace(type, entityCounts.get(type) + 1);
+					entityCountsWorld.replace(type, entityCountsWorld.get(type) + 1);
 				} else {
 					entityCountsWorld.put(type, 1);
 				}
@@ -386,12 +390,12 @@ public class dataFetcher {
 			chunkValues.put("Entities", entityCounts);
 			
 			//PLAYERS PER CHUNK
-			ArrayList<UUID> players = new ArrayList<UUID>();
+			ArrayList<HashMap<String, Object>> players = new ArrayList<HashMap<String, Object>>();
 			for(Entity ent : chunk.getEntities()) {
 				if(ent.getType() == EntityType.PLAYER) {
 					Player p = (Player) ent;
-					players.add(p.getUniqueId());
-					playersWorld.add(p.getUniqueId());
+					players.add(getPlayerForWeb(p));
+					playersWorld.add(getPlayerForWeb(p));
 				}
 			}
 			chunkValues.put("Players", players);
@@ -414,6 +418,7 @@ public class dataFetcher {
 		values.put("seed", w.getSeed());
 		values.put("time", w.getFullTime());
 		values.put("name", w.getName());
+		values.put("daytime", w.getTime());
 		
 		return values;
 	}

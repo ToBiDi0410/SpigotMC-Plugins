@@ -198,6 +198,16 @@ Array.prototype.getObjectWithKeyValue = function(key, value) {
     return null;
 }
 
+Object.size = function(obj) {
+    var size = 0,
+        key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
+
+
 var theme = (document.head.innerHTML.includes("bulmaswatch") ? "dark" : "light");
 var API_URL = "./api";
 

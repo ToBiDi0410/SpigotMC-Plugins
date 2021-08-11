@@ -1,5 +1,5 @@
-.player {
-    padding-bottom: 2%;
+.player+.player {
+    padding-top: 2%;
 }
 
 .player>.head {

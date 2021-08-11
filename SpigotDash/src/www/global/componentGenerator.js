@@ -96,7 +96,7 @@ function generatePlayerEntry(value) {
 //WORLDS
 
 var TEMPLATE_WORLD_ENTRY = '\
-<div class="worldlist_entry box" onclick="openWorldMenu(\'%NAME%\');">\
+<div class="worldlist_entry box" data-id="%NAME%" onclick="openWorldMenu(\'%NAME%\');">\
         <div class="tile is-ancestor">\
             <div class="tile is-1">\
                 <img src="./global/icons/%ICON%.png">\
@@ -106,13 +106,13 @@ var TEMPLATE_WORLD_ENTRY = '\
                 <div class="title">%NAME%</div>\
             </div>\
             <div class="tile is-2">\
-                <div class="subtitle">%CHUNKCOUNT% %T%CHUNKS%T%</div>\
+                <div class="subtitle chunkcount">%CHUNKCOUNT% %T%CHUNKS%T%</div>\
             </div>\
             <div class="tile is-2">\
-                <div class="subtitle">%PLAYERCOUNT% %T%PLAYERS%T%</div>\
+                <div class="subtitle playercount">%PLAYERCOUNT% %T%PLAYERS%T%</div>\
             </div>\
             <div class="tile is-2">\
-                <div class="subtitle">%ENTITIECOUNT% %T%ENTITIES%T%</div>\
+                <div class="subtitle entitiecount">%ENTITIECOUNT% %T%ENTITIES%T%</div>\
             </div>\
             <div class="tile is-1">\
                 <span class="material-icons-outlined" style="text-align: right; width: 90%;">\
@@ -134,14 +134,14 @@ function generateWorldEntry(value) {
 }
 
 var TEMPLATE_WORLD_ENTITIE_ENTRY = '\
-<div class="tile is-ancestor">\
+<div class="tile is-ancestor" data-id="%ID%">\
     <div class="tile is-parent">\
         <article class="tile is-child">\
             <div class="content">\
                 <div class="level">\
                     <div class="level-left">\
                         <div class="level-item" style="width: 48px">\
-                            <img style="max-width: 48px; max-height: 48px;" src="./global/icons/MOBS/%ICON%.webp">\
+                            <img style="max-width: 48px; max-height: 48px;" src="./global/icons/MOBS/%ICON%.png">\
                         </div>\
                         <div class="level-item">\
                             <div class="title" style="font-size: 120%;">%NAME%</div>\
@@ -163,7 +163,7 @@ var TEMPLATE_WORLD_ENTITIE_ENTRY = '\
 
 function generateWorldEntitieEntry(name, count) {
     var html = TEMPLATE_WORLD_ENTITIE_ENTRY;
-    var value = { name: name, count: count };
+    var value = { name: name, count: count, id: name };
     value.icon = name.toLowerCase().capitalizeFirstLetter();
 
 

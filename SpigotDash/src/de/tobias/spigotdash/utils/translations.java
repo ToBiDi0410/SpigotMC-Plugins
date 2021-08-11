@@ -177,5 +177,13 @@ public class translations {
 	
 		currentTranslations.put("NOTIFICATION_RELOADNEED_TITLE", "Reload required");
 		currentTranslations.put("NOTIFICATION_RELOADNEED_CONTENT", "A reload or restart is required to finish Plugin installation!<br><button class=\"button is-danger\" onclick='reloadServer();'>Reload</button>");
+		
+		//0.3.5
+		currentTranslations.put("Weather", "Weather"); //WORLDS
+		currentTranslations.put("Day", "Day"); 
+		currentTranslations.put("Night", "Night"); 
+		currentTranslations.put("Time", "Time"); 
+		currentTranslations.put("No_Players_in_World", "Currently, there are no Players in this World");
+
 	}
 }

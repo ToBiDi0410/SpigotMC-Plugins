@@ -23,6 +23,10 @@
     overflow: hidden;
 }
 
+.card+.card {
+    margin-top: 20px;
+}
+
 @keyframes card-expand {
     from {
         height: 0px;
@@ -46,4 +50,9 @@
         padding: 0;
         opacity: 0;
     }
+}
+
+.transparentButton {
+    border: 0 !important;
+    background-color: transparent !important;
 }

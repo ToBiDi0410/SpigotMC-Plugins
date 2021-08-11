@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -16,6 +17,7 @@ import de.tobias.spigotdash.utils.notificationManager;
 import de.tobias.spigotdash.utils.pluginConsole;
 import de.tobias.spigotdash.utils.pluginInstaller;
 import de.tobias.spigotdash.utils.pluginManager;
+import io.netty.util.internal.ThreadLocalRandom;
 import net.md_5.bungee.api.ChatColor;
 
 public class APIHandler {
@@ -38,7 +40,13 @@ public class APIHandler {
 			}
 			
 			if(method.equalsIgnoreCase("GET_WORLDS")) {
-				MainRequestHandler.sendJSONResponse(he, 200, pageDataFetcher.GET_PAGE_WORLDS());
+				Bukkit.getScheduler().runTask(main.pl, new Runnable() {
+					@Override
+					public void run() {
+						MainRequestHandler.sendJSONResponse(he, 200, pageDataFetcher.GET_PAGE_WORLDS());
+						return;
+					}
+				});
 				return;
 			}
 
@@ -75,7 +83,14 @@ public class APIHandler {
 						return;
 					}
 					
-					MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getWorldForWeb(Bukkit.getWorld(json.get("world").getAsString())));
+					Bukkit.getScheduler().runTask(main.pl, new Runnable() {
+						@Override
+						public void run() {
+							MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getWorldForWeb(Bukkit.getWorld(json.get("world").getAsString())));
+							return;
+						}
+					});
+					
 					return;
 				} else {
 					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_WORLD");
@@ -253,6 +268,78 @@ public class APIHandler {
 					
 				} else {
 					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_ACTION");
+					return;
+				}
+			}
+			
+			if(method.equalsIgnoreCase("CONTROL_WORLD")) {
+				if(json.has("world")) {
+					if(json.has("action")) {
+						String action = json.get("action").getAsString();
+						World w = Bukkit.getWorld(json.get("world").getAsString());
+						if(w != null) {
+							
+							if(action.equalsIgnoreCase("WEATHER")) {
+								if(json.has("weather")) {
+									String weather = json.get("weather").getAsString();
+									final boolean thundering = weather.equalsIgnoreCase("Thunder") ? true : false;
+									final boolean storming = weather.equalsIgnoreCase("Rain") || weather.equalsIgnoreCase("Thunder") ? true : false;
+									
+									Bukkit.getScheduler().runTask(main.pl, new Runnable() {
+										@Override
+										public void run() {
+											w.setStorm(storming);
+											w.setThundering(thundering);
+											
+											if(thundering) {
+												w.setThunderDuration(ThreadLocalRandom.current().nextInt(20*60*3, 20*60*13 + 1));
+											}
+											
+											if(storming) {
+												w.setThunderDuration((int) ThreadLocalRandom.current().nextDouble(24000*0.5, 24000*0.75 + 1));
+											}
+											MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+											return;											
+										}
+										
+									});
+									return;
+								} else {
+									MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_WEATHER");
+									return;
+								}
+							}
+							
+							if(action.equalsIgnoreCase("TIME")) {
+								if(json.has("time")) {
+									final Long time = json.get("time").getAsLong();
+									
+									Bukkit.getScheduler().runTask(main.pl, new Runnable() {
+										@Override
+										public void run() {
+											w.setTime(time);
+											MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+											return;		
+										}
+									});
+									
+									return;
+								} else {
+									MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_TIME");
+									return;
+								}
+							}
+							
+						} else {
+							MainRequestHandler.sendJSONResponse(he, 400, "ERR_NOTFOUND_WORLD");
+							return;
+						}
+					} else {
+						MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_ACTION");
+						return;
+					}
+				} else {
+					MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_WORLD");
 					return;
 				}
 			}
