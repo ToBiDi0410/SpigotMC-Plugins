@@ -19,8 +19,8 @@ public class taskManager {
 			public void run() {
 				if(lastUpdate + 1000*15 <= System.currentTimeMillis()) {
 					//Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "Data submitted into Database!");
-					//databaseManager.exec("INSERT INTO `PERFORMANCE` (`DATETIME`, `CPU_LOAD_SYSTEM`, `CPU_LOAD_PROCESS`, `MEMORY_USED`, `MEMORY_FREE`, `MEMORY_MAX`, `MEMORY_ALLOCATED`, `TPS`, `WORLD_CHUNKS`, `WORLD_ENTITIES`, `WORLD_PLAYERS`, `WORLD_COUNT`) VALUES ( DATETIME('now'), '" + dataFetcher.getSystemCPULoad() + "', '" + dataFetcher.getProcessCPULoad() + "', '" + dataFetcher.getUsedMemory() + "', '" + dataFetcher.getFreeMemory() + "', '" + dataFetcher.getMaxMemory() + "', '" + dataFetcher.getAllocatedMemory() + "', '" + dataFetcher.getTPS() + "', '" + dataFetcher.getTotalChunks() + "', '" + dataFetcher.getTotalEntities() + "', '" + dataFetcher.getPlayerCount() + "', '" + dataFetcher.getWorldCount() + "')");
-					//databaseManager.exec("DELETE FROM `PERFORMANCE` WHERE `DATETIME` <= datetime('now', '-1 hour')");
+					databaseManager.exec("INSERT INTO `PERFORMANCE` (`DATETIME`, `CPU_LOAD_SYSTEM`, `CPU_LOAD_PROCESS`, `MEMORY_USED`, `MEMORY_FREE`, `MEMORY_MAX`, `MEMORY_ALLOCATED`, `TPS`, `WORLD_CHUNKS`, `WORLD_ENTITIES`, `WORLD_PLAYERS`, `WORLD_COUNT`) VALUES ( DATETIME('now'), '" + dataFetcher.getSystemCPULoad() + "', '" + dataFetcher.getProcessCPULoad() + "', '" + dataFetcher.getUsedMemory() + "', '" + dataFetcher.getFreeMemory() + "', '" + dataFetcher.getMaxMemory() + "', '" + dataFetcher.getAllocatedMemory() + "', '" + dataFetcher.getTPS() + "', '" + dataFetcher.getTotalChunks() + "', '" + dataFetcher.getTotalEntities() + "', '" + dataFetcher.getPlayerCount() + "', '" + dataFetcher.getWorldCount() + "')");
+					databaseManager.exec("DELETE FROM `PERFORMANCE` WHERE `DATETIME` <= datetime('now', '-1 hour')");
 					
 					//** NOTIFICATIONS **
 					notificationManager.manageNotifications();
