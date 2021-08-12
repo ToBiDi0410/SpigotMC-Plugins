@@ -41,6 +41,8 @@ async function openWorldMenu(worldname) {
     var entitieList = menu.getContentDOM().querySelector(".entitieDropDownCont");
     var playerCount = menu.getContentDOM().querySelector(".card-header-title.players");
     var playerList = menu.getContentDOM().querySelector(".playersDropDownCont");
+    var chunksCount = menu.getContentDOM().querySelector(".card-header-title.chunks");
+    var chunksList = menu.getContentDOM().querySelector(".chunksDropDownCont");
 
     var weatherDom = menu.getContentDOM().querySelector(".weatherSelector");
     weatherDom.querySelectorAll(".weatherTrigger").forEach((elem) => {
@@ -58,7 +60,6 @@ async function openWorldMenu(worldname) {
     var timeDom = menu.getContentDOM().querySelector(".timeslider");
     var daysDom = menu.getContentDOM().querySelector(".days");
     timeDom.addEventListener("input", async function() {
-        //this.setAttribute("disabled", true);
         var res = await getDataFromAPI({ method: "CONTROL_WORLD", action: "TIME", world: data.name, time: this.value });
 
         if (res == "SUCCESS") {
@@ -72,6 +73,7 @@ async function openWorldMenu(worldname) {
         worldMenuUpdateEntities(entitieList, data.Entities);
         worldMenuUpdatePlayers(playerList, data.Players);
         worldUpdateWeather(weatherDom, data.weather);
+        worldUpdateChunks(chunksList, data.Chunks);
         timeDom.value = data.daytime;
 
         var entitieCountNum = 0;
@@ -79,9 +81,30 @@ async function openWorldMenu(worldname) {
 
         entitieCount.innerHTML = entitieCount.innerHTML.replace(entitieCount.innerHTML.split("(")[1].split(")")[0], entitieCountNum);
         playerCount.innerHTML = playerCount.innerHTML.replace(playerCount.innerHTML.split("(")[1].split(")")[0], data.Players.length);
+        chunksCount.innerHTML = chunksCount.innerHTML.replace(chunksCount.innerHTML.split("(")[1].split(")")[0], data.Chunks.length);
         daysDom.innerHTML = daysDom.innerHTML.replace(daysDom.innerHTML.split(": ")[1], data.days);
 
         await timer(5000);
+    }
+}
+
+function worldUpdateChunks(listDOM, chunks) {
+    listDOM.querySelectorAll("[data-id]").forEach((elem) => {
+        var id = elem.getAttribute("data-id");
+        var selelem = chunks.getObjectWithKeyValue("ID", id);
+        if (selelem != null) {
+            console.log("UPDATE: " + id);
+            elem.querySelector(".players").innerHTML = selelem.Players.length;
+            elem.querySelector(".entities").innerHTML = Object.size(selelem.Entities);
+        } else {
+            elem.remove();
+        }
+    });
+
+    for (const elem of chunks) {
+        if (listDOM.querySelector("[data-id='" + elem.ID + "']") == null) {
+            listDOM.appendChild(generateWorldChunkEntry(elem));
+        }
     }
 }
 
@@ -209,6 +232,20 @@ var TEMPLATE_WORLD_MENU = '\
     </header>\
     <div class="card-content is-hiddenc">\
         <div class="content playersDropDownCont">\
+            \
+        </div>\
+    </div>\
+</div>\
+\
+<div class="card is-fullwidth">\
+    <header class="card-header">\
+        <p class="card-header-title chunks">%T%CHUNKS%T% (0)</p>\
+        <a class="card-header-icon card-toggle" onclick="toggleExpandCart(this.parentElement.parentElement);">\
+            <span class="material-icons-outlined">expand</span>\
+        </a>\
+    </header>\
+    <div class="card-content is-hiddenc">\
+        <div class="content chunksDropDownCont">\
             \
         </div>\
     </div>\

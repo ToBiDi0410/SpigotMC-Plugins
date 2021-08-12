@@ -170,3 +170,40 @@ function generateWorldEntitieEntry(name, count) {
     html = replaceObjectKeyInString(value, html);
     return getDOMObject(html);
 }
+
+var TEMPLATE_WORLD_CHUNK_ENTRY = '\
+<div class="tile is-ancestor" data-id="%ID%">\
+    <div class="tile is-parent">\
+        <article class="tile is-child">\
+            <div class="content">\
+                <div class="level">\
+                    <div class="level-left">\
+                        <div class="level-item">\
+                            <div class="title" style="font-size: 120%;">%ID%</div>\
+                        </div>\
+                    </div>\
+\
+                    <div class="level-right">\
+                        <div class="level-item">\
+                            <div class="subtitle">Players: <div class="players">%PLAYERCOUNT%</div></div>\
+                        </div>\
+                        <div class="level-item">\
+                            <div class="subtitle">Entities: <div class="entities">%ENTITIECOUNT%</div></div>\
+                        </div>\
+                        <div class="level-item"></div>\
+                        <div class="level-item"></div>\
+                    </div>\
+                </div>\
+            </div>\
+        </article>\
+    </div>\
+</div>'
+
+function generateWorldChunkEntry(chunk) {
+    var html = TEMPLATE_WORLD_CHUNK_ENTRY;
+    var value = { id: chunk.ID, playercount: chunk.Players.length, entitiecount: Object.size(chunk.Entities) };
+    console.log(value.entitiecount);
+
+    html = replaceObjectKeyInString(value, html);
+    return getDOMObject(html);
+}

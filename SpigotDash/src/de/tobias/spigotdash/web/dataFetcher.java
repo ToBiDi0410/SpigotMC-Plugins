@@ -358,6 +358,7 @@ public class dataFetcher {
 		return values;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static HashMap<String, Object> getWorldForWeb(World w) {
 		HashMap<String, Object> values = new HashMap<String, Object>();
 				
@@ -390,6 +391,7 @@ public class dataFetcher {
 			chunkValues.put("Entities", entityCounts);
 			chunkValues.put("X", chunk.getX());
 			chunkValues.put("Z", chunk.getZ());
+			chunkValues.put("ID", chunk.getX() + " " + chunk.getZ());
 			
 			//PLAYERS PER CHUNK
 			ArrayList<HashMap<String, Object>> players = new ArrayList<HashMap<String, Object>>();
@@ -404,6 +406,17 @@ public class dataFetcher {
 			
 			chunks.add(chunkValues);
 		}
+
+		Comparator<HashMap<String, Object>> valComp = new Comparator<HashMap<String, Object>>() {
+			@Override
+			public int compare(HashMap<String, Object> o1, HashMap<String, Object> o2) {
+				Integer worth1 = ((HashMap<Object, Integer>) o1.get("Entities")).size() + ((ArrayList<HashMap<String, Object>>)o1.get("Players")).size();
+				Integer worth2 = ((HashMap<Object, Integer>) o2.get("Entities")).size() + ((ArrayList<HashMap<String, Object>>)o2.get("Players")).size();
+				return worth2.compareTo(worth1);
+			}
+		};
+		
+		Collections.sort(chunks, valComp);
 		
 		values.put("Chunks", chunks);
 
