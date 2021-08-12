@@ -76,7 +76,7 @@ public class translations {
 		//OVERVIEW
 		currentTranslations.put("TPS", "TPS");
 		currentTranslations.put("Plugins", "Plugins");
-		currentTranslations.put("Ontime", "Ontime");
+		currentTranslations.put("Uptime", "Uptime");
 		currentTranslations.put("Notifications", "Notifications");
 		currentTranslations.put("PLAYER_RECORD", "Player Record");
 		
