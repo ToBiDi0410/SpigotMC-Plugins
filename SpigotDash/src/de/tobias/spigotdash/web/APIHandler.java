@@ -463,6 +463,8 @@ public class APIHandler {
 				MainRequestHandler.sendJSONResponse(he, 200, dataFetcher.getPluginFileNames());
 				return;
 			}*/
+			
+			//ee
 
 			if (method.equalsIgnoreCase("NOTIFICATION_CLOSED")) {
 				if (json.has("uuid")) {
