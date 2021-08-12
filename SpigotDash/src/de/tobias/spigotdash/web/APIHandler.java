@@ -464,8 +464,6 @@ public class APIHandler {
 				return;
 			}*/
 			
-			//ee
-
 			if (method.equalsIgnoreCase("NOTIFICATION_CLOSED")) {
 				if (json.has("uuid")) {
 					notificationManager.closeNotification(json.get("uuid").getAsString());
