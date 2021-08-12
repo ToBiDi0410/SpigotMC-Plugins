@@ -21,7 +21,6 @@ async function init() {
     });
 
     theme = await getDataFromAPI({ method: "THEME" });
-    theme = "dark";
 
     console.log("[INDEX] Using Theme: " + theme);
     if (theme == "dark") {
@@ -31,6 +30,7 @@ async function init() {
     }
 
     addNewTask("heightFillClass", heightFillRestClass, 1000);
+    addNewTask("NOTIFICATIONS", refreshNotifications, 2000);
 
     //loadPage("./pages/overview/overview");
     loadPage("./pages/performance/worlds");

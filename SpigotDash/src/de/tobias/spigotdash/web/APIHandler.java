@@ -72,7 +72,12 @@ public class APIHandler {
 			
 			//DATA
 			if(method.equalsIgnoreCase("THEME"))  {
-				MainRequestHandler.sendJSONResponse(he, 400, configuration.yaml_cfg.getBoolean("darkMode") ? "dark" : "light");
+				MainRequestHandler.sendJSONResponse(he, 200, configuration.yaml_cfg.getBoolean("darkMode") ? "dark" : "light");
+				return;
+			}
+			
+			if(method.equalsIgnoreCase("GET_NOTIFICATIONS")) {
+				MainRequestHandler.sendJSONResponse(he, 200, notificationManager.notifications);
 				return;
 			}
 			

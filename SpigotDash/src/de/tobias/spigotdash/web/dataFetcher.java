@@ -388,6 +388,8 @@ public class dataFetcher {
 			}
 			entityCounts = sortByValue(entityCounts);
 			chunkValues.put("Entities", entityCounts);
+			chunkValues.put("X", chunk.getX());
+			chunkValues.put("Z", chunk.getZ());
 			
 			//PLAYERS PER CHUNK
 			ArrayList<HashMap<String, Object>> players = new ArrayList<HashMap<String, Object>>();

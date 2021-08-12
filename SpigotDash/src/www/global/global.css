@@ -11,6 +11,10 @@
     border-radius: 20px;
 }
 
+*::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+
 .card-content.is-expanded {
     animation: card-expand 1s;
     height: 100%;
@@ -55,4 +59,12 @@
 .transparentButton {
     border: 0 !important;
     background-color: transparent !important;
+}
+
+.vanillatoasts-toast {
+    background-color: #77777785;
+}
+
+.vanillatoasts-text {
+    color: #464646;
 }
