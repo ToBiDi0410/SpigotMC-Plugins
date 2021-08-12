@@ -121,3 +121,7 @@
 .menuWindow>*.content {
     padding: 2%;
 }
+
+.colorbox {
+    color: #ffffff !important;
+}

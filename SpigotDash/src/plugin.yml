@@ -1,5 +1,5 @@
 name: SpigotDash
-version: 0.3.4 AFTER-RELEASE
+version: 0.3.4 PRE-NEXT
 main: de.tobias.spigotdash.main
 api-version: 1.13
 author: Tobias Dickes
