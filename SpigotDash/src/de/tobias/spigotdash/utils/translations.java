@@ -180,20 +180,21 @@ public class translations {
 		
 		//0.3.5
 		currentTranslations.put("Weather", "Weather"); //WORLDS
-		currentTranslations.put("Day", "Day"); 
-		currentTranslations.put("Night", "Night"); 
-		currentTranslations.put("Time", "Time"); 
-		currentTranslations.put("No_Players_in_World", "Currently, there are no Players in this World");
-		currentTranslations.put("XP_Level", "XP Level");
-		currentTranslations.put("XP_Required_For_Next_Level", "Next Level");
-		currentTranslations.put("XP_Level", "XP Level");
-		currentTranslations.put("XP", "XP");
-		currentTranslations.put("Level", "Level");
-		currentTranslations.put("Gamemode", "Gamemode");
-		currentTranslations.put("Gamemode_Survival", "Survival");
-		currentTranslations.put("Gamemode_Creative", "Creative");
-		currentTranslations.put("Gamemode_Adventure", "Adventure");
-		currentTranslations.put("Gamemode_Spectator", "Spectator");
+		currentTranslations.put("Day", "Day");  //WORLDS
+		currentTranslations.put("Night", "Night");  //WORLDS
+		currentTranslations.put("Time", "Time");  //WORLDS
+		currentTranslations.put("No_Players_in_World", "Currently, there are no Players in this World"); //WORLDS
+		currentTranslations.put("XP_Level", "XP Level"); //PLAYERS
+		currentTranslations.put("XP_Required_For_Next_Level", "Next Level"); //PLAYERS
+		currentTranslations.put("XP_Level", "XP Level"); //PLAYERS
+		currentTranslations.put("XP", "XP"); //PLAYERS
+		currentTranslations.put("Level", "Level"); //PLAYERS
+		currentTranslations.put("Gamemode", "Gamemode"); //PLAYERS
+		currentTranslations.put("Gamemode_Survival", "Survival"); //PLAYERS
+		currentTranslations.put("Gamemode_Creative", "Creative"); //PLAYERS
+		currentTranslations.put("Gamemode_Adventure", "Adventure"); //PLAYERS
+		currentTranslations.put("Gamemode_Spectator", "Spectator"); //PLAYERS
+		currentTranslations.put("MSPT_Long", "Milliseconds per Tick"); //GRAPHS
 
 
 	}
