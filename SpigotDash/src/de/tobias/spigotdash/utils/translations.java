@@ -184,6 +184,17 @@ public class translations {
 		currentTranslations.put("Night", "Night"); 
 		currentTranslations.put("Time", "Time"); 
 		currentTranslations.put("No_Players_in_World", "Currently, there are no Players in this World");
+		currentTranslations.put("XP_Level", "XP Level");
+		currentTranslations.put("XP_Required_For_Next_Level", "Next Level");
+		currentTranslations.put("XP_Level", "XP Level");
+		currentTranslations.put("XP", "XP");
+		currentTranslations.put("Level", "Level");
+		currentTranslations.put("Gamemode", "Gamemode");
+		currentTranslations.put("Gamemode_Survival", "Survival");
+		currentTranslations.put("Gamemode_Creative", "Creative");
+		currentTranslations.put("Gamemode_Adventure", "Adventure");
+		currentTranslations.put("Gamemode_Spectator", "Spectator");
+
 
 	}
 }

@@ -129,11 +129,13 @@ async function kickClick(uuid) {
 }
 
 var TEMPLATE_PLAYER_MENU = '\
-<a><b>%T%DISPLAYNAME%T%: </b>%DISPLAYNAME%<br>\
-<a><b>UUID: </b>%UUID%<br><br>\
-<a><b>%T%POSITION%T%: </b>X: %X%, Y: %Y%, Z: %Z% %T%IN%T% %WORLD%<br>\
-<a><b>%T%HEALTH%T%: </b>%HEALTH%/%HEALTH_MAX%<br>\
-<a><b>%T%FOOD%T%: </b>%FOOD%/20<br>\
+<a><b>%T%DISPLAYNAME%T%: </b>%DISPLAYNAME%</a><br>\
+<a><b>UUID: </b>%UUID%</a><br>\
+<a><b>%T%GAMEMODE%T%: </b>%GAMEMODE%</a><br><br>\
+<a><b>%T%POSITION%T%: </b>X: %X%, Y: %Y%, Z: %Z% %T%IN%T% %WORLD%</a><br>\
+<a><b>%T%HEALTH%T%: </b>%HEALTH%/%HEALTH_MAX%</a><br>\
+<a><b>%T%FOOD%T%: </b>%FOOD%/20</a><br>\
+<a><b>%T%XP%T%: </b>%XPLEVEL% %T%LEVEL%T% (%T%XP_REQUIRED_FOR_NEXT_LEVEL%T%: %XPHASFORNEXTLEVEL%/%XPFORNEXTLEVEL% %T%XP%T%)</a><br>\
 <div class="button is-info m-1" onclick="sendMessageClick(this.getAttribute(\'data-uuid\'))" data-uuid="%UUID%">%T%ACTION_MESSAGE%T%</div>\
 <div class="button is-danger m-1" onclick="kickClick(this.getAttribute(\'data-uuid\'))" data-uuid="%UUID%">%T%ACTION_KICK%T%</div>\
 ';
