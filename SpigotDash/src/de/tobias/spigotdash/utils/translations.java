@@ -1,12 +1,17 @@
 package de.tobias.spigotdash.utils;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 
 import de.tobias.spigotdash.main;
 
@@ -14,7 +19,6 @@ public class translations {
 
 	public static Map<String, Object> currentTranslations = new HashMap<String, Object>();
 	public static String translationBrackets = "%T%";
-	public static File translationFile = new File(main.pl.getDataFolder(), "translations.yml");
 	public static YamlConfiguration yaml_cfg = null;
 	
 	public static String replaceTranslationsInString(String input) {
@@ -27,29 +31,55 @@ public class translations {
 	public static boolean load() {
 		pluginConsole.sendMessage("Loading Translations...");
 		loadDefaultTranslations();
-		yaml_cfg = YamlConfiguration.loadConfiguration(translationFile);
+		loadInternalTranslation(configuration.yaml_cfg.getString("translations"));
 		
-		for(String key : yaml_cfg.getKeys(true)) {
-			if(currentTranslations.containsKey(key)) {
+		for(String key : currentTranslations.keySet()) {
+			if(yaml_cfg.contains(key)) {
 				currentTranslations.replace(key, yaml_cfg.getString(key));
 			} else {
-				currentTranslations.put(key, yaml_cfg.getString(key));
+				pluginConsole.sendMessage("&6WARN: The Translations loaded are missing: &b" + key);
 			}
 		}
-		
-		yaml_cfg.addDefaults(currentTranslations);
-		yaml_cfg.options().copyDefaults(true);
-		try {
-			yaml_cfg.save(translationFile);
-		} catch (IOException e) {
-			pluginConsole.sendMessage("&cCould not save Translations: ");
-			e.printStackTrace();
-		}
-		pluginConsole.sendMessage("&aTranslations from File imported!");
+
+		pluginConsole.sendMessage("&aTranslations loaded!");
 		return true;
 	}
 	
+	public static void loadInternalTranslation(String name) {
+		try {
+			String resname = "/translations/" + name.toUpperCase() + ".yml";
+			InputStream stream = main.pl.getClass().getResourceAsStream(resname);
+			
+			if(stream == null) {
+				File f = new File(main.pl.getDataFolder(), "translations.yml");
+				
+				if(f.exists()) {
+					pluginConsole.sendMessage("&6The Translations for &b'" + name + "' &6could not be found, using the &btranslations.yml &6File!");
+					stream = FileUtils.openInputStream(f);
+				} else {
+					pluginConsole.sendMessage("&cThe Translations for &6'" + name + "' &ccould not be found, using &6'EN'&c!");
+					stream = main.pl.getClass().getResourceAsStream("/translations/EN.yml");
+				}
+			} else {
+				pluginConsole.sendMessage("&7Loading Internal Translations &6'" + name + "'&7...");
+			}
+			
+			Reader r = new InputStreamReader(stream, StandardCharsets.UTF_8);
+			yaml_cfg = YamlConfiguration.loadConfiguration(r);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void loadDefaultTranslations() {
+		InputStream stream = main.pl.getClass().getResourceAsStream("/translations/EN.yml");
+		YamlConfiguration temp = YamlConfiguration.loadConfiguration(new InputStreamReader(stream, StandardCharsets.UTF_8));
+		
+		for(String key : temp.getKeys(true)) {
+			currentTranslations.put(key, temp.getString(key));
+		}
+
+		/*
 		//LOGIN
 		currentTranslations.put("Login", "Login");
 		currentTranslations.put("Login_Required", "You need to be logged in, in order to continue!");
@@ -194,8 +224,6 @@ public class translations {
 		currentTranslations.put("Gamemode_Creative", "Creative"); //PLAYERS
 		currentTranslations.put("Gamemode_Adventure", "Adventure"); //PLAYERS
 		currentTranslations.put("Gamemode_Spectator", "Spectator"); //PLAYERS
-		currentTranslations.put("MSPT_Long", "Milliseconds per Tick"); //GRAPHS
-
-
+		currentTranslations.put("MSPT_Long", "Milliseconds per Tick"); //GRAPHS*/
 	}
 }
