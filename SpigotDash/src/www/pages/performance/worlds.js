@@ -183,7 +183,7 @@ var TEMPLATE_WORLD_MENU = '\
 </div>\
 \
 <div class="p-2">\
-    <div class="days">Day in World: %DAY%</div>\
+    <div class="days">%T%DAY_IN_WORLD%T%: %DAY%</div>\
 </div>\
 \
 <div class="timeSelector p-2">\

@@ -185,10 +185,10 @@ var TEMPLATE_WORLD_CHUNK_ENTRY = '\
 \
                     <div class="level-right">\
                         <div class="level-item">\
-                            <div class="subtitle">Players: <div class="players">%PLAYERCOUNT%</div></div>\
+                            <div class="subtitle">%T%PLAYERS%T%: <div class="players">%PLAYERCOUNT%</div></div>\
                         </div>\
                         <div class="level-item">\
-                            <div class="subtitle">Entities: <div class="entities">%ENTITIECOUNT%</div></div>\
+                            <div class="subtitle">%T%ENTITIES%T%: <div class="entities">%ENTITIECOUNT%</div></div>\
                         </div>\
                         <div class="level-item"></div>\
                         <div class="level-item"></div>\
