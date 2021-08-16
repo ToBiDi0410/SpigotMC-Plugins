@@ -45,6 +45,7 @@ import de.tobias.spigotdash.utils.databaseManager;
 import de.tobias.spigotdash.utils.errorCatcher;
 import de.tobias.spigotdash.utils.pluginConsole;
 import de.tobias.spigotdash.utils.pluginManager;
+import de.tobias.spigotdash.utils.translations;
 
 public class dataFetcher {
 
@@ -234,7 +235,14 @@ public class dataFetcher {
 		playerinfo.put("Health", p.getHealth());
 		playerinfo.put("Health_Max", p.getHealthScale());
 		playerinfo.put("Food", p.getFoodLevel());
+		playerinfo.put("Gamemode", translations.replaceTranslationsInString("%T%GAMEMODE_" + p.getGameMode().name() + "%T%"));
 		playerinfo.put("Jointime", JoinTime.joinTimes.get(p.getUniqueId().toString()));
+		playerinfo.put("XPLevel", p.getLevel());
+		playerinfo.put("XP", p.getTotalExperience());
+		playerinfo.put("XPForNextLevel", getExpFromLevel(p.getLevel() + 1) - getExpFromLevel(p.getLevel()));
+		playerinfo.put("XPMissingForNextLevel", (getExpFromLevel(p.getLevel() + 1) - p.getTotalExperience()));
+		playerinfo.put("XPHasForNextLevel", p.getTotalExperience() - getExpFromLevel(p.getLevel()));
+
 		return playerinfo;
 	}
 
@@ -358,6 +366,7 @@ public class dataFetcher {
 		return values;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static HashMap<String, Object> getWorldForWeb(World w) {
 		HashMap<String, Object> values = new HashMap<String, Object>();
 				
@@ -388,6 +397,9 @@ public class dataFetcher {
 			}
 			entityCounts = sortByValue(entityCounts);
 			chunkValues.put("Entities", entityCounts);
+			chunkValues.put("X", chunk.getX());
+			chunkValues.put("Z", chunk.getZ());
+			chunkValues.put("ID", chunk.getX() + " " + chunk.getZ());
 			
 			//PLAYERS PER CHUNK
 			ArrayList<HashMap<String, Object>> players = new ArrayList<HashMap<String, Object>>();
@@ -402,6 +414,17 @@ public class dataFetcher {
 			
 			chunks.add(chunkValues);
 		}
+
+		Comparator<HashMap<String, Object>> valComp = new Comparator<HashMap<String, Object>>() {
+			@Override
+			public int compare(HashMap<String, Object> o1, HashMap<String, Object> o2) {
+				Integer worth1 = ((HashMap<Object, Integer>) o1.get("Entities")).size() + ((ArrayList<HashMap<String, Object>>)o1.get("Players")).size();
+				Integer worth2 = ((HashMap<Object, Integer>) o2.get("Entities")).size() + ((ArrayList<HashMap<String, Object>>)o2.get("Players")).size();
+				return worth2.compareTo(worth1);
+			}
+		};
+		
+		Collections.sort(chunks, valComp);
 		
 		values.put("Chunks", chunks);
 
@@ -419,7 +442,8 @@ public class dataFetcher {
 		values.put("time", w.getFullTime());
 		values.put("name", w.getName());
 		values.put("daytime", w.getTime());
-		
+		values.put("days", w.getFullTime()/24000);
+
 		return values;
 	}
 
@@ -588,4 +612,14 @@ public class dataFetcher {
 		//RETURN THE SORTED HASHMAP
 		return sortedByValue;
     }
+	
+	public static int getExpFromLevel(int level) {
+		if (level > 30) {
+			return (int) (4.5 * level * level - 162.5 * level + 2220);
+		}
+		if (level > 15) {
+			return (int) (2.5 * level * level - 40.5 * level + 360);
+		}
+		return level * level + 6 * level;
+	}
 }

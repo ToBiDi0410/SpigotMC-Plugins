@@ -17,3 +17,15 @@
 .box {
     background-color: #1f2424 !important;
 }
+
+.vanillatoasts-toast {
+    background-color: #000000c9 !important;
+}
+
+.vanillatoasts-title {
+    color: white;
+}
+
+.vanillatoasts-text {
+    color: #969696;
+}

@@ -79,9 +79,11 @@ function initTPSChart() {
             text: '%T%TPS_HISTORY%T%',
             align: 'left'
         },
-        yaxis: {
-            min: 0
-        }
+        yaxis: [{
+            show: true
+        }, {
+            show: false,
+        }]
     };
 
     tpschart = new ApexCharts(document.querySelector("#tpschart"), options);
@@ -169,6 +171,9 @@ async function updateData() {
             series: [{
                 name: "%T%TPS_LONG%T%",
                 data: []
+            }, {
+                name: "%T%MSPT_LONG%T%",
+                data: []
             }]
         }
 
@@ -203,6 +208,8 @@ async function updateData() {
             RAM_GRAPH.series[1].data.push({ x: elem_date, y: elem.MEMORY_USED });
 
             TPS_GRAPH.series[0].data.push({ x: elem_date, y: parseFloat(elem.TPS).toFixed(2) });
+            if (elem.TPS == 0) elem.TPS = 1;
+            TPS_GRAPH.series[1].data.push({ x: elem_date, y: (1000 / parseFloat(elem.TPS).toFixed(2)) });
 
             CPU_GRAPH.series[0].data.push({ x: elem_date, y: elem.CPU_LOAD_SYSTEM });
             CPU_GRAPH.series[1].data.push({ x: elem_date, y: elem.CPU_LOAD_PROCESS });
