@@ -106,6 +106,8 @@ public class configuration {
 		if(yaml_cfg.getString("FILE_VERSION").equalsIgnoreCase("0.5")) {
 			yaml_cfg.set("translations", "EN");
 			yaml_cfg.set("FILE_VERSION", "0.6");
+			save();
+			migrated = true;
 		}
 		
 		if(migrated) {
