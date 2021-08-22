@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -263,7 +264,7 @@ public class dataFetcher {
 		try {
 			List<String> lines = new ArrayList<String>();
 			int counter = 0;
-			try (ReversedLinesFileReader reader = new ReversedLinesFileReader(logfile, Charset.forName("utf-8"));) {
+			try (ReversedLinesFileReader reader = new ReversedLinesFileReader(logfile, Charset.defaultCharset())) {
 				while (counter < linecount) {
 					String line = reader.readLine();
 					if(line == null) break;
