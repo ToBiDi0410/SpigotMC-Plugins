@@ -237,10 +237,6 @@ public class APIHandler {
 					if(action.equalsIgnoreCase("WHITELIST_ADD")) {
 						if (json.has("player")) {
 							String uuid = json.get("player").getAsString();
-							//UUID uuidObj = dataFetcher.uuidFromUUIDWithoutDashes(uuid);
-							//System.out.println(uuidObj.toString());
-							//System.out.println(Bukkit.getOfflinePlayer(uuidObj).getName());
-
 							Bukkit.getOfflinePlayer(uuid).setWhitelisted(true);
 							MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
 							return;

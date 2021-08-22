@@ -1,16 +1,6 @@
 package de.tobias.spigotdash;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
 import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,7 +11,6 @@ import de.tobias.spigotdash.utils.pluginConsole;
 import de.tobias.spigotdash.utils.taskManager;
 import de.tobias.spigotdash.utils.translations;
 import de.tobias.spigotdash.web.WebServer;
-import de.tobias.spigotdash.web.dataFetcher;
 
 public class main extends JavaPlugin {
 
