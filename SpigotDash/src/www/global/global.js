@@ -77,6 +77,7 @@ async function getDataFromAPI(body) {
             mode: "cors",
             cache: "no-cache",
             redirect: "follow",
+			credentials: "include",
             body: JSON.stringify(body)
         });
         showOffline(false);
