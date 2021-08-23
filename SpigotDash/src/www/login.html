@@ -105,10 +105,9 @@
                     "Cache-Control": "no-cache",
 
                 });
-
+                var REP_TEXT = await data.json();
                 if (data.status != 200) {
-                    var REP_TEXT = await data.text();
-                    REP_TEXT = REP_TEXT.replace('"ERR_WRONG_NAME_OR_PASSWORD"', "Wrong Password")
+                    REP_TEXT = REP_TEXT.replace('"ERR_WRONG_NAME_OR_PASSWORD"', "Wrong Password");
                     document.getElementById("PWORD").classList.remove("is-success");
                     document.getElementById("PWORD").classList.add("is-danger");
                     document.getElementById("ERR_FIELD").innerHTML = "CODE: " + data.status + " (" + data.statusText + ")\n" + REP_TEXT;
@@ -116,6 +115,7 @@
                     document.getElementById("PWORD").classList.add("is-success");
                     document.getElementById("PWORD").classList.remove("is-danger");
                     document.getElementById("ERR_FIELD").innerHTML = "Success";
+                    document.cookie = REP_TEXT;
                 }
             } catch (err) {
                 document.getElementById("PWORD").classList.remove("is-success");

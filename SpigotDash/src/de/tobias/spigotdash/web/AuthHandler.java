@@ -20,8 +20,9 @@ public class AuthHandler {
 			if (!isAuthed(he)) {
 				if (json.has("username") && json.has("password")) {
 					if (isValid(json.get("username").getAsString(), json.get("password").getAsString())) {
-						he.getResponseHeaders().add("Set-Cookie", generateNewCookie().toString());
-						MainRequestHandler.sendJSONResponse(he, 200, "COOKIE_ADDED");
+						String cok = generateNewCookie().toString();
+						he.getResponseHeaders().add("Set-Cookie", cok);
+						MainRequestHandler.sendJSONResponse(he, 200, cok);
 						return;
 					} else {
 						MainRequestHandler.sendJSONResponse(he, 400, "ERR_WRONG_NAME_OR_PASSWORD");
