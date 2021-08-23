@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -39,6 +38,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.google.common.collect.Lists;
+import com.sun.management.OperatingSystemMXBean;
 
 import de.tobias.spigotdash.main;
 import de.tobias.spigotdash.listener.JoinTime;
@@ -53,9 +53,9 @@ public class dataFetcher {
 	public static File serverDir = Bukkit.getWorldContainer();
 	public static File serverPropFile = new File(serverDir, "server.properties");
 	public static File bukkitPropFile = new File(serverDir, "bukkit.yml");
-	
+
+	public static OperatingSystemMXBean operatingSystemMXBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 	public static Runtime runtime = Runtime.getRuntime();
-	public static MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 
 	public static long last_tick_time = 0;
 	public static float tps = 0;
@@ -452,17 +452,10 @@ public class dataFetcher {
 
 	public static double getProcessCPULoad() {
 		try {
-			ObjectName name = ObjectName.getInstance("java.lang:type=OperatingSystem");
-			AttributeList list = mbs.getAttributes(name, new String[] { "ProcessCpuLoad" });
+			Double value = operatingSystemMXBean.getProcessCpuLoad();
 
-			if (list.isEmpty())
-				return Double.NaN;
-
-			Attribute att = (Attribute) list.get(0);
-			Double value = (Double) att.getValue();
-
-			if (value == -1.0)
-				return Double.NaN;
+			if (value == -1.0) return (double)0;
+			
 			return ((int) (value * 1000) / 10.0);
 		} catch (Exception ex) {
 			return 0;
@@ -472,17 +465,10 @@ public class dataFetcher {
 
 	public static double getSystemCPULoad() {
 		try {
-			ObjectName name = ObjectName.getInstance("java.lang:type=OperatingSystem");
-			AttributeList list = mbs.getAttributes(name, new String[] { "SystemCpuLoad" });
+			Double value = operatingSystemMXBean.getSystemCpuLoad();
 
-			if (list.isEmpty())
-				return Double.NaN;
-
-			Attribute att = (Attribute) list.get(0);
-			Double value = (Double) att.getValue();
-
-			if (value == -1.0)
-				return Double.NaN;
+			if (value == -1.0) return (double)0;
+			
 			return ((int) (value * 1000) / 10.0);
 		} catch (Exception ex) {
 			return 0;
