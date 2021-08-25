@@ -1,11 +1,17 @@
 package de.tobias.spigotdash.web;
 
 import java.net.HttpCookie;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyPair;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.crypto.Cipher;
+
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 
 import de.tobias.spigotdash.utils.configuration;
@@ -14,6 +20,7 @@ import de.tobias.spigotdash.utils.errorCatcher;
 public class AuthHandler {
 
 	public static Map<String, Object> sessionData = new HashMap<String, Object>();
+	public static Map<String, KeyPair> authKeys = new HashMap<String, KeyPair>();
 	
 	public static void handle(HttpExchange he, JsonObject json) {
 		try {
@@ -34,13 +41,28 @@ public class AuthHandler {
 				}
 			} else {
 				MainRequestHandler.sendJSONResponse(he, 200, "WARN_ALREADY_AUTHED");
-				return;
 			}
 		} catch (Exception ex) {
 			errorCatcher.catchException(ex, false);
 		}
 	}
+
+	public static String decryptData(String data, KeyPair pair) throws Exception {
+		byte[] bytes = Base64.getDecoder().decode(data);
+        Cipher decriptCipher = Cipher.getInstance("RSA");
+        decriptCipher.init(Cipher.DECRYPT_MODE, pair.getPrivate());
+        return new String(decriptCipher.doFinal(bytes), StandardCharsets.UTF_8);
+	}
 	
+	public static JsonObject decryptDataToJSON(String data, KeyPair pair) {
+		try {
+			String decrypted = decryptData(data, pair);
+			JsonParser parser = new JsonParser();
+			return parser.parse(decrypted).getAsJsonObject();
+		} catch (Exception ex) {
+			return null;
+		}
+	}
 	
 	public static String hashPassword(String password) {
 		return "NOT_IMPLEMENTED";

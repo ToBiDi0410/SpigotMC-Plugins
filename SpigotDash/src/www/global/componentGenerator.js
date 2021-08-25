@@ -202,7 +202,6 @@ var TEMPLATE_WORLD_CHUNK_ENTRY = '\
 function generateWorldChunkEntry(chunk) {
     var html = TEMPLATE_WORLD_CHUNK_ENTRY;
     var value = { id: chunk.ID, playercount: chunk.Players.length, entitiecount: Object.size(chunk.Entities) };
-    console.log(value.entitiecount);
 
     html = replaceObjectKeyInString(value, html);
     return getDOMObject(html);

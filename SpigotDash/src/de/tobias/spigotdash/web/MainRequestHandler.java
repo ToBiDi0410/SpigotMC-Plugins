@@ -9,7 +9,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.crypto.Cipher;
 
 import org.bukkit.craftbukkit.libs.org.codehaus.plexus.util.FileUtils;
 
@@ -26,7 +32,7 @@ import de.tobias.spigotdash.utils.pluginConsole;
 import de.tobias.spigotdash.utils.translations;
 
 public class MainRequestHandler implements HttpHandler {
-
+	
 	@Override
 	public void handle(HttpExchange he) throws IOException {
 		try {
@@ -70,22 +76,31 @@ public class MainRequestHandler implements HttpHandler {
 	public boolean handleWithSections(HttpExchange he) {
 		String path = he.getRequestURI().getPath();
 		String request_body = castInputStreamToString(he.getRequestBody());
-		JsonParser parser = new JsonParser();
-		JsonElement jsonTree;
+		JsonObject json;
+		
+		if(path.equalsIgnoreCase("/encryptKey")) {
+			EncryptionManager.handleKeyRequest(he);
+			return false;
+		}
+		
 		try {
-			jsonTree = parser.parse(request_body);
+			JsonElement tempjson = new JsonParser().parse(request_body);
+			if(tempjson == null || !tempjson.isJsonObject()) return true;
+			json = tempjson.getAsJsonObject();
 		} catch(Exception ex) {
-			pluginConsole.sendMessage("&cFailed to parse JSON from Request: ");
-			pluginConsole.sendMessage("&4Please report this on Discord and I will fix it! Probably your language is not fully Supported.");
-			pluginConsole.sendMessage("&b" + request_body);
+			ex.printStackTrace();
+			pluginConsole.sendMessage("&cFailed to parse JSON from Request: \n&b" + request_body);
 			errorCatcher.transmitError("MainRequestHandler.java", 81 , "JSON Parse failed: " + request_body);
 			return false;
 		}
 
 		
-		if(request_body == null || jsonTree == null || !jsonTree.isJsonObject()) return true;
+		if(request_body == null || json == null) return true;
 		
-		JsonObject json = jsonTree.getAsJsonObject();
+		//DATA DECRYPTION
+		json = EncryptionManager.decryptRequest(he, json);
+		if(json == null) return false;
+		
 		if(path.equalsIgnoreCase("/api")) {
 			if(!AuthHandler.isAuthed(he)) {
 				sendJSONResponse(he, 401, "ERR_REQUIRE_AUTH");
