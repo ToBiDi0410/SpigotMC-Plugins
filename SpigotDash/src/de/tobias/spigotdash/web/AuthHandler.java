@@ -47,23 +47,6 @@ public class AuthHandler {
 		}
 	}
 
-	public static String decryptData(String data, KeyPair pair) throws Exception {
-		byte[] bytes = Base64.getDecoder().decode(data);
-        Cipher decriptCipher = Cipher.getInstance("RSA");
-        decriptCipher.init(Cipher.DECRYPT_MODE, pair.getPrivate());
-        return new String(decriptCipher.doFinal(bytes), StandardCharsets.UTF_8);
-	}
-	
-	public static JsonObject decryptDataToJSON(String data, KeyPair pair) {
-		try {
-			String decrypted = decryptData(data, pair);
-			JsonParser parser = new JsonParser();
-			return parser.parse(decrypted).getAsJsonObject();
-		} catch (Exception ex) {
-			return null;
-		}
-	}
-	
 	public static String hashPassword(String password) {
 		return "NOT_IMPLEMENTED";
 	}
