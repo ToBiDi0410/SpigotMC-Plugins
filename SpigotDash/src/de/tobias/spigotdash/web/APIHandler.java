@@ -261,6 +261,31 @@ public class APIHandler {
 						}
 					}
 					
+					if(action.equalsIgnoreCase("OPERATOR_ADD")) {
+						if (json.has("player")) {
+							String uuid = json.get("player").getAsString();
+							Bukkit.getOfflinePlayer(uuid).setOp(true);
+							MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+							return;
+						} else {
+							MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PLAYER");
+							return;
+						}
+					}
+					
+					if(action.equalsIgnoreCase("OPERATOR_REMOVE")) {
+						if (json.has("player")) {
+							String uuid = json.get("player").getAsString();
+							UUID uuidObj = dataFetcher.uuidFromUUIDWithoutDashes(uuid.replaceAll("-", ""));
+							Bukkit.getOfflinePlayer(uuidObj).setOp(false);
+							MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+							return;
+						} else {
+							MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PLAYER");
+							return;
+						}
+					}
+					
 					if(action.equalsIgnoreCase("TOGGLE_END")) {
 						boolean current = (Bukkit.getWorld("world_the_end") != null);
 						boolean suc = dataFetcher.modifyBukkitPropertie("settings.allow-end", !current);

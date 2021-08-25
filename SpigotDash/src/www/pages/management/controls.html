@@ -14,6 +14,11 @@
 </div>
 
 <div class="m-1">
+    <div>%T%ADMINISTRATION%T%</div>
+    <div class="button is-success m-1" onclick="showOperatorEditor();"><span class="material-icons-outlined">edit</span>%T%EDIT_OPERATORS%T%</div>
+</div>
+
+<div class="m-1">
     <div>%T%GAME%T%</div>
     <div class="button is-info m-1" onclick='executeAPIRequestWithButton(this, { method: "CONTROL", action: "TOGGLE_NETHER" }, function(data) { return(data == "SUCCESS") });'>
         <span class="material-icons-outlined">power_settings_new</span>
