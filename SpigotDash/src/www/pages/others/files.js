@@ -4,12 +4,14 @@ var FILE_TEMPLATE_FOLDER = '<tr onclick="fileListClickEntry(this);" data-relativ
     <th><span class="material-icons-outlined">folder</span></th >\
     <td>%NAME%</td>\
     <td>%MODF%</td>\
+    <td></td>\
     <tr>';
 
 var FILE_TEMPLATE_FILE = '<tr onclick="fileListClickEntry(this);" data-relative-path="%RELPATH%">\
-    <th><span class="material-icons-outlined">insert_drive_file</span></th >\
+    <th><span class="material-icons-outlined">insert_drive_file</span></th>\
     <td>%NAME%</td>\
     <td>%MODF%</td>\
+    <td><div class="button is-success buttonDownload" onclick="downloadFile(event)" data-relative-path="%RELPATH%"><span class="material-icons-outlined">file_download</span></div></td>\
     <tr>';
 
 var FILE_TEMPLATE_BACK = '<tr onclick="goBackPath();">\
@@ -46,9 +48,9 @@ function getHTMLForFile(FILE_OBJ) {
         html = FILE_TEMPLATE_FILE;
     }
 
-    html = html.replace("%NAME%", FILE_OBJ.NAME);
-    html = html.replace("%MODF%", (new Date(FILE_OBJ.LAST_CHANGED)).toLocaleString());
-    html = html.replace("%RELPATH%", curr_path + FILE_OBJ.NAME);
+    html = html.replaceAll("%NAME%", FILE_OBJ.NAME);
+    html = html.replaceAll("%MODF%", (new Date(FILE_OBJ.LAST_CHANGED)).toLocaleString());
+    html = html.replaceAll("%RELPATH%", curr_path + FILE_OBJ.NAME);
 
     return html;
 }
@@ -63,6 +65,43 @@ async function fileListClickEntry(elem) {
     } else {
         openFileInViewer(path);
     }
+}
+
+
+async function downloadFile(event) {
+    event.stopPropagation();
+    var elem = event.target.parentElement.parentElement.querySelector(".buttonDownload");
+    elem.classList.add("is-loading");
+    console.log(elem);
+
+    try {
+        var path = elem.getAttribute("data-relative-path");
+        var data = await fetch(API_URL, {
+            "headers": {
+                "accept": "*/*",
+                "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7,nl;q=0.6",
+                "cache-control": "no-cache",
+                "content-type": "application/json;charset=UTF-8",
+            },
+            "body": '{\n    "method": "GET_FILE_WITH_PATH", "path": "' + path + '"\n}',
+            "method": "POST",
+            "Cache-Control": "no-cache"
+
+        });
+
+        var blob = await data.blob();
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = path.split("/").latest();
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    } catch (err) {
+        console.error(err);
+    }
+
+    elem.classList.remove("is-loading");
 }
 
 async function openFileInViewer(path) {
