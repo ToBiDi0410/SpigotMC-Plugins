@@ -209,7 +209,7 @@ async function updateData() {
 
             TPS_GRAPH.series[0].data.push({ x: elem_date, y: parseFloat(elem.TPS).toFixed(2) });
             if (elem.TPS == 0) elem.TPS = 1;
-            TPS_GRAPH.series[1].data.push({ x: elem_date, y: (1000 / parseFloat(elem.TPS).toFixed(2)) });
+            TPS_GRAPH.series[1].data.push({ x: elem_date, y: (1000 / parseFloat(elem.TPS)).toFixed(2) });
 
             CPU_GRAPH.series[0].data.push({ x: elem_date, y: elem.CPU_LOAD_SYSTEM });
             CPU_GRAPH.series[1].data.push({ x: elem_date, y: elem.CPU_LOAD_PROCESS });
