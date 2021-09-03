@@ -210,6 +210,15 @@ async function loadCSSIfExists(url, container) {
     }
 }
 
+function copyClipboardElem(elem) {
+    var copyTarget = elem.firstChild;
+    copyClipboard(copyTarget.innerText);
+}
+
+function copyClipboard(text) {
+    navigator.clipboard.writeText(text);
+}
+
 String.prototype.capitalizeFirstLetter = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }

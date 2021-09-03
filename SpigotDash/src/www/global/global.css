@@ -69,6 +69,10 @@
     color: #464646;
 }
 
+.copyClipboardBtn {
+    font-size: 80%;
+}
+
 html {
     --theme-graphs-backcolor: #ffffff;
 }

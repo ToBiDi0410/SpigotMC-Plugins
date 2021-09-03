@@ -129,8 +129,8 @@ async function kickClick(uuid) {
 }
 
 var TEMPLATE_PLAYER_MENU = '\
-<a><b>%T%DISPLAYNAME%T%: </b>%DISPLAYNAME%</a><br>\
-<a><b>UUID: </b>%UUID%</a><br>\
+<a><b>%T%DISPLAYNAME%T%: </b>%DISPLAYNAME%</a><span class="material-icons-outlined copyClipboardBtn" onclick="copyClipboard(\'%NAME%\');">content_copy</span><br>\
+<a><b>UUID: </b>%UUID%</a><span class="material-icons-outlined copyClipboardBtn" onclick="copyClipboard(\'%UUID%\');">content_copy</span><br>\
 <a><b>%T%GAMEMODE%T%: </b>%GAMEMODE%</a><br><br>\
 <a><b>%T%POSITION%T%: </b>X: %X%, Y: %Y%, Z: %Z% %T%IN%T% %WORLD%</a><br>\
 <a><b>%T%HEALTH%T%: </b>%HEALTH%/%HEALTH_MAX%</a><br>\
