@@ -50,6 +50,9 @@ class smartMenu {
     }
 
     open() {
+        if (smartMenuHelpers.MENU_PATH.latest() == this.path) return;
+        //FIX MENU DUPLICATION
+
         smartMenuHelpers.MENU_PATH[smartMenuHelpers.MENU_PATH.length] = this.path;
         var cont = document.querySelector(".menuLayerContainer");
 
@@ -101,13 +104,12 @@ class smartMenu {
             this.DOMChild.querySelector(".path").innerHTML = smartMenuHelpers.MENU_PATH.join(" → ");
             this.DOMChild.querySelector(".ctitle").innerHTML = this.title;
             this.DOMChild.querySelector(".content").innerHTML = this.html;
-        } else {
-            console.log(this.DOMChild == null);
-        }
+        } else {}
     }
 
     getContentDOM() {
-        return this.DOMChild.querySelector(".content");
+        if (this.DOMChild != null) return this.DOMChild.querySelector(".content");
+        return null;
     }
 }
 
