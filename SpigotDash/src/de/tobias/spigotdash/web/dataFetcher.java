@@ -374,6 +374,18 @@ public class dataFetcher {
 		HashMap<Object, Integer> entityCountsWorld = new HashMap<Object, Integer>();
 		ArrayList<HashMap<String, Object>> playersWorld = new ArrayList<HashMap<String, Object>>();
 		
+		//DATAPACKS
+		File dataPackFolder = new File(w.getWorldFolder(), "datapacks");
+		ArrayList<String> dataPacks = new ArrayList<>();
+		
+		if(dataPackFolder.exists() && dataPackFolder.isDirectory()) {
+			for(File datapack : dataPackFolder.listFiles()) {
+				dataPacks.add(datapack.getName());
+			}
+		}
+		
+		values.put("Datapacks", dataPacks);
+		
 		//CHUNKS
 		ArrayList<HashMap<String, Object>> chunks = new ArrayList<HashMap<String, Object>>();
 		

@@ -67,6 +67,8 @@ async function openWorldMenu(worldname) {
         }
     });
 
+    var datapackDom = menu.getContentDOM().querySelector(".datapacks");
+
     while (!menu.closed) {
         data = await getDataFromAPI({ method: "GET_WORLD", world: worldname });
 
@@ -83,6 +85,7 @@ async function openWorldMenu(worldname) {
         playerCount.innerHTML = playerCount.innerHTML.replace(playerCount.innerHTML.split("(")[1].split(")")[0], data.Players.length);
         chunksCount.innerHTML = chunksCount.innerHTML.replace(chunksCount.innerHTML.split("(")[1].split(")")[0], data.Chunks.length);
         daysDom.innerHTML = daysDom.innerHTML.replace(daysDom.innerHTML.split(": ")[1], data.days);
+        datapackDom.innerHTML = datapackDom.innerHTML.replace(datapackDom.innerHTML.split(": ")[1], data.Datapacks.join(","));
 
         await timer(5000);
     }
@@ -93,7 +96,6 @@ function worldUpdateChunks(listDOM, chunks) {
         var id = elem.getAttribute("data-id");
         var selelem = chunks.getObjectWithKeyValue("ID", id);
         if (selelem != null) {
-            console.log("UPDATE: " + id);
             elem.querySelector(".players").innerHTML = selelem.Players.length;
             elem.querySelector(".entities").innerHTML = Object.size(selelem.Entities);
         } else {
@@ -209,6 +211,9 @@ var TEMPLATE_WORLD_MENU = '\
     <input class="timeslider slider is-fullwidth" step="1000" min="0" max="24000" value="0" type="range">\
 </div>\
 \
+<div class="p-2">\
+    <div class="datapacks">%T%DATAPACKS%T%: %DATAPACKS%</div>\
+</div>\
 <div class="card is-fullwidth">\
     <header class="card-header">\
         <p class="card-header-title entities">%T%ENTITIES%T% (0)</p>\
