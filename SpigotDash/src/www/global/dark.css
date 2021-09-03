@@ -29,3 +29,7 @@
 .vanillatoasts-text {
     color: #969696;
 }
+
+html {
+    --theme-graphs-backcolor: #1f2424 !important;
+}

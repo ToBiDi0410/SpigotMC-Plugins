@@ -68,3 +68,7 @@
 .vanillatoasts-text {
     color: #464646;
 }
+
+html {
+    --theme-graphs-backcolor: #ffffff;
+}
