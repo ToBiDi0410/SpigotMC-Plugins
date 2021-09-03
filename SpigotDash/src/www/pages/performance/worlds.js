@@ -85,7 +85,7 @@ async function openWorldMenu(worldname) {
         playerCount.innerHTML = playerCount.innerHTML.replace(playerCount.innerHTML.split("(")[1].split(")")[0], data.Players.length);
         chunksCount.innerHTML = chunksCount.innerHTML.replace(chunksCount.innerHTML.split("(")[1].split(")")[0], data.Chunks.length);
         daysDom.innerHTML = daysDom.innerHTML.replace(daysDom.innerHTML.split(": ")[1], data.days);
-        datapackDom.innerHTML = datapackDom.innerHTML.replace(datapackDom.innerHTML.split(": ")[1], data.Datapacks.join(","));
+        datapackDom.innerHTML = datapackDom.innerHTML.replace(datapackDom.innerHTML.split(": ")[1], data.Datapacks.length > 0 ? data.Datapacks.join(",") : "No Datapacks loaded");
 
         await timer(5000);
     }

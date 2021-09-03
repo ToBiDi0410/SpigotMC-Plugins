@@ -21,14 +21,10 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.UUID;
 
-import javax.management.Attribute;
-import javax.management.AttributeList;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.input.ReversedLinesFileReader;
@@ -42,6 +38,7 @@ import com.sun.management.OperatingSystemMXBean;
 
 import de.tobias.spigotdash.main;
 import de.tobias.spigotdash.listener.JoinTime;
+import de.tobias.spigotdash.utils.AltDetector;
 import de.tobias.spigotdash.utils.databaseManager;
 import de.tobias.spigotdash.utils.errorCatcher;
 import de.tobias.spigotdash.utils.pluginConsole;
@@ -243,7 +240,8 @@ public class dataFetcher {
 		playerinfo.put("XPForNextLevel", getExpFromLevel(p.getLevel() + 1) - getExpFromLevel(p.getLevel()));
 		playerinfo.put("XPMissingForNextLevel", (getExpFromLevel(p.getLevel() + 1) - p.getTotalExperience()));
 		playerinfo.put("XPHasForNextLevel", p.getTotalExperience() - getExpFromLevel(p.getLevel()));
-
+		playerinfo.put("ALTS", dataFetcher.getOfflinePlayersAsString(AltDetector.getAlts(p)));
+		
 		return playerinfo;
 	}
 
@@ -256,6 +254,15 @@ public class dataFetcher {
 		loc.put("YAW", l.getYaw());
 		loc.put("WORLD", l.getWorld().getName());
 		return loc;
+	}
+	
+	public static String getOfflinePlayersAsString(ArrayList<OfflinePlayer> players) {
+		String s = "";
+		for(OfflinePlayer p : players) {
+			if(!s.equalsIgnoreCase("")) { s+= ", "; }
+			s+= p.getName();
+		}
+		return s;
 	}
 
 	// ** LOG **

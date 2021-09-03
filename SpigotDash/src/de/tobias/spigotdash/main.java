@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.tobias.spigotdash.listener.AltJoin;
 import de.tobias.spigotdash.listener.JoinTime;
 import de.tobias.spigotdash.utils.configuration;
 import de.tobias.spigotdash.utils.databaseManager;
@@ -56,12 +57,12 @@ public class main extends JavaPlugin {
 			Bukkit.getPluginManager().registerEvents(new JoinTime(), main.pl);
 			JoinTime.enableSet();
 			
+			//ALT DETECTOR
+			Bukkit.getPluginManager().registerEvents(new AltJoin(), main.pl);
+			
 			latestStart = System.currentTimeMillis();
 			
 			pluginConsole.sendMessage("&5Everything (seems to be) done!");
-			
-			//pluginInstaller.installPlugin("761feafe03");
-			//pluginManager.removePlugin(Bukkit.getPluginManager().getPlugin("SilkySpawnersLITE"));
 		} catch (Exception ex) {
 			pluginConsole.sendMessage("&7----------- [  " + pluginConsole.CONSOLE_PREFIX + "&7] -----------");
 			pluginConsole.sendMessage("&cINIT FAILURE! This error is currently unrecoverable!");

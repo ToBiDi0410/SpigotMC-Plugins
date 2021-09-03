@@ -136,6 +136,7 @@ var TEMPLATE_PLAYER_MENU = '\
 <a><b>%T%HEALTH%T%: </b>%HEALTH%/%HEALTH_MAX%</a><br>\
 <a><b>%T%FOOD%T%: </b>%FOOD%/20</a><br>\
 <a><b>%T%XP%T%: </b>%XPLEVEL% %T%LEVEL%T% (%T%XP_REQUIRED_FOR_NEXT_LEVEL%T%: %XPHASFORNEXTLEVEL%/%XPFORNEXTLEVEL% %T%XP%T%)</a><br>\
+<a><b>%T%ALT_ACCOUNTS%T%: </b>%ALTS%</a><br>\
 <div class="button is-info m-1" onclick="sendMessageClick(this.getAttribute(\'data-uuid\'))" data-uuid="%UUID%">%T%ACTION_MESSAGE%T%</div>\
 <div class="button is-danger m-1" onclick="kickClick(this.getAttribute(\'data-uuid\'))" data-uuid="%UUID%">%T%ACTION_KICK%T%</div>\
 ';
