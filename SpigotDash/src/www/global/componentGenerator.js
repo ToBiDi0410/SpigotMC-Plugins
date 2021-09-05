@@ -152,7 +152,7 @@ var TEMPLATE_WORLD_ENTITIE_ENTRY = '\
                         <div class="level-item">\
                             <div class="subtitle">%COUNT%</div>\
                         </div>\
-                        <div class="level-item"><div class="button is-danger killEntities" data-type="%NAME%">Kill</div></div>\
+                        <div class="level-item"><div class="button is-danger killEntities" data-type="%NAME%">%T%KILL%T%</div></div>\
                         <div class="level-item"></div>\
                     </div>\
                 </div>\
