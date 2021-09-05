@@ -2,11 +2,11 @@ package de.tobias.spigotdash.web;
 
 import java.io.File;
 import java.util.UUID;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -354,6 +354,27 @@ public class APIHandler {
 									return;
 								} else {
 									MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_TIME");
+									return;
+								}
+							}
+							
+							if(action.equalsIgnoreCase("KILL_ENTITY_TYPE")) {
+								if(json.has("type")) {
+									EntityType entType = EntityType.valueOf(json.get("type").getAsString());
+									
+									if(entType != null) {
+										for(Entity e : w.getEntities()) {
+											if(e.getType() == entType) e.remove();
+										}
+										
+										MainRequestHandler.sendJSONResponse(he, 200, "KILLED");
+										return;
+									} else {
+										MainRequestHandler.sendJSONResponse(he, 400, "ERR_INVALID_ENTITYTYPE");
+										return;
+									}
+								} else {
+									MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_TYPE");
 									return;
 								}
 							}

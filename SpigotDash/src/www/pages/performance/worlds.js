@@ -87,8 +87,26 @@ async function openWorldMenu(worldname) {
         daysDom.innerHTML = daysDom.innerHTML.replace(daysDom.innerHTML.split(": ")[1], data.days);
         datapackDom.innerHTML = datapackDom.innerHTML.replace(datapackDom.innerHTML.split(": ")[1], data.Datapacks.length > 0 ? data.Datapacks.join(",") : "No Datapacks loaded");
 
+        registerEntityKillClicks(menu, data);
+
         await timer(5000);
     }
+}
+
+function registerEntityKillClicks(menu, data) {
+    menu.getContentDOM().querySelectorAll(".killEntities").forEach((elem) => {
+        elem.addEventListener("click", async function() {
+            this.setAttribute("disabled", true);
+            this.classList.add("is-loading");
+            var res = await getDataFromAPI({ method: "CONTROL_WORLD", action: "KILL_ENTITY_TYPE", world: data.name, "type": this.getAttribute("data-type") });
+
+            if (res == "KILLED") {
+                this.removeAttribute("disabled");
+                this.classList.remove("is-loading");
+                this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.remove();
+            }
+        });
+    });
 }
 
 function worldUpdateChunks(listDOM, chunks) {
