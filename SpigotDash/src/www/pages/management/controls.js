@@ -118,7 +118,6 @@ async function showWhiteListEditor() {
             title: "%T%EDIT_WHITELIST%T%",
             html: html
         });
-
         updateWhiteListEditorUntilClosed();
     }
 
@@ -156,6 +155,89 @@ async function updateWhiteListEditorUntilClosed() {
     }
 }
 
+//OPERATOR LIST
+
+async function showOperatorEditor() {
+    var html = getOperatorEditorHTML();
+    if (!Swal.isVisible() || Swal.getTitle() != "%T%EDIT_OPERATORS%T%") {
+        Swal.fire({
+            title: "%T%EDIT_OPERATORS%T%",
+            html: html
+        });
+        updateOperatorEditorUntilClosed();
+    }
+
+
+}
+
+function getOperatorEditorHTML() {
+    var html = CONTROLS_OPERATOR_DIALOGUE;
+    var ENTRYS_HTML = "";
+    CURR_DATA.operatorEntrys.forEach((elem) => {
+        ENTRYS_HTML += replaceObjectKeyInString(elem, CONTROLS_OPERATOR_DIALOGUE_ENTRY);
+    });
+    html = html.replace("%ENTRYS%", ENTRYS_HTML);
+
+    return html;
+}
+
+function getOperatorEditorEntrysHTML() {
+    var ENTRYS_HTML = "";
+    CURR_DATA.operatorEntrys.forEach((elem) => {
+        ENTRYS_HTML += replaceObjectKeyInString(elem, CONTROLS_OPERATOR_DIALOGUE_ENTRY);
+    });
+    return ENTRYS_HTML;
+}
+
+async function updateOperatorEditorUntilClosed() {
+    while (Swal.isVisible() || Swal.getTitle() == "%T%EDIT_OPERATORS%T%") {
+        var html = getOperatorEditorEntrysHTML();
+
+        var playerList = Swal.getHtmlContainer().querySelector(".simplePlayerList");
+        if (playerList.innerHTML != html) {
+            playerList.innerHTML = html;
+        }
+        await timer(1000);
+    }
+}
+
+async function addToOperators(elem) {
+    var main = elem.parentElement.parentElement;
+    var input = main.querySelector("input");
+    var icon = main.querySelector("img");
+    var uuid = icon.src.split("/");
+
+    uuid = uuid[uuid.length - 1];
+    elem.classList.add("is-loading");
+
+    var data = await getDataFromAPI({ method: "CONTROL", action: "OPERATOR_ADD", player: input.value });
+
+    if (data == null || data != "SUCCESS") {
+        input.value = "%T%ADD_FAILED%T%";
+        input.oninput();
+    }
+
+    elem.classList.remove("is-loading");
+    updateTask();
+}
+
+async function removeFromOperators(elem) {
+    var main = elem.parentElement.parentElement;
+    var uuid = main.getAttribute("data-uuid");
+
+    elem.classList.add("is-loading");
+
+    var data = await getDataFromAPI({ method: "CONTROL", action: "OPERATOR_REMOVE", player: uuid });
+
+    if (data != "SUCCESS") {
+        elem.innerHTML = "%T%ERROR%T%";
+        elem.setAttribute("disabled", true);
+    }
+
+    elem.classList.remove("is-loading");
+    updateTask();
+}
+
 var CURR_DATA = [11];
 
 var CONTROLS_WHITELIST_DIALOGUE = '<div class="w-100">\
@@ -174,12 +256,38 @@ var CONTROLS_WHITELIST_DIALOGUE = '<div class="w-100">\
 \
 <div class="simplePlayerList">\
 %ENTRYS%\
-</div>'
+</div>';
 
 var CONTROLS_WHITELIST_DIALOGUE_ENTRY = '<div class="box playerListBox" data-uuid="%UUID%">\
 <div class="playerListHead"><img src="https://crafatar.com/avatars/%UUID%"></div>\
 <div class="playerListName">%NAME%</div>\
 <div class="playerListActions">\
     <div class="button is-danger" onclick="removeFromWhitelist(this);">%T%REMOVE%T%</div>\
+</div>\
+</div>';
+
+var CONTROLS_OPERATOR_DIALOGUE = '<div class="w-100">\
+<div class="field has-addons w-100" style="justify-content: center;">\
+    <div class="control">\
+        <img style="height: 40px; width: 40px; margin-right: 1rem; display: none;" alt="Head">\
+    </div>\
+    <div class="control">\
+        <input class="input is-primary" type="text" placeholder="Name" oninput="inputWhitelist(this);">\
+    </div>\
+    <div class="control">\
+        <a class="button is-success" disabled="true" onclick="addToOperators(this)">+</a>\
+    </div>\
+</div>\
+</div>\
+\
+<div class="simplePlayerList">\
+%ENTRYS%\
+</div>';
+
+var CONTROLS_OPERATOR_DIALOGUE_ENTRY = '<div class="box playerListBox" data-uuid="%UUID%">\
+<div class="playerListHead"><img src="https://crafatar.com/avatars/%UUID%"></div>\
+<div class="playerListName">%NAME%</div>\
+<div class="playerListActions">\
+    <div class="button is-danger" onclick="removeFromOperators(this);">%T%REMOVE%T%</div>\
 </div>\
 </div>';

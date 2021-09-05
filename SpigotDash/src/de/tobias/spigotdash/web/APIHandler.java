@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -237,10 +239,6 @@ public class APIHandler {
 					if(action.equalsIgnoreCase("WHITELIST_ADD")) {
 						if (json.has("player")) {
 							String uuid = json.get("player").getAsString();
-							//UUID uuidObj = dataFetcher.uuidFromUUIDWithoutDashes(uuid);
-							//System.out.println(uuidObj.toString());
-							//System.out.println(Bukkit.getOfflinePlayer(uuidObj).getName());
-
 							Bukkit.getOfflinePlayer(uuid).setWhitelisted(true);
 							MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
 							return;
@@ -255,6 +253,31 @@ public class APIHandler {
 							String uuid = json.get("player").getAsString();
 							UUID uuidObj = dataFetcher.uuidFromUUIDWithoutDashes(uuid.replaceAll("-", ""));
 							Bukkit.getOfflinePlayer(uuidObj).setWhitelisted(false);
+							MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+							return;
+						} else {
+							MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PLAYER");
+							return;
+						}
+					}
+					
+					if(action.equalsIgnoreCase("OPERATOR_ADD")) {
+						if (json.has("player")) {
+							String uuid = json.get("player").getAsString();
+							Bukkit.getOfflinePlayer(uuid).setOp(true);
+							MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
+							return;
+						} else {
+							MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_PLAYER");
+							return;
+						}
+					}
+					
+					if(action.equalsIgnoreCase("OPERATOR_REMOVE")) {
+						if (json.has("player")) {
+							String uuid = json.get("player").getAsString();
+							UUID uuidObj = dataFetcher.uuidFromUUIDWithoutDashes(uuid.replaceAll("-", ""));
+							Bukkit.getOfflinePlayer(uuidObj).setOp(false);
 							MainRequestHandler.sendJSONResponse(he, 200, "SUCCESS");
 							return;
 						} else {
@@ -331,6 +354,27 @@ public class APIHandler {
 									return;
 								} else {
 									MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_TIME");
+									return;
+								}
+							}
+							
+							if(action.equalsIgnoreCase("KILL_ENTITY_TYPE")) {
+								if(json.has("type")) {
+									EntityType entType = EntityType.valueOf(json.get("type").getAsString());
+									
+									if(entType != null) {
+										for(Entity e : w.getEntities()) {
+											if(e.getType() == entType) e.remove();
+										}
+										
+										MainRequestHandler.sendJSONResponse(he, 200, "KILLED");
+										return;
+									} else {
+										MainRequestHandler.sendJSONResponse(he, 400, "ERR_INVALID_ENTITYTYPE");
+										return;
+									}
+								} else {
+									MainRequestHandler.sendJSONResponse(he, 400, "ERR_MISSING_TYPE");
 									return;
 								}
 							}

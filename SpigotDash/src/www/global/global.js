@@ -1,7 +1,52 @@
 var curr_task = null;
+var encryptKey;
+
+var customEncryptor = {
+    fetchedKey: null,
+    encrypter: null,
+    init: async function() {
+        this.fetchedKey = (await (await fetch("./encryptKey")).json());
+        this.encrypter = new JSEncrypt();
+        var formattedKey = "-----BEGIN RSA PRIVATE KEY-----\n" + chunk(this.fetchedKey.KEY, 64).join("\n") + "\n-----END RSA PRIVATE KEY-----";
+        this.encrypter.setPublicKey(formattedKey);
+        console.log("[SECURITY] RSA Encryptor set up!")
+    },
+    encryptData: function(data) {
+        if (this.fetchedKey) {
+            return this.encrypter.encrypt(data);
+        } else {
+            console.warn("[SECURITY] No Key found to encrypt data! Security issue!");
+            return data;
+        }
+    },
+    ready: function() {
+        return (this.fetchedKey != null && this.encrypter != null);
+    },
+    encryptedFetch: function(url, options) {
+        if (options.body != null && options.body != "" && this.ready()) {
+            options.body = JSON.stringify({
+                DATA: customEncryptor.encryptData(options.body),
+                PAIR_ID: customEncryptor.fetchedKey.ID
+            });
+        }
+        return fetch(url, options);
+    }
+}
 
 function replaceObjectKeyInString(object, string) {
     return replaceObjectKeyInStringWithChar(object, string, "%");
+}
+
+function chunk(str, n) {
+    var ret = [];
+    var i;
+    var len;
+
+    for (i = 0, len = str.length; i < len; i += n) {
+        ret.push(str.substr(i, n))
+    }
+
+    return ret
 }
 
 function replaceObjectKeyInStringWithChar(object, string, char) {
@@ -72,11 +117,13 @@ function toggleExpandCart(elem) {
 
 async function getDataFromAPI(body) {
     try {
-        var data = await fetch(API_URL, {
+        var data;
+        data = await customEncryptor.encryptedFetch(API_URL, {
             method: "POST",
             mode: "cors",
             cache: "no-cache",
             redirect: "follow",
+            credentials: "include",
             body: JSON.stringify(body)
         });
         showOffline(false);
@@ -89,7 +136,7 @@ async function getDataFromAPI(body) {
         data = await data.json();
         return data;
     } catch (err) {
-        //showOffline(true);
+        console.error(err);
         return null;
     }
 }
@@ -161,6 +208,15 @@ async function loadCSSIfExists(url, container) {
     } catch (err) {
         return false;
     }
+}
+
+function copyClipboardElem(elem) {
+    var copyTarget = elem.firstChild;
+    copyClipboard(copyTarget.innerText);
+}
+
+function copyClipboard(text) {
+    navigator.clipboard.writeText(text);
 }
 
 String.prototype.capitalizeFirstLetter = function() {

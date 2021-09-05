@@ -21,14 +21,10 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.UUID;
 
-import javax.management.Attribute;
-import javax.management.AttributeList;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.input.ReversedLinesFileReader;
@@ -38,9 +34,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.google.common.collect.Lists;
+import com.sun.management.OperatingSystemMXBean;
 
 import de.tobias.spigotdash.main;
 import de.tobias.spigotdash.listener.JoinTime;
+import de.tobias.spigotdash.utils.AltDetector;
 import de.tobias.spigotdash.utils.databaseManager;
 import de.tobias.spigotdash.utils.errorCatcher;
 import de.tobias.spigotdash.utils.pluginConsole;
@@ -52,9 +50,9 @@ public class dataFetcher {
 	public static File serverDir = Bukkit.getWorldContainer();
 	public static File serverPropFile = new File(serverDir, "server.properties");
 	public static File bukkitPropFile = new File(serverDir, "bukkit.yml");
-	
+
+	public static OperatingSystemMXBean operatingSystemMXBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 	public static Runtime runtime = Runtime.getRuntime();
-	public static MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 
 	public static long last_tick_time = 0;
 	public static float tps = 0;
@@ -242,7 +240,8 @@ public class dataFetcher {
 		playerinfo.put("XPForNextLevel", getExpFromLevel(p.getLevel() + 1) - getExpFromLevel(p.getLevel()));
 		playerinfo.put("XPMissingForNextLevel", (getExpFromLevel(p.getLevel() + 1) - p.getTotalExperience()));
 		playerinfo.put("XPHasForNextLevel", p.getTotalExperience() - getExpFromLevel(p.getLevel()));
-
+		playerinfo.put("ALTS", dataFetcher.getOfflinePlayersAsString(AltDetector.getAlts(p)));
+		
 		return playerinfo;
 	}
 
@@ -256,6 +255,15 @@ public class dataFetcher {
 		loc.put("WORLD", l.getWorld().getName());
 		return loc;
 	}
+	
+	public static String getOfflinePlayersAsString(ArrayList<OfflinePlayer> players) {
+		String s = "";
+		for(OfflinePlayer p : players) {
+			if(!s.equalsIgnoreCase("")) { s+= ", "; }
+			s+= p.getName();
+		}
+		return s;
+	}
 
 	// ** LOG **
 	public static List<String> getLog(Integer linecount) {
@@ -263,7 +271,7 @@ public class dataFetcher {
 		try {
 			List<String> lines = new ArrayList<String>();
 			int counter = 0;
-			try (ReversedLinesFileReader reader = new ReversedLinesFileReader(logfile, Charset.forName("utf-8"));) {
+			try (ReversedLinesFileReader reader = new ReversedLinesFileReader(logfile, Charset.defaultCharset())) {
 				while (counter < linecount) {
 					String line = reader.readLine();
 					if(line == null) break;
@@ -373,6 +381,18 @@ public class dataFetcher {
 		HashMap<Object, Integer> entityCountsWorld = new HashMap<Object, Integer>();
 		ArrayList<HashMap<String, Object>> playersWorld = new ArrayList<HashMap<String, Object>>();
 		
+		//DATAPACKS
+		File dataPackFolder = new File(w.getWorldFolder(), "datapacks");
+		ArrayList<String> dataPacks = new ArrayList<>();
+		
+		if(dataPackFolder.exists() && dataPackFolder.isDirectory()) {
+			for(File datapack : dataPackFolder.listFiles()) {
+				dataPacks.add(datapack.getName());
+			}
+		}
+		
+		values.put("Datapacks", dataPacks);
+		
 		//CHUNKS
 		ArrayList<HashMap<String, Object>> chunks = new ArrayList<HashMap<String, Object>>();
 		
@@ -451,17 +471,10 @@ public class dataFetcher {
 
 	public static double getProcessCPULoad() {
 		try {
-			ObjectName name = ObjectName.getInstance("java.lang:type=OperatingSystem");
-			AttributeList list = mbs.getAttributes(name, new String[] { "ProcessCpuLoad" });
+			Double value = operatingSystemMXBean.getProcessCpuLoad();
 
-			if (list.isEmpty())
-				return Double.NaN;
-
-			Attribute att = (Attribute) list.get(0);
-			Double value = (Double) att.getValue();
-
-			if (value == -1.0)
-				return Double.NaN;
+			if (value == -1.0) return (double)0;
+			
 			return ((int) (value * 1000) / 10.0);
 		} catch (Exception ex) {
 			return 0;
@@ -471,17 +484,10 @@ public class dataFetcher {
 
 	public static double getSystemCPULoad() {
 		try {
-			ObjectName name = ObjectName.getInstance("java.lang:type=OperatingSystem");
-			AttributeList list = mbs.getAttributes(name, new String[] { "SystemCpuLoad" });
+			Double value = operatingSystemMXBean.getSystemCpuLoad();
 
-			if (list.isEmpty())
-				return Double.NaN;
-
-			Attribute att = (Attribute) list.get(0);
-			Double value = (Double) att.getValue();
-
-			if (value == -1.0)
-				return Double.NaN;
+			if (value == -1.0) return (double)0;
+			
 			return ((int) (value * 1000) / 10.0);
 		} catch (Exception ex) {
 			return 0;

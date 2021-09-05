@@ -74,6 +74,7 @@ public class pageDataFetcher {
 		}
 		
 		data.put("whitelistEntrys", offlinePlayerListToWeb(Bukkit.getWhitelistedPlayers()));
+		data.put("operatorEntrys", offlinePlayerListToWeb(Bukkit.getOperators()));
 		
 		return data;
 

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./global/other-license/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="./global/global.js"></script>
+    <script src="./global/other-license/jsencrypt.min.js"></script>
 </head>
 
 <body style="max-height: 100vh; overflow: hidden;">
@@ -60,19 +61,22 @@
     </style>
 
     <script>
+        customEncryptor.init();
+
         async function checkLogin() {
             try {
-                var data = await fetch("./api", {
+                var data = await customEncryptor.encryptedFetch("./api", {
                     "headers": {
                         "accept": "*/*",
                         "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7,nl;q=0.6",
                         "cache-control": "no-cache",
                         "content-type": "application/json;charset=UTF-8",
                     },
-                    "body": "{\n    \"method\": \"" + "NULL" + "\"\n}",
                     "method": "POST",
                     "Cache-Control": "no-cache",
-
+                    body: JSON.stringify({
+                        method: "NULL"
+                    })
                 });
 
                 if (data.status == 500) {
@@ -93,22 +97,24 @@
             var password = document.getElementById("PWORD").value;
 
             try {
-                var data = await fetch("./auth", {
+                var data = await customEncryptor.encryptedFetch("./auth", {
                     "headers": {
                         "accept": "*/*",
                         "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7,nl;q=0.6",
                         "cache-control": "no-cache",
                         "content-type": "application/json;charset=UTF-8",
                     },
-                    "body": '{ "username": "' + username + '", "password": "' + password + '"}',
                     "method": "POST",
                     "Cache-Control": "no-cache",
-
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
                 });
 
+                var REP_TEXT = await data.json();
                 if (data.status != 200) {
-                    var REP_TEXT = await data.text();
-                    REP_TEXT = REP_TEXT.replace('"ERR_WRONG_NAME_OR_PASSWORD"', "Wrong Password")
+                    REP_TEXT = REP_TEXT.replace('"ERR_WRONG_NAME_OR_PASSWORD"', "Wrong Password");
                     document.getElementById("PWORD").classList.remove("is-success");
                     document.getElementById("PWORD").classList.add("is-danger");
                     document.getElementById("ERR_FIELD").innerHTML = "CODE: " + data.status + " (" + data.statusText + ")\n" + REP_TEXT;
@@ -116,6 +122,7 @@
                     document.getElementById("PWORD").classList.add("is-success");
                     document.getElementById("PWORD").classList.remove("is-danger");
                     document.getElementById("ERR_FIELD").innerHTML = "Success";
+                    document.cookie = REP_TEXT;
                 }
             } catch (err) {
                 document.getElementById("PWORD").classList.remove("is-success");

@@ -1,12 +1,21 @@
 package de.tobias.spigotdash.web;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.crypto.Cipher;
 
 import org.bukkit.craftbukkit.libs.org.codehaus.plexus.util.FileUtils;
 
@@ -23,7 +32,7 @@ import de.tobias.spigotdash.utils.pluginConsole;
 import de.tobias.spigotdash.utils.translations;
 
 public class MainRequestHandler implements HttpHandler {
-
+	
 	@Override
 	public void handle(HttpExchange he) throws IOException {
 		try {
@@ -56,6 +65,7 @@ public class MainRequestHandler implements HttpHandler {
 					getClass().getResourceAsStream(classpath).transferTo(outputStream);
 				}
 				
+				outputStream.flush();
 				outputStream.close();
 			}
 		} catch (Exception ex) {
@@ -66,12 +76,31 @@ public class MainRequestHandler implements HttpHandler {
 	public boolean handleWithSections(HttpExchange he) {
 		String path = he.getRequestURI().getPath();
 		String request_body = castInputStreamToString(he.getRequestBody());
-		JsonParser parser = new JsonParser();
-		JsonElement jsonTree = parser.parse(request_body);
+		JsonObject json;
 		
-		if(request_body == null || jsonTree == null || !jsonTree.isJsonObject()) return true;
+		if(path.equalsIgnoreCase("/encryptKey")) {
+			EncryptionManager.handleKeyRequest(he);
+			return false;
+		}
 		
-		JsonObject json = jsonTree.getAsJsonObject();
+		try {
+			JsonElement tempjson = new JsonParser().parse(request_body);
+			if(tempjson == null || !tempjson.isJsonObject()) return true;
+			json = tempjson.getAsJsonObject();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			pluginConsole.sendMessage("&cFailed to parse JSON from Request: \n&b" + request_body);
+			errorCatcher.transmitError("MainRequestHandler.java", 81 , "JSON Parse failed: " + request_body);
+			return false;
+		}
+
+		
+		if(request_body == null || json == null) return true;
+		
+		//DATA DECRYPTION
+		json = EncryptionManager.decryptRequest(he, json);
+		if(json == null) return false;
+		
 		if(path.equalsIgnoreCase("/api")) {
 			if(!AuthHandler.isAuthed(he)) {
 				sendJSONResponse(he, 401, "ERR_REQUIRE_AUTH");
@@ -109,12 +138,10 @@ public class MainRequestHandler implements HttpHandler {
 	
 	public static String castInputStreamToString(InputStream ios) {
 		try {
-			StringBuilder sb = new StringBuilder();
-			int i;
-			while ((i = ios.read()) != -1) {
-				sb.append((char) i);
-			}
-			return sb.toString();
+			 InputStreamReader isr = new InputStreamReader(ios, StandardCharsets.UTF_8);
+		     BufferedReader br = new BufferedReader(isr);
+		     String text = br.lines().collect(Collectors.joining("\n"));
+		     return text;
 		} catch (Exception ex) {
 			pluginConsole.sendMessage("&c[ERROR] Failed to read InputStream into String:");
 			errorCatcher.catchException(ex, false);
@@ -126,13 +153,13 @@ public class MainRequestHandler implements HttpHandler {
 		try {
 			String response_string = new GsonBuilder().serializeNulls().create().toJson(data);
 			byte[] message_bytes = response_string.getBytes(StandardCharsets.UTF_8);
-			he.getResponseHeaders().add("Content-Type", "application/json");
+			he.getResponseHeaders().add("Content-Type", "application/json; charset=UTF-8");
 			he.sendResponseHeaders(code, message_bytes.length);
 			OutputStream outputStream = he.getResponseBody();
 			outputStream.write(message_bytes);
 			outputStream.close();
 		} catch (Exception ex) {
-			pluginConsole.sendMessage("§c[ERROR] Failed to send JSON Response:");
+			pluginConsole.sendMessage("&c[ERROR] Failed to send JSON Response:");
 			errorCatcher.catchException(ex, false);
 			he.close();
 		}

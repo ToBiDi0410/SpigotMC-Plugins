@@ -152,7 +152,7 @@ var TEMPLATE_WORLD_ENTITIE_ENTRY = '\
                         <div class="level-item">\
                             <div class="subtitle">%COUNT%</div>\
                         </div>\
-                        <div class="level-item"></div>\
+                        <div class="level-item"><div class="button is-danger killEntities" data-type="%NAME%">%T%KILL%T%</div></div>\
                         <div class="level-item"></div>\
                     </div>\
                 </div>\
@@ -202,7 +202,6 @@ var TEMPLATE_WORLD_CHUNK_ENTRY = '\
 function generateWorldChunkEntry(chunk) {
     var html = TEMPLATE_WORLD_CHUNK_ENTRY;
     var value = { id: chunk.ID, playercount: chunk.Players.length, entitiecount: Object.size(chunk.Entities) };
-    console.log(value.entitiecount);
 
     html = replaceObjectKeyInString(value, html);
     return getDOMObject(html);

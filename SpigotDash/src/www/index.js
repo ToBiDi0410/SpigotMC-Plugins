@@ -14,6 +14,20 @@ var PAGE_NAMES = {
 }
 
 async function init() {
+    try {
+        await customEncryptor.init();
+    } catch (err) {
+        console.warn("[SECURITY] Failed to setup Encryptor!");
+        console.error(err);
+        Swal.fire({
+            icon: "warning",
+            title: "Encryption",
+            html: "There was a Problem setting up Encryption for this connection!",
+            allowClickOutside: false
+        });
+    }
+
+
     document.querySelectorAll(".menu-list>li>a").forEach((elem) => {
         elem.addEventListener("click", function(event) {
             loadPage(event.target.getAttribute("data-url").replace(".html", ""));
