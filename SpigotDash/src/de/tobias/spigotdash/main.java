@@ -1,6 +1,12 @@
 package de.tobias.spigotdash;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,6 +18,7 @@ import de.tobias.spigotdash.utils.pluginConsole;
 import de.tobias.spigotdash.utils.taskManager;
 import de.tobias.spigotdash.utils.translations;
 import de.tobias.spigotdash.web.WebServer;
+import de.tobias.spigotdash.web.webBundler;
 
 public class main extends JavaPlugin {
 
@@ -63,6 +70,11 @@ public class main extends JavaPlugin {
 			latestStart = System.currentTimeMillis();
 			
 			pluginConsole.sendMessage("&5Everything (seems to be) done!");
+			
+			//final NgrokClient ngrokClient = new NgrokClient.Builder().build();
+			//final Tunnel httpTunnel = ngrokClient.connect(new CreateTunnel.Builder().withAddr(webserver.port).withProto(Proto.HTTP).build());
+			//System.out.println(httpTunnel.getPublicUrl());
+
 		} catch (Exception ex) {
 			pluginConsole.sendMessage("&7----------- [  " + pluginConsole.CONSOLE_PREFIX + "&7] -----------");
 			pluginConsole.sendMessage("&cINIT FAILURE! This error is currently unrecoverable!");

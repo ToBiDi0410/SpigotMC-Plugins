@@ -9,13 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
-
-import javax.crypto.Cipher;
 
 import org.bukkit.craftbukkit.libs.org.codehaus.plexus.util.FileUtils;
 
@@ -81,6 +75,36 @@ public class MainRequestHandler implements HttpHandler {
 		if(path.equalsIgnoreCase("/encryptKey")) {
 			EncryptionManager.handleKeyRequest(he);
 			return false;
+		}
+		
+		if(path.equalsIgnoreCase("/bundledCSS")) {
+			try {
+				OutputStream outputStream = he.getResponseBody();
+				String result = webBundler.bundleDefaultCSS();
+				byte[] content = result.getBytes(StandardCharsets.UTF_8);
+				he.sendResponseHeaders(200, content.length);
+				outputStream.write(content);
+				outputStream.flush();
+				outputStream.close();
+				return false;
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		if(path.equalsIgnoreCase("/bundledJS")) {
+			try {
+				OutputStream outputStream = he.getResponseBody();
+				String result = webBundler.bundleDefaultJS();
+				byte[] content = result.getBytes(StandardCharsets.UTF_8);
+				he.sendResponseHeaders(200, content.length);
+				outputStream.write(content);
+				outputStream.flush();
+				outputStream.close();
+				return false;
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 		
 		try {

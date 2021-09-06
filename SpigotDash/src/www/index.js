@@ -37,11 +37,6 @@ async function init() {
     theme = await getDataFromAPI({ method: "THEME" });
 
     console.log("[INDEX] Using Theme: " + theme);
-    if (theme == "dark") {
-        loadCSSIfExists("./global/dark.css", document.head);
-        loadCSSIfExists("./global/other-license/bulmaswatch.min.css", document.head);
-        loadCSSIfExists("./global/other-license/sweet_dark.css", document.head);
-    }
 
     addNewTask("heightFillClass", heightFillRestClass, 1000);
     addNewTask("NOTIFICATIONS", refreshNotifications, 2000);

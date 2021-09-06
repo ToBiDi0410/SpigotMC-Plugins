@@ -16,6 +16,7 @@ public class configuration {
 	public static YamlConfiguration yaml_cfg = null;
 	
 	public static HashMap<String, Object> CFG = new HashMap<String, Object>();
+	public static boolean dark = false;
 	
 	public static boolean init() {
 		boolean created = false;
@@ -72,6 +73,8 @@ public class configuration {
 		}
 		
 		pluginConsole.sendMessage("&aConfiguration loaded from File!");
+		
+		dark = yaml_cfg.getBoolean("darkMode");
 		
 		return true;
 		

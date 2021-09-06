@@ -1,17 +1,12 @@
 package de.tobias.spigotdash.web;
 
 import java.net.HttpCookie;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.crypto.Cipher;
-
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 
 import de.tobias.spigotdash.utils.configuration;

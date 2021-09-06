@@ -10,8 +10,8 @@ import de.tobias.spigotdash.utils.pluginConsole;
 
 public class WebServer {
 
-	Integer port;
-	HttpServer server;
+	public Integer port;
+	public HttpServer server;
 
 	public WebServer(Integer port) {
 		this.port = port;
