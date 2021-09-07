@@ -13,6 +13,7 @@ import org.bukkit.craftbukkit.libs.org.codehaus.plexus.util.FileUtils;
 
 import de.tobias.spigotdash.main;
 import de.tobias.spigotdash.utils.configuration;
+import de.tobias.spigotdash.utils.translations;
 
 public class webBundler {
 	
@@ -103,7 +104,7 @@ public class webBundler {
 			+ "\n\n/*----------\n"
 			+ "FROM: " + ent.getKey()
 			+ "\n----------*/\n"
-			+ ent.getValue();
+			+ translations.replaceTranslationsInString(ent.getValue());
 		}
 
 		return s;
@@ -112,6 +113,36 @@ public class webBundler {
 	public static void addResourceToMap(String rsname, HashMap<String, String> files) throws IOException {
 		URL rs = main.pl.getClass().getResource("/www/global/" + rsname);
 		files.put(rs.getFile(), IOUtils.toString(rs, StandardCharsets.UTF_8));
+	}
+	
+	//
+	public static HashMap<String, String> getBundledPage(String relpath) {
+		HashMap<String, String> ressources = new HashMap<>();
+
+		String html = "";
+		String css = "";
+		String js = "";
+		
+		
+		
+		try {
+			html = IOUtils.toString(main.pl.getClass().getResource("/www/" + relpath + ".html"), StandardCharsets.UTF_8);
+			html = translations.replaceTranslationsInString(html);
+			ressources.put("HTML", html);
+		} catch (Exception e) {}
+		
+		try {
+			css = IOUtils.toString(main.pl.getClass().getResource("/www/" + relpath + ".css"), StandardCharsets.UTF_8);
+			ressources.put("CSS", css);
+		} catch (Exception e) {}
+		
+		try {
+			js = IOUtils.toString(main.pl.getClass().getResource("/www/" + relpath + ".js"), StandardCharsets.UTF_8);
+			js = translations.replaceTranslationsInString(js);
+			ressources.put("JS", js);
+		} catch (Exception e) {}
+			
+		return ressources;
 	}
  
 }

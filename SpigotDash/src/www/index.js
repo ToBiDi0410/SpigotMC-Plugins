@@ -66,28 +66,35 @@ async function loadPage(url) {
     contentContainer = menu.getContentDOM();
 
     try {
-        var html = url + ".html";
-        var css = url + ".css";
-        var js = url + ".js";
+        var data = await fetch("./bundledPage?page=" + url.replace("./", ""));
+        data = await data.json();
 
-        var htmlt = await fetch(html);
-        htmlt = await htmlt.text();
-        contentContainer.innerHTML += htmlt;
+        contentContainer.innerHTML += data.HTML;
 
-        await loadCSSIfExists(css, contentContainer);
-        loadJSIfExists(js, contentContainer);
+        //CSS
+        var styleSheet = document.createElement("style");
+        styleSheet.type = "text/css";
+        styleSheet.innerHTML = data.CSS;
+        contentContainer.appendChild(styleSheet);
 
+        //JS
+        var scriptTag = document.createElement("script");
+        scriptTag.innerHTML = data.JS;
+        contentContainer.appendChild(scriptTag);
+
+        //OTHER
         contentContainer.innerHTML = contentContainer.innerHTML.replace('<progress class="progress is-small is-primary" max="100">15%</progress>', '');
-        hightlightMenu(html);
+        hightlightMenu(url + ".html");
         heightFillRestClass();
 
+        await timer(100);
+        if (initPage != null) { initPage(); }
         //MANAGE DATAREFRESH TASKS
         await stopTask("dataRefresher");
-        await timer(100);
         addNewTask("dataRefresher", function() {
             if (curr_task == null) return;
             curr_task();
-        }, 5000);
+        }, 5000 * 2);
     } catch (err) {
         console.error("[LOADER] Page load failed: ");
         console.error(err);

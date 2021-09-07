@@ -1,14 +1,13 @@
 package de.tobias.spigotdash;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.github.alexdlaird.ngrok.NgrokClient;
+import com.github.alexdlaird.ngrok.protocol.CreateTunnel;
+import com.github.alexdlaird.ngrok.protocol.Proto;
+import com.github.alexdlaird.ngrok.protocol.Tunnel;
 
 import de.tobias.spigotdash.listener.AltJoin;
 import de.tobias.spigotdash.listener.JoinTime;
@@ -18,7 +17,6 @@ import de.tobias.spigotdash.utils.pluginConsole;
 import de.tobias.spigotdash.utils.taskManager;
 import de.tobias.spigotdash.utils.translations;
 import de.tobias.spigotdash.web.WebServer;
-import de.tobias.spigotdash.web.webBundler;
 
 public class main extends JavaPlugin {
 
@@ -71,9 +69,9 @@ public class main extends JavaPlugin {
 			
 			pluginConsole.sendMessage("&5Everything (seems to be) done!");
 			
-			//final NgrokClient ngrokClient = new NgrokClient.Builder().build();
-			//final Tunnel httpTunnel = ngrokClient.connect(new CreateTunnel.Builder().withAddr(webserver.port).withProto(Proto.HTTP).build());
-			//System.out.println(httpTunnel.getPublicUrl());
+			final NgrokClient ngrokClient = new NgrokClient.Builder().build();
+			final Tunnel httpTunnel = ngrokClient.connect(new CreateTunnel.Builder().withAddr(webserver.port).withProto(Proto.HTTP).build());
+			pluginConsole.sendMessage("&c[BETA] NGROK Url: " + httpTunnel.getPublicUrl());
 
 		} catch (Exception ex) {
 			pluginConsole.sendMessage("&7----------- [  " + pluginConsole.CONSOLE_PREFIX + "&7] -----------");

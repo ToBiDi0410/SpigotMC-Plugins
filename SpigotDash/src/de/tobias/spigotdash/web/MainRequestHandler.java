@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.bukkit.craftbukkit.libs.org.codehaus.plexus.util.FileUtils;
@@ -107,6 +109,17 @@ public class MainRequestHandler implements HttpHandler {
 			}
 		}
 		
+		if(path.equalsIgnoreCase("/bundledPage")) {
+			Map<String, String> query = queryToMap(he.getRequestURI().getQuery());
+			if(query != null && query.containsKey("page")) {
+				sendJSONResponse(he, 200, webBundler.getBundledPage(query.get("page")));
+				return false;
+			} else {
+				sendJSONResponse(he, 400, "ERR_MISSING_PAGE");
+				return false;
+			}	
+		}
+		
 		try {
 			JsonElement tempjson = new JsonParser().parse(request_body);
 			if(tempjson == null || !tempjson.isJsonObject()) return true;
@@ -201,6 +214,22 @@ public class MainRequestHandler implements HttpHandler {
 			he.close();
 			errorCatcher.catchException(ex, false);
 		}
+	}
+	
+	public Map<String, String> queryToMap(String query) {
+	    if(query == null) {
+	        return null;
+	    }
+	    Map<String, String> result = new HashMap<>();
+	    for (String param : query.split("&")) {
+	        String[] entry = param.split("=");
+	        if (entry.length > 1) {
+	            result.put(entry[0], entry[1]);
+	        }else{
+	            result.put(entry[0], "");
+	        }
+	    }
+	    return result;
 	}
 
 }
