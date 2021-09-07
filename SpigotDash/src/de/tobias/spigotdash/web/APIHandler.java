@@ -362,13 +362,20 @@ public class APIHandler {
 								if(json.has("type")) {
 									EntityType entType = EntityType.valueOf(json.get("type").getAsString());
 									
-									if(entType != null) {
-										for(Entity e : w.getEntities()) {
-											if(e.getType() == entType) e.remove();
-										}
-										
-										MainRequestHandler.sendJSONResponse(he, 200, "KILLED");
-										return;
+									if (entType != null) {
+										Bukkit.getScheduler().runTask(main.pl, new Runnable() {
+											@Override
+											public void run() {
+												for (Entity e : w.getEntities()) {
+													if (e.getType() == entType)
+														e.remove();
+												}
+
+												MainRequestHandler.sendJSONResponse(he, 200, "KILLED");
+												return;
+											}
+										});
+									
 									} else {
 										MainRequestHandler.sendJSONResponse(he, 400, "ERR_INVALID_ENTITYTYPE");
 										return;
