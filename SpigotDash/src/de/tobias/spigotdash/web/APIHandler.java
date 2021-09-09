@@ -370,12 +370,12 @@ public class APIHandler {
 													if (e.getType() == entType)
 														e.remove();
 												}
-
 												MainRequestHandler.sendJSONResponse(he, 200, "KILLED");
 												return;
 											}
 										});
-									
+										
+										return;
 									} else {
 										MainRequestHandler.sendJSONResponse(he, 400, "ERR_INVALID_ENTITYTYPE");
 										return;

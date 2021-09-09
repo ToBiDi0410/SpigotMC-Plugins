@@ -203,7 +203,7 @@ async function updateData() {
         }
 
         data.forEach((elem) => {
-            var elem_date = transformDate(new Date(elem.DATETIME + " UTC"));
+            var elem_date = transformDate(new Date(elem.DATETIME));
             RAM_GRAPH.series[0].data.push({ x: elem_date, y: elem.MEMORY_ALLOCATED });
             RAM_GRAPH.series[1].data.push({ x: elem_date, y: elem.MEMORY_USED });
 

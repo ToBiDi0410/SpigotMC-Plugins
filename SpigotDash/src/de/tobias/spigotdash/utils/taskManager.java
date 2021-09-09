@@ -1,5 +1,7 @@
 package de.tobias.spigotdash.utils;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 
 import de.tobias.spigotdash.main;
@@ -17,11 +19,23 @@ public class taskManager {
 		DATA_taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(main.pl, new Runnable() {
 			@Override
 			public void run() {
-				if(lastUpdate + 1000*15 <= System.currentTimeMillis()) {
-					//Bukkit.getConsoleSender().sendMessage(main.CONSOLE_PREFIX + "Data submitted into Database!");
-					databaseManager.exec("INSERT INTO `PERFORMANCE` (`DATETIME`, `CPU_LOAD_SYSTEM`, `CPU_LOAD_PROCESS`, `MEMORY_USED`, `MEMORY_FREE`, `MEMORY_MAX`, `MEMORY_ALLOCATED`, `TPS`, `WORLD_CHUNKS`, `WORLD_ENTITIES`, `WORLD_PLAYERS`, `WORLD_COUNT`) VALUES ( DATETIME('now'), '" + dataFetcher.getSystemCPULoad() + "', '" + dataFetcher.getProcessCPULoad() + "', '" + dataFetcher.getUsedMemory() + "', '" + dataFetcher.getFreeMemory() + "', '" + dataFetcher.getMaxMemory() + "', '" + dataFetcher.getAllocatedMemory() + "', '" + dataFetcher.getTPS() + "', '" + dataFetcher.getTotalChunks() + "', '" + dataFetcher.getTotalEntities() + "', '" + dataFetcher.getPlayerCount() + "', '" + dataFetcher.getWorldCount() + "')");
-					databaseManager.exec("DELETE FROM `PERFORMANCE` WHERE `DATETIME` <= datetime('now', '-1 hour')");
-					
+				if(lastUpdate + 1000*15 <= System.currentTimeMillis()) {					
+					HashMap<String, Object> currentPerformanceData = new HashMap<String, Object>();
+					currentPerformanceData.put("DATETIME", System.currentTimeMillis());
+					currentPerformanceData.put("CPU_LOAD_SYSTEM", dataFetcher.getSystemCPULoad());
+					currentPerformanceData.put("CPU_LOAD_PROCESS", dataFetcher.getProcessCPULoad());
+					currentPerformanceData.put("MEMORY_MAX", dataFetcher.getMaxMemory());
+					currentPerformanceData.put("MEMORY_USED", dataFetcher.getUsedMemory());
+					currentPerformanceData.put("MEMORY_FREE", dataFetcher.getFreeMemory());
+					currentPerformanceData.put("MEMORY_ALLOCATED", dataFetcher.getAllocatedMemory());
+					currentPerformanceData.put("TPS", dataFetcher.getTPS());
+					currentPerformanceData.put("WORLD_CHUNKS", dataFetcher.getTotalChunks());
+					currentPerformanceData.put("WORLD_ENTITIES", dataFetcher.getTotalEntities());
+					currentPerformanceData.put("WORLD_PLAYERS", dataFetcher.getPlayerCount());
+					currentPerformanceData.put("WORLD_COUNT", dataFetcher.getWorldCount());
+					main.cacheFile.jsonTree.get("PERFORMANCE_DATA").getAsJsonArray().add(main.cacheFile.gson.toJsonTree(currentPerformanceData).getAsJsonObject());
+					main.cacheFile.save();
+										
 					//** NOTIFICATIONS **
 					notificationManager.manageNotifications();
 					if(dataFetcher.getTPS() < 17.0f) {
@@ -41,6 +55,10 @@ public class taskManager {
 					}
 					
 					lastUpdate = System.currentTimeMillis();
+				}
+				
+				if(lastUpdate + 1000*120 <= System.currentTimeMillis()) {
+					dataFetcher.clearWithTime(main.cacheFile.jsonTree.get("PERFORMANCE_DATA").getAsJsonArray(), (1000 * 60 * 10));
 				}
 				
 			}

@@ -34,12 +34,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.sun.management.OperatingSystemMXBean;
 
 import de.tobias.spigotdash.main;
 import de.tobias.spigotdash.listener.JoinTime;
 import de.tobias.spigotdash.utils.AltDetector;
-import de.tobias.spigotdash.utils.databaseManager;
 import de.tobias.spigotdash.utils.errorCatcher;
 import de.tobias.spigotdash.utils.pluginConsole;
 import de.tobias.spigotdash.utils.pluginManager;
@@ -311,21 +312,27 @@ public class dataFetcher {
 	
 	// ** PERFORMANCE GENERAL **
 	public static Object getPerformanceDataForWeb() {
-		ResultSet data = databaseManager.query("SELECT * FROM `PERFORMANCE` WHERE `DATETIME` >= Datetime('now', '-10 minutes') ORDER BY date(`DATETIME`) ASC");
-		if (data != null) {
-			try {
-				ArrayList<HashMap<String, Object>> data_maps = new ArrayList<HashMap<String, Object>>();
-				ArrayList<String> columns = getColumsFromResultSet(data);
-				while (data.next()) {
-					data_maps.add(resultSetToHashMap(data, columns));
+		JsonArray entrys = main.cacheFile.jsonTree.get("PERFORMANCE_DATA").getAsJsonArray();
+		clearWithTime(entrys, (1000 * 60 * 10));
+		return entrys;
+
+	}
+	
+	public static void clearWithTime(JsonArray a, Integer maxtime) {
+		if(a != null) {
+			System.out.println(a.size() + "-->");
+			Integer loop = a.size() - 1;
+			ArrayList<JsonElement> remove = new ArrayList<JsonElement>();
+			while(loop >= 0) {
+				JsonElement e = a.get(loop);
+				Long time = e.getAsJsonObject().get("DATETIME").getAsLong();
+				if((System.currentTimeMillis() - time) > maxtime) {
+					remove.add(e);
 				}
-				return data_maps;
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				return "ERR";
+				loop--;
 			}
-		} else {
-			return "";
+			
+			remove.forEach(e -> a.remove(e));
 		}
 	}
 
