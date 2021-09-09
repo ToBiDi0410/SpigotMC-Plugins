@@ -320,7 +320,6 @@ public class dataFetcher {
 	
 	public static void clearWithTime(JsonArray a, Integer maxtime) {
 		if(a != null) {
-			System.out.println(a.size() + "-->");
 			Integer loop = a.size() - 1;
 			ArrayList<JsonElement> remove = new ArrayList<JsonElement>();
 			while(loop >= 0) {

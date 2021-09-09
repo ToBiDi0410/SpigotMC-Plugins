@@ -14,6 +14,7 @@ public class taskManager {
 	public static int UPDATE_taskID = 0;
 
 	public static long lastUpdate = 0;
+	public static long lastClearUpdate = 0;
 	
 	public static void startTasks() {
 		DATA_taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(main.pl, new Runnable() {
@@ -57,9 +58,11 @@ public class taskManager {
 					lastUpdate = System.currentTimeMillis();
 				}
 				
-				if(lastUpdate + 1000*120 <= System.currentTimeMillis()) {
+				if(lastClearUpdate + 1000*120 <= System.currentTimeMillis()) {
 					dataFetcher.clearWithTime(main.cacheFile.jsonTree.get("PERFORMANCE_DATA").getAsJsonArray(), (1000 * 60 * 10));
+					lastClearUpdate = System.currentTimeMillis();
 				}
+				
 				
 			}
 	    
