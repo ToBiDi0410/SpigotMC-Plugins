@@ -10,7 +10,7 @@ import de.tobias.spigotdash.main;
 
 public class configuration {
 	
-	public static String current_ver = "0.6";
+	public static String current_ver = "0.7";
 	
 	public static File cfg_file = new File(main.pl.getDataFolder(), "config.yml");
 	public static YamlConfiguration yaml_cfg = null;
@@ -31,6 +31,9 @@ public class configuration {
 		CFG.put("autoReloadOnUpdate", true);
 		//0.6
 		CFG.put("translations", "EN");
+		//0.7
+		CFG.put("USE_NGROK", false);
+		CFG.put("NGROK_AUTH", "");
 		
 		pluginConsole.sendMessage("Initializing Config File...");
 		if(!cfg_file.exists()) {
@@ -109,6 +112,14 @@ public class configuration {
 		if(yaml_cfg.getString("FILE_VERSION").equalsIgnoreCase("0.5")) {
 			yaml_cfg.set("translations", "EN");
 			yaml_cfg.set("FILE_VERSION", "0.6");
+			save();
+			migrated = true;
+		}
+		
+		if(yaml_cfg.getString("FILE_VERSION").equalsIgnoreCase("0.6")) {
+			yaml_cfg.set("USE_NGROK", false);
+			yaml_cfg.set("NGROK_AUTH", "");
+			yaml_cfg.set("FILE_VERSION", "0.7");
 			save();
 			migrated = true;
 		}

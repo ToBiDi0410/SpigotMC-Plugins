@@ -8,11 +8,7 @@ import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.alexdlaird.ngrok.NgrokClient;
-import com.github.alexdlaird.ngrok.protocol.CreateTunnel;
-import com.github.alexdlaird.ngrok.protocol.Proto;
-import com.github.alexdlaird.ngrok.protocol.Tunnel;
-
+import de.tobias.spigotdash.commands.dashurl;
 import de.tobias.spigotdash.listener.AltJoin;
 import de.tobias.spigotdash.listener.JoinTime;
 import de.tobias.spigotdash.utils.configuration;
@@ -20,12 +16,14 @@ import de.tobias.spigotdash.utils.jsonDatabase;
 import de.tobias.spigotdash.utils.pluginConsole;
 import de.tobias.spigotdash.utils.taskManager;
 import de.tobias.spigotdash.utils.translations;
+import de.tobias.spigotdash.web.NgrokManager;
 import de.tobias.spigotdash.web.WebServer;
 
 public class main extends JavaPlugin {
 
 	public static WebServer webserver;
 	public static jsonDatabase cacheFile;
+	public static NgrokManager ngrok;
 	public static Plugin pl;
 	public static Metrics metrics;
 	public static long latestStart = 0;
@@ -64,6 +62,13 @@ public class main extends JavaPlugin {
 			webserver = new WebServer((Integer) configuration.CFG.get("PORT"));
 			webserver.setup();
 			
+			//NGROK
+			if(configuration.yaml_cfg.getBoolean("USE_NGROK")) {
+				ngrok = new NgrokManager(webserver.port);
+				ngrok.ngrokClient.setAuthToken(configuration.yaml_cfg.getString("NGROK_AUTH"));
+				ngrok.connect();
+			}
+			
 			//TASKS SETUP
 			taskManager.startTasks();
 
@@ -74,13 +79,12 @@ public class main extends JavaPlugin {
 			//ALT DETECTOR
 			Bukkit.getPluginManager().registerEvents(new AltJoin(), main.pl);
 			
+			//COMMANDS
+			Bukkit.getPluginCommand("dashurl").setExecutor(new dashurl());
+			
 			latestStart = System.currentTimeMillis();
 			
 			pluginConsole.sendMessage("&5Everything (seems to be) done!");
-			
-			/*final NgrokClient ngrokClient = new NgrokClient.Builder().build();
-			final Tunnel httpTunnel = ngrokClient.connect(new CreateTunnel.Builder().withAddr(webserver.port).withProto(Proto.HTTP).build());
-			pluginConsole.sendMessage("&c[BETA] NGROK Url: " + httpTunnel.getPublicUrl());*/
 
 		} catch (Exception ex) {
 			pluginConsole.sendMessage("&7----------- [  " + pluginConsole.CONSOLE_PREFIX + "&7] -----------");
@@ -95,6 +99,10 @@ public class main extends JavaPlugin {
 			try {
 				webserver.destroy();
 			} catch(Exception eex) {}
+			
+			try {
+				ngrok.destroy();
+			} catch(Exception eex) {}
 
 		}
 
@@ -104,6 +112,5 @@ public class main extends JavaPlugin {
 		cacheFile.save();
 		taskManager.stopTasks();
 		webserver.destroy();
-		configuration.save();
 	}
 }

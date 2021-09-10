@@ -15,6 +15,7 @@ public class taskManager {
 
 	public static long lastUpdate = 0;
 	public static long lastClearUpdate = 0;
+	public static long lastNgrokUpdate = 0;
 	
 	public static void startTasks() {
 		DATA_taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(main.pl, new Runnable() {
@@ -61,6 +62,13 @@ public class taskManager {
 				if(lastClearUpdate + 1000*120 <= System.currentTimeMillis()) {
 					dataFetcher.clearWithTime(main.cacheFile.jsonTree.get("PERFORMANCE_DATA").getAsJsonArray(), (1000 * 60 * 10));
 					lastClearUpdate = System.currentTimeMillis();
+				}
+				
+				if(lastNgrokUpdate + 1000*60*60*1.5 <= System.currentTimeMillis()) {
+					if(main.ngrok != null && configuration.yaml_cfg.getString("NGROK_AUTH").replace(" ", "").equalsIgnoreCase("")) {
+						main.ngrok.reopen();
+					}
+					lastNgrokUpdate = System.currentTimeMillis();
 				}
 				
 				

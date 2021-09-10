@@ -4,3 +4,4 @@ main: de.tobias.spigotdash.main
 api-version: 1.13
 author: Tobias Dickes
 commands:
+    dashurl:
